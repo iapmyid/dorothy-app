@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import { routes as mainRoutes } from '@/modules/main/routes'
+import { routes as authenticationRoutes } from '@/modules/authentication/routes'
 import { routes as templateRoutes } from '@/modules/template/routes'
 
 const routes = [
   mainRoutes,
+  authenticationRoutes,
   templateRoutes,
   {
     path: '/:pathMatch(.*)*',

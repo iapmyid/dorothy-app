@@ -107,26 +107,45 @@ const menuMain = {
       path: '/dashboard'
     },
     {
-      name: 'Page 1',
-      path: '/page-1'
+      name: 'User',
+      path: '/user'
     },
     {
-      name: 'Page 2',
-      path: '/page-2'
+      name: 'Warehouse',
+      path: '/warehouse'
     },
     {
-      name: 'Nested',
-      submenu: [
-        {
-          name: 'Page Nested 1',
-          path: '/nested/page-nested-1'
-        },
-        {
-          name: 'Page Nested 2',
-          path: '/nested/page-nested-2'
-        }
-      ]
-    }
+      name: 'Supplier',
+      path: '/supplier'
+    },
+    {
+      name: 'Customer',
+      path: '/customer'
+    },
+    {
+      name: 'Item',
+      path: '/item'
+    },
+    {
+      name: 'Inventory Report',
+      path: '/inventory-report'
+    },
+    {
+      name: 'Stock Correction',
+      path: '/stock-correction'
+    },
+    {
+      name: 'Transfer Item',
+      path: '/transfer-item'
+    },
+    {
+      name: 'Purchase',
+      path: '/purchase'
+    },
+    {
+      name: 'Point of Sales',
+      path: '/pos'
+    },
   ]
 }
 
