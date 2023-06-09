@@ -2,11 +2,21 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import { routes as mainRoutes } from '@/modules/main/routes'
 import { routes as authenticationRoutes } from '@/modules/authentication/routes'
+import { routes as userRoutes } from '@/modules/user/routes'
+import { routes as warehouseRoutes } from '@/modules/warehouse/routes'
+import { routes as supplierRoutes } from '@/modules/supplier/routes'
+import { routes as customerRoutes } from '@/modules/customer/routes'
+import { routes as itemRoutes } from '@/modules/item/routes'
 import { routes as templateRoutes } from '@/modules/template/routes'
 
 const routes = [
   mainRoutes,
   authenticationRoutes,
+  userRoutes,
+  warehouseRoutes,
+  supplierRoutes,
+  customerRoutes,
+  itemRoutes,
   templateRoutes,
   {
     path: '/:pathMatch(.*)*',

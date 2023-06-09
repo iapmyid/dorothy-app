@@ -42,7 +42,7 @@ const showBodyOverflow = () => {
 }
 </script>
 
-<style scoped lang="postcss">
+<style lang="postcss" scoped>
 .preloader {
   @apply w-full h-100vh flex flex-col justify-center items-center text-slate-50 bg-slate-900 relative z-50;
 }

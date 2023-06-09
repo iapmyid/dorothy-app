@@ -104,7 +104,7 @@ const menuMain = {
   menu: [
     {
       name: 'Dashboard',
-      path: '/dashboard'
+      path: '/'
     },
     {
       name: 'User',
@@ -145,7 +145,7 @@ const menuMain = {
     {
       name: 'Point of Sales',
       path: '/pos'
-    },
+    }
   ]
 }
 

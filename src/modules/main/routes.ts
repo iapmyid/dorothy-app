@@ -10,6 +10,6 @@ export const routes = {
     },
   ],
   beforeEnter: async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    next('/signin')
+    next()
   },
 }

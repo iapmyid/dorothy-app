@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { BaseDropdown } from '@/components/index'
-import ComponentNotification from './component-notification.vue'
 import ComponentToggleSidebar from './component-toggle-sidebar.vue'
 import { appName } from '@/config/app'
 
@@ -35,8 +34,6 @@ function toggleDarkMode() {
 
         <!-- Right: Header Buttons -->
         <div class="flex items-center space-x-2">
-          <component :is="ComponentNotification" />
-
           <component :is="BaseDropdown">
             <template #trigger>
               <div
@@ -84,7 +81,7 @@ function toggleDarkMode() {
   </nav>
 </template>
 
-<style scoped>
+<style lang="postcss" scoped>
 nav.header {
   @apply fixed top-0 flex w-full h-60px z-20 px-4 bg-white dark:bg-slate-900 shadow;
 }

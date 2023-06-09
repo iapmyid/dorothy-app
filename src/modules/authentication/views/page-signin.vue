@@ -10,7 +10,7 @@ const form = ref({
 </script>
 
 <template>
-  <div class="h-screen w-full bg-slate-100">
+  <div class="h-screen w-full bg-slate-100 dark:bg-slate-900">
     <div class="mx-auto max-w-xl w-full p-4 sm:px-5">
       <div class="text-center">
         <div class="mt-4">
