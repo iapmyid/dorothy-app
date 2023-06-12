@@ -6,6 +6,7 @@ import { routes as userRoutes } from '@/modules/user/routes'
 import { routes as warehouseRoutes } from '@/modules/warehouse/routes'
 import { routes as supplierRoutes } from '@/modules/supplier/routes'
 import { routes as customerRoutes } from '@/modules/customer/routes'
+import { routes as itemCategoryRoutes } from '@/modules/item-category/routes'
 import { routes as itemRoutes } from '@/modules/item/routes'
 import { routes as templateRoutes } from '@/modules/template/routes'
 
@@ -16,6 +17,7 @@ const routes = [
   warehouseRoutes,
   supplierRoutes,
   customerRoutes,
+  itemCategoryRoutes,
   itemRoutes,
   templateRoutes,
   {

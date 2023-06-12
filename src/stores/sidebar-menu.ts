@@ -123,6 +123,10 @@ const menuMain = {
       path: '/customer'
     },
     {
+      name: 'Item Category',
+      path: '/item-category'
+    },
+    {
       name: 'Item',
       path: '/item'
     },
