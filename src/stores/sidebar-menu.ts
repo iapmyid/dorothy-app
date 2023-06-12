@@ -104,7 +104,7 @@ const menuMain = {
   menu: [
     {
       name: 'Dashboard',
-      path: '/'
+      path: '/dashboard'
     },
     {
       name: 'User',

@@ -8,8 +8,12 @@ export const routes = {
       path: '',
       component: () => import('./views/page-dashboard.vue')
     },
+    {
+      path: 'dashboard',
+      component: () => import('./views/page-dashboard.vue')
+    }
   ],
   beforeEnter: async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     next()
-  },
+  }
 }
