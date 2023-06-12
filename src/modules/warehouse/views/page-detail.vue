@@ -33,7 +33,7 @@ const onDelete = async () => {
   if (confirm('Are you sure want to delete this data?')) {
     const result = await axios.delete(`/v1/warehouses/${route.params.id}`)
     if (result.status === 204) {
-      notification('Delete warehouse data success', '', { type: TypesEnum.Success })
+      notification('', 'Delete warehouse data success', { type: TypesEnum.Success })
       router.push('/warehouse')
     }
   }
