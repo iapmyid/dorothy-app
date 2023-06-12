@@ -1,12 +1,80 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { BaseBreadcrumb } from '@/components/index'
-import { BaseDivider } from '@/components/index'
-import { BaseInput } from '@/components/index'
+import { ref, watch, onMounted } from 'vue'
+import { AxiosError } from 'axios'
+import { BaseBreadcrumb, BaseDivider, BaseSelect, BaseInput } from '@/components/index'
+import { useBaseNotification, TypesEnum } from '@/composable/notification'
+import { useRoute, useRouter } from 'vue-router'
+import axios from '@/axios'
+
+const { notification } = useBaseNotification()
+const route = useRoute()
+const router = useRouter()
+
+const _id = ref('')
 
 const form = ref({
-  name: ''
+  name: '',
+  username: '',
+  role: 'cashier'
 })
+
+const list = [
+  { id: 1, label: 'Admin' },
+  { id: 2, label: 'Cashier' }
+]
+const selected = ref(list[1])
+
+watch(selected, () => {
+  form.value.role = selected.value.label.toLowerCase()
+})
+
+onMounted(async () => {
+  try {
+    const result = await axios.get(`/v1/users/${route.params.id}`)
+
+    if (result.status === 200) {
+      _id.value = result.data._id
+      form.value.name = result.data.name
+      form.value.username = result.data.username
+      form.value.role = result.data.role.toLowerCase()
+
+      // set selected role
+      const index = list.findIndex((el) => {
+        return el.label.toLowerCase() === result.data.role.toLowerCase()
+      })
+      selected.value = list[index < 0 ? 1 : index]
+    } else {
+      router.push('/404')
+    }
+  } catch (error) {
+    router.push('/404')
+  }
+})
+
+const errors = ref()
+const isSubmitted = ref(false)
+
+const onSubmit = async () => {
+  try {
+    isSubmitted.value = true
+    const response = await axios.patch(`/v1/users/${_id.value}`, form.value)
+
+    if (response.status === 204) {
+      router.push('/user')
+    }
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      errors.value = error.response?.data.errors
+      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+    } else if (error instanceof AxiosError) {
+      notification(error.code as string, error.message, { type: TypesEnum.Warning })
+    } else {
+      notification('Unknown Error', '', { type: TypesEnum.Warning })
+    }
+  } finally {
+    isSubmitted.value = false
+  }
+}
 </script>
 
 <template>
@@ -16,7 +84,11 @@ const form = ref({
       <base-divider orientation="horizontal" />
       <component
         :is="BaseBreadcrumb"
-        :breadcrumbs="[{ name: 'User', path: '/user' }, { name: '1', path: '/user/1' }, { name: 'Edit' }]"
+        :breadcrumbs="[
+          { name: 'User', path: '/user' },
+          { name: route.params.id.toString(), path: `/user/${route.params.id.toString()}` },
+          { name: 'Edit' }
+        ]"
       />
     </div>
     <div class="main-content-body">
@@ -25,9 +97,17 @@ const form = ref({
           <h2>Edit User</h2>
         </div>
         <div class="flex flex-col gap-4">
-          <form action="" method="post" class="space-y-5">
+          <form @submit.prevent="onSubmit()" class="space-y-5">
             <div class="space-y-2">
-              <component :is="BaseInput" required v-model="form.name" label="name"></component>
+              <component :is="BaseInput" required readonly v-model="form.name" label="Name"></component>
+              <component :is="BaseInput" required readonly v-model="form.username" label="Username"></component>
+              <div class="flex flex-col items-start gap-5">
+                <label class="text-sm font-bold">
+                  Role
+                  <span class="text-xs text-slate-400">(required)</span>
+                </label>
+                <component :is="BaseSelect" v-model="selected" :list="list"></component>
+              </div>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>

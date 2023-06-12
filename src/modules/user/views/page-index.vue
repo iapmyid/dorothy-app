@@ -1,10 +1,104 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { BaseBreadcrumb } from '@/components/index'
 import { BaseDivider } from '@/components/index'
 import { BaseInput } from '@/components/index'
+import { watchDebounced } from '@vueuse/core'
+import { usePagination } from '@/composable/pagination'
+import { useRoute, useRouter } from 'vue-router'
+import axios from '@/axios'
+
+const pagination = usePagination()
+const route = useRoute()
+const router = useRouter()
 
 const searchAll = ref('')
+const isLoadingSearch = ref(false)
+
+interface UserInterface {
+  _id: string
+  name: string
+  username: string
+  role: string
+}
+const users = ref<UserInterface[]>([])
+
+const getUsers = async (page = 1, search = '') => {
+  const result = await axios.get('/v1/users', {
+    params: {
+      pageSize: 10,
+      page: page,
+      sort: 'name',
+      filter: {
+        username: search,
+        name: search,
+        role: search,
+      },
+    },
+  })
+
+  users.value = result.data.data
+  
+  pagination.page.value = result.data.pagination.page
+  pagination.pageCount.value = result.data.pagination.pageCount
+  pagination.pageSize.value = result.data.pagination.pageSize
+  pagination.totalDocument.value = result.data.pagination.totalDocument
+}
+
+watchDebounced(
+  searchAll,
+  async () => {
+    router.replace({
+      path: route.path,
+      query: {
+        ...route.query,
+        page: pagination.previousPage(),
+        search: searchAll.value
+      }
+    })
+    isLoadingSearch.value = true
+    await getUsers(1, searchAll.value)
+    isLoadingSearch.value = false
+  },
+  { debounce: 500, maxWait: 1000 }
+)
+
+onMounted(async () => {
+  const page = Number(route.query.page ?? 1)
+  searchAll.value = route.query.search?.toString() ?? ''
+  await getUsers(page, searchAll.value)
+})
+
+const paginatePrev = async () => {
+  router.replace({
+    path: route.path,
+    query: {
+      ...route.query,
+      page: pagination.previousPage()
+    }
+  })
+  await getUsers(pagination.previousPage(), searchAll.value)
+}
+const paginateNext = async () => {
+  router.replace({
+    path: route.path,
+    query: {
+      ...route.query,
+      page: pagination.nextPage()
+    }
+  })
+  await getUsers(pagination.nextPage(), searchAll.value)
+}
+const paginate = async (page: number) => {
+  router.replace({
+    path: route.path,
+    query: {
+      ...route.query,
+      page: page
+    }
+  })
+  await getUsers(page, searchAll.value)
+}
 </script>
 
 <template>
@@ -47,49 +141,47 @@ const searchAll = ref('')
                   </th>
                   <th class="basic-table-head">
                     <div class="flex items-center justify-between">
+                      <p>Username</p>
+                    </div>
+                  </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
                       <p>Role</p>
                     </div>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr class="basic-table-row">
-                  <td class="basic-table-body">
-                    <router-link to="/user/1" class="text-info">Ganderton lorem</router-link>
-                  </td>
-                  <td class="basic-table-body">Admin</td>
-                </tr>
-                <tr class="basic-table-row">
-                  <td class="basic-table-body">
-                    <router-link to="/user/1" class="text-info">John Doe</router-link>
-                  </td>
-                  <td class="basic-table-body">Cashier</td>
-                </tr>
-                <tr class="basic-table-row">
-                  <td class="basic-table-body">
-                    <router-link to="/user/1" class="text-info">Adrenalo Tate</router-link>
-                  </td>
-                  <td class="basic-table-body">Cashier</td>
-                </tr>
+                <template v-if="users.length > 0">
+                  <tr v-for="(user, index) in users" :key="user._id" class="basic-table-row">
+                    <td class="basic-table-body">
+                      <router-link :to="`/user/${user._id}`" class="text-info">{{ user.name }}</router-link>
+                    </td>
+                    <td class="basic-table-body">{{ user.username }}</td>
+                    <td class="basic-table-body">{{ user.role }}</td>
+                  </tr>
+                </template>
               </tbody>
             </table>
           </div>
+
           <div class="w-full flex items-center justify-between">
             <div>
               <p class="text-sm text-slate-600 dark:text-slate-400">
-                Showing 1 to 10 of 23 entries
+                Showing {{ pagination.dataFrom() }} to {{ pagination.dataTo() }} of {{ pagination.totalDocument }} entries
               </p>
             </div>
-            <div class="btn-group">
-              <button type="button" class="btn btn-light-dark rounded-r-none">
+            <div class="btn-group" v-if="pagination.pageCount.value > 1">
+              <button @click="paginatePrev()" type="button" class="btn btn-light-dark rounded-r-none">
                 <i class="i-fas-angle-left block"></i>
               </button>
-              <button type="button" class="btn btn-secondary rounded border-r-none">1</button>
-              <button type="button" class="btn btn-light-dark rounded-none border-r-none">2</button>
-              <button type="button" class="btn btn-light-dark rounded-none border-r-none">3</button>
-              <button type="button" class="btn btn-light-dark rounded-none border-r-none">4</button>
-              <button type="button" class="btn btn-light-dark rounded-none border-r-none">5</button>
-              <button type="button" class="btn btn-light-dark rounded-l-none">
+              <button v-for="page in pagination.pageCount.value" type="button" class="btn rounded border-r-none" :class="{
+                'btn-secondary': page === pagination.page.value,
+                'btn-light-dark': page !== pagination.page.value,
+              }" @click="paginate(page)">
+                {{ page }}
+              </button>
+              <button @click="paginateNext()" type="button" class="btn btn-light-dark rounded-l-none">
                 <i class="i-fas-angle-right block"></i>
               </button>
             </div>
