@@ -16,24 +16,9 @@ const codeToggle = ref(false)
     </div>
     <div class="flex flex-col gap-4">
       <component :is="BaseAccordion">
-        <component
-          :is="BaseAccordionItem"
-          :item-id="1"
-          title="Accordion #1"
-          content="Hello World"
-        ></component>
-        <component
-          :is="BaseAccordionItem"
-          :item-id="2"
-          title="Accordion #2"
-          content="Hello World"
-        ></component>
-        <component
-          :is="BaseAccordionItem"
-          :item-id="3"
-          title="Accordion #3"
-          content="Hello World"
-        ></component>
+        <component :is="BaseAccordionItem" :item-id="1" title="Accordion #1" content="Hello World"></component>
+        <component :is="BaseAccordionItem" :item-id="2" title="Accordion #2" content="Hello World"></component>
+        <component :is="BaseAccordionItem" :item-id="3" title="Accordion #3" content="Hello World"></component>
       </component>
     </div>
     <div

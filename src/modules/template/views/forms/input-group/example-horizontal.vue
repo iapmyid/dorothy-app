@@ -50,24 +50,12 @@ const codeToggle = ref(false)
               <i class="i-far-envelope mx-3 block"></i>
             </template>
           </component>
-          <component
-            :is="BaseInput"
-            layout="horizontal"
-            v-model="form.phone"
-            label="Phone"
-            type="tel"
-          >
+          <component :is="BaseInput" layout="horizontal" v-model="form.phone" label="Phone" type="tel">
             <template #prefix>
               <div class="mx-3">+62</div>
             </template>
           </component>
-          <component
-            :is="BaseInput"
-            layout="horizontal"
-            v-model="form.number"
-            label="Age"
-            type="number"
-          >
+          <component :is="BaseInput" layout="horizontal" v-model="form.number" label="Age" type="number">
             <template #suffix>
               <div class="mx-3">Years old</div>
             </template>

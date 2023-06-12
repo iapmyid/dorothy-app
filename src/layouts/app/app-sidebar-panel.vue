@@ -27,10 +27,7 @@ useSidebar()
       <!-- Sidebar Panel Body -->
       <div class="sidebar-panel-body">
         <ul class="flex flex-1 flex-col px-4">
-          <li
-            v-for="menu in sidebarMenuStore.shortcut[sidebarMenuStore.activeShortcutIndex].menu"
-            :key="menu.name"
-          >
+          <li v-for="menu in sidebarMenuStore.shortcut[sidebarMenuStore.activeShortcutIndex].menu" :key="menu.name">
             <!-- Sub Menu Wrapper -->
             <template v-if="menu.submenu">
               <router-link
@@ -44,8 +41,7 @@ useSidebar()
                   v-if="menu.submenu"
                   class="i-fas-angle-right block"
                   :class="{
-                    'rotate-90 transition transform-gpu':
-                      sidebarMenuStore.$state.activeMenuName === menu.name
+                    'rotate-90 transition transform-gpu': sidebarMenuStore.$state.activeMenuName === menu.name
                   }"
                 />
               </router-link>
@@ -60,8 +56,7 @@ useSidebar()
                   v-if="menu.submenu"
                   class="i-fas-angle-right block"
                   :class="{
-                    'rotate-90 transition transform-gpu':
-                      sidebarMenuStore.$state.activeMenuName === menu.name
+                    'rotate-90 transition transform-gpu': sidebarMenuStore.$state.activeMenuName === menu.name
                   }"
                 />
               </div>

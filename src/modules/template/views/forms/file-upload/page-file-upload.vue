@@ -21,8 +21,8 @@ import ExampleDropzone from './example-dropzone.vue'
     </div>
     <div class="main-content-body">
       <p>
-        Input elements with type "file" let the user choose one or more files from their device
-        storage. Once chosen, the files can be uploaded to a server using form submission.
+        Input elements with type "file" let the user choose one or more files from their device storage. Once chosen,
+        the files can be uploaded to a server using form submission.
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleDropzone" />

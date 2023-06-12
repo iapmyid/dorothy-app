@@ -19,10 +19,7 @@ import ExampleBasic from './example-basic.vue'
       />
     </div>
     <div class="main-content-body">
-      <p>
-        Radio are generally used in radio groups collections of radio buttons describing a set of
-        related options.
-      </p>
+      <p>Radio are generally used in radio groups collections of radio buttons describing a set of related options.</p>
       <component :is="ExampleBasic" />
     </div>
   </div>

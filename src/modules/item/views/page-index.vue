@@ -23,13 +23,7 @@ const searchAll = ref('')
                 <i class="i-far-pen-to-square block"></i>
                 <span>Add New</span>
               </router-link>
-              <component
-                :is="BaseInput"
-                v-model="searchAll"
-                placeholder="Search"
-                border="full"
-                class="flex-1"
-              >
+              <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
                 </template>

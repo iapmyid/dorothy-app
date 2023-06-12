@@ -19,12 +19,7 @@ const codeToggle = ref(false)
       <!-- default -->
       <button
         class="btn btn-primary"
-        @click="
-          notification(
-            'Notification Title',
-            'Lorem ipsum, dolor sit amet consectetur adipisicing elit.'
-          )
-        "
+        @click="notification('Notification Title', 'Lorem ipsum, dolor sit amet consectetur adipisicing elit.')"
       >
         Trigger Notification
       </button>
@@ -32,11 +27,9 @@ const codeToggle = ref(false)
       <button
         class="btn btn-info"
         @click="
-          notification(
-            'Notification Title',
-            'Lorem ipsum, dolor sit amet consectetur adipisicing elit.',
-            { type: TypesEnum.Info }
-          )
+          notification('Notification Title', 'Lorem ipsum, dolor sit amet consectetur adipisicing elit.', {
+            type: TypesEnum.Info
+          })
         "
       >
         Trigger Notification
@@ -45,11 +38,9 @@ const codeToggle = ref(false)
       <button
         class="btn btn-success"
         @click="
-          notification(
-            'Notification Title',
-            'Lorem ipsum, dolor sit amet consectetur adipisicing elit.',
-            { type: TypesEnum.Success }
-          )
+          notification('Notification Title', 'Lorem ipsum, dolor sit amet consectetur adipisicing elit.', {
+            type: TypesEnum.Success
+          })
         "
       >
         Trigger Notification
@@ -58,11 +49,9 @@ const codeToggle = ref(false)
       <button
         class="btn btn-warning"
         @click="
-          notification(
-            'Notification Title',
-            'Lorem ipsum, dolor sit amet consectetur adipisicing elit.',
-            { type: TypesEnum.Warning }
-          )
+          notification('Notification Title', 'Lorem ipsum, dolor sit amet consectetur adipisicing elit.', {
+            type: TypesEnum.Warning
+          })
         "
       >
         Trigger Notification
@@ -70,11 +59,9 @@ const codeToggle = ref(false)
       <button
         class="btn btn-danger"
         @click="
-          notification(
-            'Notification Title',
-            'Lorem ipsum, dolor sit amet consectetur adipisicing elit.',
-            { type: TypesEnum.Danger }
-          )
+          notification('Notification Title', 'Lorem ipsum, dolor sit amet consectetur adipisicing elit.', {
+            type: TypesEnum.Danger
+          })
         "
       >
         Trigger Notification

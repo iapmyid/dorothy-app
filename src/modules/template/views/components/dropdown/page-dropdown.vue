@@ -20,8 +20,8 @@ import ExampleBasic from './example-basic.vue'
     </div>
     <div class="main-content-body">
       <p>
-        Get started with the dropdown component to show a list of menu items when clicking on the
-        trigger element based on multiple layouts, styles, and placements
+        Get started with the dropdown component to show a list of menu items when clicking on the trigger element based
+        on multiple layouts, styles, and placements
       </p>
       <component :is="ExampleBasic" />
     </div>

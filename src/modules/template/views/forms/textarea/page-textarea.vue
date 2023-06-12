@@ -22,8 +22,8 @@ import ExampleBorderless from './example-borderless.vue'
     </div>
     <div class="main-content-body">
       <p>
-        The Textarea defines a multi-line text input control. The Textarea is often used in a form,
-        to collect user inputs like comments or reviews.
+        The Textarea defines a multi-line text input control. The Textarea is often used in a form, to collect user
+        inputs like comments or reviews.
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleBordered" />

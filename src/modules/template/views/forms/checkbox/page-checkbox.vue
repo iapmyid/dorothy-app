@@ -21,8 +21,8 @@ import ExampleLabel from './example-label.vue'
     </div>
     <div class="main-content-body">
       <p>
-        Checkboxes are for selecting one or several options in a list, while radios are for
-        selecting one option from many.
+        Checkboxes are for selecting one or several options in a list, while radios are for selecting one option from
+        many.
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleLabel" />

@@ -4,7 +4,7 @@ export const useScreenBreakpointStore = defineStore('screen-breakpoint', {
   state: () => ({
     windowWidth: 0,
     windowHeight: 0,
-    screenBreakpoint: 'sm',
+    screenBreakpoint: 'sm'
   }),
   actions: {
     onResizeWindow() {
@@ -13,24 +13,24 @@ export const useScreenBreakpointStore = defineStore('screen-breakpoint', {
       const screens = [
         {
           breakpoint: 'sm',
-          width: 640,
+          width: 640
         },
         {
           breakpoint: 'md',
-          width: 768,
+          width: 768
         },
         {
           breakpoint: 'lg',
-          width: 1024,
+          width: 1024
         },
         {
           breakpoint: 'xl',
-          width: 1280,
+          width: 1280
         },
         {
           breakpoint: '2xl',
-          width: 1536,
-        },
+          width: 1536
+        }
       ]
 
       screens.every((el) => {
@@ -47,6 +47,6 @@ export const useScreenBreakpointStore = defineStore('screen-breakpoint', {
 
         return true
       })
-    },
-  },
+    }
+  }
 })

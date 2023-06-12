@@ -23,13 +23,7 @@ const codeToggle = ref(false)
     <div class="flex flex-col gap-4">
       <form action="" method="post" class="space-y-5">
         <div class="space-y-2">
-          <component
-            :is="BaseInput"
-            required
-            v-model="form.username"
-            label="Username"
-            placeholder="John Doe"
-          >
+          <component :is="BaseInput" required v-model="form.username" label="Username" placeholder="John Doe">
             <template #prefix>
               <i class="i-far-user mx-3 block"></i>
             </template>

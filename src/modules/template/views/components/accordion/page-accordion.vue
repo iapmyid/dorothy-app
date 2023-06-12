@@ -20,8 +20,8 @@ import ExampleBasic from './example-basic.vue'
     </div>
     <div class="main-content-body">
       <p>
-        Use the accordion component to show hidden information based on the collapse and expand
-        state of the child elements using data attribute options
+        Use the accordion component to show hidden information based on the collapse and expand state of the child
+        elements using data attribute options
       </p>
       <component :is="ExampleBasic" />
       <!-- API -->

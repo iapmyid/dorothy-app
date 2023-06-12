@@ -66,15 +66,8 @@ const selected = computed({
             :value="data"
             as="template"
           >
-            <li
-              :class="[
-                active ? 'list-box-option-active' : 'list-box-option-inactive',
-                'list-box-option'
-              ]"
-            >
-              <span :class="[selected ? 'font-extrabold' : 'font-normal', 'block ']">{{
-                data.label
-              }}</span>
+            <li :class="[active ? 'list-box-option-active' : 'list-box-option-inactive', 'list-box-option']">
+              <span :class="[selected ? 'font-extrabold' : 'font-normal', 'block ']">{{ data.label }}</span>
             </li>
           </ListboxOption>
         </ListboxOptions>

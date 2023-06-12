@@ -17,22 +17,10 @@ const codeToggle = ref(false)
     <div class="flex flex-col gap-4">
       <div>Selected : {{ selected }}</div>
       <form @submit.prevent="" class="flex gap-4">
-        <component
-          :is="BaseRadio"
-          name="radio-option"
-          value="value 1"
-          v-model="selected"
-          :required="true"
-        >
+        <component :is="BaseRadio" name="radio-option" value="value 1" v-model="selected" :required="true">
           Value 1
         </component>
-        <component
-          :is="BaseRadio"
-          name="radio-option"
-          value="value 2"
-          v-model="selected"
-          :required="true"
-        >
+        <component :is="BaseRadio" name="radio-option" value="value 2" v-model="selected" :required="true">
           Value 2
         </component>
         <button type="submit" class="btn btn-primary">Submit</button>

@@ -23,13 +23,7 @@ const searchAll = ref('')
                 <i class="i-far-pen-to-square block"></i>
                 <span>Add New</span>
               </router-link>
-              <component
-                :is="BaseInput"
-                v-model="searchAll"
-                placeholder="Search"
-                border="full"
-                class="flex-1"
-              >
+              <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
                 </template>
@@ -58,9 +52,7 @@ const searchAll = ref('')
           </div>
           <div class="w-full flex items-center justify-between">
             <div>
-              <p class="text-sm text-slate-600 dark:text-slate-400">
-                Showing 1 to 10 of 23 entries
-              </p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Showing 1 to 10 of 23 entries</p>
             </div>
             <div class="btn-group">
               <button type="button" class="btn btn-light-dark rounded-r-none">

@@ -19,9 +19,9 @@ export const routes = {
     {
       path: ':id/edit',
       component: () => import('./views/page-edit.vue')
-    },
+    }
   ],
   beforeEnter: async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     next()
-  },
+  }
 }

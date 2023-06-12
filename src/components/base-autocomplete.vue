@@ -47,10 +47,7 @@ let filtered = computed(() =>
   query.value === ''
     ? props.list
     : props.list.filter((data) =>
-        data.label
-          .toLowerCase()
-          .replace(/\s+/g, '')
-          .includes(query.value.toLowerCase().replace(/\s+/g, ''))
+        data.label.toLowerCase().replace(/\s+/g, '').includes(query.value.toLowerCase().replace(/\s+/g, ''))
       )
 )
 </script>

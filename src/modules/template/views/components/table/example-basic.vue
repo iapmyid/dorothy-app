@@ -13,10 +13,7 @@ const codeToggle = ref(false)
       <component :is="BaseSwitch" v-model="codeToggle" label="code" />
     </div>
     <div>
-      <p>
-        The accordion component allows the user to show and hide sections of related content on a
-        page.
-      </p>
+      <p>The accordion component allows the user to show and hide sections of related content on a page.</p>
     </div>
     <div class="flex flex-col gap-4">
       <div class="table-container">

@@ -23,8 +23,8 @@ import ExampleHorizontal from './example-horizontal.vue'
     </div>
     <div class="main-content-body">
       <p>
-        Easily extend form controls by adding text, buttons, or button groups on either side of
-        textual inputs, custom selects, and custom file inputs.
+        Easily extend form controls by adding text, buttons, or button groups on either side of textual inputs, custom
+        selects, and custom file inputs.
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleHorizontal" />

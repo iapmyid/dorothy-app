@@ -21,8 +21,8 @@ import ExampleSeparator from './example-separator.vue'
     </div>
     <div class="main-content-body">
       <p>
-        The breadcrumb component is an important part of any website or application that can be used
-        to show the current location of a page in a hierarchical structure of pages.
+        The breadcrumb component is an important part of any website or application that can be used to show the current
+        location of a page in a hierarchical structure of pages.
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleSeparator" />

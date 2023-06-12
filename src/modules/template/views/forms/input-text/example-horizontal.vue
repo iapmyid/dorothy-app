@@ -42,20 +42,8 @@ const codeToggle = ref(false)
             placeholder="johndoe@example.com"
             helper="this is helper message"
           ></component>
-          <component
-            :is="BaseInput"
-            layout="horizontal"
-            v-model="form.phone"
-            label="Phone"
-            type="tel"
-          ></component>
-          <component
-            :is="BaseInput"
-            layout="horizontal"
-            v-model="form.number"
-            label="Age"
-            type="number"
-          ></component>
+          <component :is="BaseInput" layout="horizontal" v-model="form.phone" label="Phone" type="tel"></component>
+          <component :is="BaseInput" layout="horizontal" v-model="form.number" label="Age" type="number"></component>
           <component
             :is="BaseInput"
             layout="horizontal"

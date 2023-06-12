@@ -21,8 +21,8 @@ import ExampleVertical from './example-vertical.vue'
     </div>
     <div class="main-content-body">
       <p>
-        The tabs component can be used either as an extra navigational hierarchy complementing the
-        main navbar or you can also use it to change content inside a container
+        The tabs component can be used either as an extra navigational hierarchy complementing the main navbar or you
+        can also use it to change content inside a container
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleVertical" />

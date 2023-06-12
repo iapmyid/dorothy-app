@@ -20,8 +20,8 @@ import ExampleBasic from './example-basic.vue'
     </div>
     <div class="main-content-body">
       <p>
-        Use these responsive card components to show data entries and information to your users in
-        multiple forms and contexts such as for your blog, application, user profiles, and more.
+        Use these responsive card components to show data entries and information to your users in multiple forms and
+        contexts such as for your blog, application, user profiles, and more.
       </p>
       <component :is="ExampleBasic" />
     </div>

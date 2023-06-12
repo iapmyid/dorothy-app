@@ -22,8 +22,8 @@ import ExampleSimple from './example-simple.vue'
     </div>
     <div class="main-content-body">
       <p>
-        Autocomplete gives you a customizable select box with support for searching, tagging, remote
-        data sets, infinite scrolling, and many other highly used options.
+        Autocomplete gives you a customizable select box with support for searching, tagging, remote data sets, infinite
+        scrolling, and many other highly used options.
       </p>
       <component :is="ExampleSimple" />
       <component :is="ExampleBordered" />

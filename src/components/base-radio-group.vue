@@ -39,10 +39,7 @@ const value = computed({
       >
         <slot :active="active" :checked="checked" :option="option">
           <div class="w-full cursor-pointer">
-            <div
-              :class="[checked ? 'bg-blue-900 text-white ' : 'bg-white text-slate-900']"
-              class="border rounded p-4"
-            >
+            <div :class="[checked ? 'bg-blue-900 text-white ' : 'bg-white text-slate-900']" class="border rounded p-4">
               <div class="w-full flex items-center justify-between space-x-4">
                 <div class="flex items-center">
                   <div class="text-sm">{{ option }}</div>

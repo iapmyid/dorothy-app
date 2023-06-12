@@ -26,8 +26,7 @@ import ExampleWithIcon from './example-with-icon.vue'
     </div>
     <div class="main-content-body">
       <p>
-        Use Button component for actions in forms, dialogs, and more with support for multiple
-        sizes, states, and more.
+        Use Button component for actions in forms, dialogs, and more with support for multiple sizes, states, and more.
       </p>
       <component :is="ExampleSolid" />
       <component :is="ExampleRounded" />

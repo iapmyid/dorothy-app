@@ -22,8 +22,7 @@ import ExampleHorizontal from './example-horizontal.vue'
     </div>
     <div class="main-content-body">
       <p>
-        The Datepicker is used to allow the user to select a date, and to display that date in the
-        specified format.
+        The Datepicker is used to allow the user to select a date, and to display that date in the specified format.
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleHorizontal" />

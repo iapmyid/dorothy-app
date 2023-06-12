@@ -13,10 +13,7 @@ const codeToggle = ref(false)
       <component :is="BaseSwitch" v-model="codeToggle" label="code" />
     </div>
     <div>
-      <p>
-        In the absence of a image, you can use the initial. Initials can be used in various
-        variants.
-      </p>
+      <p>In the absence of a image, you can use the initial. Initials can be used in various variants.</p>
     </div>
     <div class="flex flex-wrap items-center gap-2">
       <div class="avatar avatar-2xl">

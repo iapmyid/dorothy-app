@@ -59,10 +59,7 @@ function toggleDarkMode() {
               </div>
             </div>
             <div class="p-1">
-              <button
-                @click="toggleDarkMode()"
-                class="w-full flex items-center rounded-md px-2 py-2 text-sm space-x-2"
-              >
+              <button @click="toggleDarkMode()" class="w-full flex items-center rounded-md px-2 py-2 text-sm space-x-2">
                 <i v-if="isDarkMode" class="i-ph-sun block"></i>
                 <i v-else class="i-ph-moon-fill block"></i>
                 <span>Dark Mode</span>

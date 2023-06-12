@@ -19,11 +19,9 @@ const codeToggle = ref(false)
       <button
         class="btn btn-primary"
         @click="
-          notification(
-            'Notification Title',
-            'Lorem ipsum, dolor sit amet consectetur adipisicing elit. ',
-            { duration: 10000 }
-          )
+          notification('Notification Title', 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. ', {
+            duration: 10000
+          })
         "
       >
         10000 milisecond / 10 second

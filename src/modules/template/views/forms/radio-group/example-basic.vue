@@ -52,9 +52,7 @@ const codeToggle = ref(false)
                 <div class="w-full flex items-center justify-between space-x-4">
                   <div class="flex flex-col">
                     <div class="text-base font-semibold">{{ option.name }}</div>
-                    <div class="text-sm font-light">
-                      {{ option.cpus }} - {{ option.ram }} - {{ option.disk }}
-                    </div>
+                    <div class="text-sm font-light">{{ option.cpus }} - {{ option.ram }} - {{ option.disk }}</div>
                   </div>
                   <div v-show="checked" class="shrink-0 text-white">
                     <i class="i-fas-circle-check block"></i>

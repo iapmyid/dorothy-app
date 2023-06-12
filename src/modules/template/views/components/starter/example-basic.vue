@@ -14,9 +14,9 @@ const codeToggle = ref(false)
     </div>
     <div>
       <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Earum reprehenderit minus quas
-        cupiditate deleniti sint repellendus nesciunt commodi ducimus voluptatem repudiandae
-        consequatur magni, dolore non tempora at quis? Quaerat, possimus.
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Earum reprehenderit minus quas cupiditate deleniti
+        sint repellendus nesciunt commodi ducimus voluptatem repudiandae consequatur magni, dolore non tempora at quis?
+        Quaerat, possimus.
       </p>
     </div>
     <div class="flex flex-col gap-4">

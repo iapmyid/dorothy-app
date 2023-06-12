@@ -23,9 +23,8 @@ import ExampleWithIcon from './example-with-icon.vue'
     </div>
     <div class="main-content-body">
       <p>
-        The alert component can be used to provide information to your users such as success or
-        error messages, but also highlighted information complementing the normal flow of paragraphs
-        and headers on a page.
+        The alert component can be used to provide information to your users such as success or error messages, but also
+        highlighted information complementing the normal flow of paragraphs and headers on a page.
       </p>
       <component :is="ExampleSolid" />
       <component :is="ExampleOutline" />

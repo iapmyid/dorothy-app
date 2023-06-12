@@ -20,9 +20,7 @@ import ExampleSlot from './example-slot.vue'
       />
     </div>
     <div class="main-content-body">
-      <p>
-        A Spinner component is used to show the user a timely process is currently taking place.
-      </p>
+      <p>A Spinner component is used to show the user a timely process is currently taking place.</p>
       <component :is="ExampleDirective" />
       <component :is="ExampleSlot" />
     </div>

@@ -21,9 +21,7 @@ import ExampleDate from './example-date.vue'
       />
     </div>
     <div class="main-content-body">
-      <p>
-        To provide an easy way to increase input field readability by formatting your typed data.
-      </p>
+      <p>To provide an easy way to increase input field readability by formatting your typed data.</p>
       <component :is="ExampleCreditCard" />
       <component :is="ExampleNumeral" />
       <component :is="ExampleDate" />

@@ -13,9 +13,7 @@ const codeToggle = ref(false)
       <component :is="BaseSwitch" v-model="codeToggle" label="code" />
     </div>
     <div>
-      <p>
-        The Avatar group can be a dot attached to it. It can be used to indicate the user status.
-      </p>
+      <p>The Avatar group can be a dot attached to it. It can be used to indicate the user status.</p>
     </div>
     <div class="flex flex-wrap items-center gap-2">
       <!-- large -->

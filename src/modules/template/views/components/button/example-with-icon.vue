@@ -13,9 +13,7 @@ const codeToggle = ref(false)
       <component :is="BaseSwitch" v-model="codeToggle" label="code" />
     </div>
     <div class="flex flex-wrap items-center gap-2">
-      <button class="btn btn-primary btn-with-icon">
-        <i class="i-fas-user block"></i> <span>Button</span>
-      </button>
+      <button class="btn btn-primary btn-with-icon"><i class="i-fas-user block"></i> <span>Button</span></button>
       <button class="btn btn-secondary btn-with-icon rounded-full">
         <i class="i-fas-user block"></i> <span>Button</span>
       </button>

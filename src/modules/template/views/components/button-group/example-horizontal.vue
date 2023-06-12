@@ -15,21 +15,13 @@ const codeToggle = ref(false)
     <div class="flex flex-col gap-4">
       <div class="btn-group">
         <button type="button" class="btn btn-primary rounded-r-none border-r-none">Left</button>
-        <button type="button" class="btn btn-outline-primary rounded-none border-r-none">
-          Middle
-        </button>
+        <button type="button" class="btn btn-outline-primary rounded-none border-r-none">Middle</button>
         <button type="button" class="btn btn-outline-primary rounded-l-none">Right</button>
       </div>
       <div class="btn-group">
-        <button type="button" class="btn btn-secondary rounded-l-full rounded-r-none border-r-none">
-          Left
-        </button>
-        <button type="button" class="btn btn-outline-secondary rounded-none border-r-none">
-          Middle
-        </button>
-        <button type="button" class="btn btn-outline-secondary rounded-l-none rounded-r-full">
-          Right
-        </button>
+        <button type="button" class="btn btn-secondary rounded-l-full rounded-r-none border-r-none">Left</button>
+        <button type="button" class="btn btn-outline-secondary rounded-none border-r-none">Middle</button>
+        <button type="button" class="btn btn-outline-secondary rounded-l-none rounded-r-full">Right</button>
       </div>
     </div>
     <div

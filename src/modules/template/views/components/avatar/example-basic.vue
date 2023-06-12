@@ -14,8 +14,7 @@ const codeToggle = ref(false)
     </div>
     <div>
       <p>
-        The Avatar component creates a scalable, colorable element that can have text, icon or image
-        within its shape.
+        The Avatar component creates a scalable, colorable element that can have text, icon or image within its shape.
       </p>
     </div>
     <div class="flex flex-wrap items-center gap-2">

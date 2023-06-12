@@ -22,8 +22,8 @@ import ExampleHorizontal from './example-horizontal.vue'
     </div>
     <div class="main-content-body">
       <p>
-        The input element with a type attribute whose value is "text" represents a one-line plain
-        text edit control for the input element’s value.
+        The input element with a type attribute whose value is "text" represents a one-line plain text edit control for
+        the input element’s value.
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleHorizontal" />

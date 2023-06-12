@@ -27,8 +27,8 @@ import ExampleAnimate from './example-animate.vue'
     </div>
     <div class="main-content-body">
       <p>
-        Use the avatar component to show a visual representation of a user profile using an image
-        element or SVG object based on multiple styles and sizes
+        Use the avatar component to show a visual representation of a user profile using an image element or SVG object
+        based on multiple styles and sizes
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleInitial" />

@@ -13,17 +13,13 @@ const codeToggle = ref(false)
       <component :is="BaseSwitch" v-model="codeToggle" label="code" />
     </div>
     <div class="flex flex-col gap-4">
-      <div
-        class="h-20 w-full flex items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-500"
-      >
+      <div class="h-20 w-full flex items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-500">
         <p class="text-xl">Sample Content</p>
       </div>
       <div class="divider-vertical">
         <div class="divider-vertical-line"></div>
       </div>
-      <div
-        class="h-20 w-full flex items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-500"
-      >
+      <div class="h-20 w-full flex items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-500">
         <p class="text-xl">Sample Content</p>
       </div>
     </div>

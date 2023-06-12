@@ -21,9 +21,8 @@ import ExampleSize from './example-size.vue'
     </div>
     <div class="main-content-body">
       <p>
-        The modal component can be used as an interactive dialog on top of the main content area of
-        the website to show notifications and gather information using form elements from your
-        website users.
+        The modal component can be used as an interactive dialog on top of the main content area of the website to show
+        notifications and gather information using form elements from your website users.
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleSize" />

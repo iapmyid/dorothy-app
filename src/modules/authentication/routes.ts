@@ -4,6 +4,6 @@ export const routes = {
     {
       path: '/signin',
       component: () => import('./views/page-signin.vue')
-    },
+    }
   ]
 }

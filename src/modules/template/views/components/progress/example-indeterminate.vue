@@ -13,10 +13,7 @@ const codeToggle = ref(false)
       <component :is="BaseSwitch" v-model="codeToggle" label="code" />
     </div>
     <div>
-      <p>
-        You can use indeterminate mode for the progress bar when you do not know how long an
-        operation will take.
-      </p>
+      <p>You can use indeterminate mode for the progress bar when you do not know how long an operation will take.</p>
     </div>
     <div class="flex flex-wrap items-center gap-4">
       <div class="progress-container progress-xs">

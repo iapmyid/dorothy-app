@@ -39,13 +39,7 @@ const codeToggle = ref(false)
             type="email"
             placeholder="johndoe@example.com"
           ></component>
-          <component
-            :is="BaseInput"
-            border="full"
-            v-model="form.phone"
-            label="Phone"
-            type="tel"
-          ></component>
+          <component :is="BaseInput" border="full" v-model="form.phone" label="Phone" type="tel"></component>
           <component
             :is="BaseInput"
             border="full"

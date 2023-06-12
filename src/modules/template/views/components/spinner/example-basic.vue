@@ -13,9 +13,7 @@ const codeToggle = ref(false)
       <component :is="BaseSwitch" v-model="codeToggle" label="code" />
     </div>
     <div>
-      <p>
-        A Spinner component is used to show the user a timely process is currently taking place.
-      </p>
+      <p>A Spinner component is used to show the user a timely process is currently taking place.</p>
     </div>
     <div class="flex gap-4">
       <span class="spinner spinner-primary" />

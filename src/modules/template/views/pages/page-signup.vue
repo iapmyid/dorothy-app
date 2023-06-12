@@ -13,9 +13,7 @@ const form = ref({
   <div class="mx-auto max-w-xl w-full p-4 sm:px-5">
     <div class="text-center">
       <div class="mt-4">
-        <h2 class="text-2xl font-semibold text-slate-600 dark:text-slate-100">
-          Welcome To Pointhub
-        </h2>
+        <h2 class="text-2xl font-semibold text-slate-600 dark:text-slate-100">Welcome To Pointhub</h2>
         <p class="text-slate-400 dark:text-slate-300">Please sign up to continue</p>
       </div>
     </div>
@@ -70,9 +68,7 @@ const form = ref({
           />
           <p class="line-clamp-1">
             I agree with
-            <a href="#" class="text-slate-400 dark:text-slate-300 hover:underline">
-              privacy policy
-            </a>
+            <a href="#" class="text-slate-400 dark:text-slate-300 hover:underline"> privacy policy </a>
           </p>
         </div>
         <button class="btn btn-primary btn-block">Submit</button>
@@ -80,10 +76,7 @@ const form = ref({
       <div class="text-xs+ mt-4 text-center">
         <p class="line-clamp-1">
           <span>Already have an account? </span>
-          <a
-            class="text-blue-500 transition-colors dark:text-slate hover:text-blue-600 dark:hover:text-info"
-            href="#"
-          >
+          <a class="text-blue-500 transition-colors dark:text-slate hover:text-blue-600 dark:hover:text-info" href="#">
             Sign In
           </a>
         </p>

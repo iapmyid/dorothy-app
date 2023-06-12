@@ -15,19 +15,14 @@ const codeToggle = ref(false)
       <component :is="BaseSwitch" v-model="codeToggle" label="code" />
     </div>
     <div>
-      <p>
-        The accordion component allows the user to show and hide sections of related content on a
-        page.
-      </p>
+      <p>The accordion component allows the user to show and hide sections of related content on a page.</p>
     </div>
     <div class="flex gap-4">
       <component :is="BasePopper" placement="bottom-start">
         <button class="btn btn-primary">Trigger element</button>
         <template #content>
           <div class="popper-root">
-            <div
-              class="rounded-t-lg bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-200"
-            >
+            <div class="rounded-t-lg bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-200">
               <div class="mb-2 flex items-center justify-between px-4 pt-2">
                 <div class="flex items-center space-x-2">
                   <h3 class="font-medium text-slate-700 dark:text-slate-100">Notifications</h3>
@@ -106,9 +101,7 @@ const codeToggle = ref(false)
                 <div class="mt-8 pb-8 text-center">
                   <img class="mx-auto w-36" src="@/assets/images/no-data.svg" alt="image" />
                   <div class="mt-5">
-                    <p class="text-base font-semibold text-slate-700 dark:text-slate-100">
-                      Empty logs
-                    </p>
+                    <p class="text-base font-semibold text-slate-700 dark:text-slate-100">Empty logs</p>
                     <p class="text-slate-400 dark:text-slate-300">There are no unread logs</p>
                   </div>
                 </div>

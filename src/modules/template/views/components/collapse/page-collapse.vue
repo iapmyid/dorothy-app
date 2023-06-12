@@ -20,8 +20,8 @@ import ExampleBasic from './example-basic.vue'
     </div>
     <div class="main-content-body">
       <p>
-        The Collapse component is used to create regions of content that can expand/collapse with a
-        simple animation. It helps to hide content that's not immediately relevant to the user.
+        The Collapse component is used to create regions of content that can expand/collapse with a simple animation. It
+        helps to hide content that's not immediately relevant to the user.
       </p>
       <component :is="ExampleBasic" />
       <!-- API -->
@@ -48,8 +48,8 @@ import ExampleBasic from './example-basic.vue'
                     <span class="highlight">false</span>
                   </p>
                   <p>
-                    Because collapse uses the accordion component, so to change the behavior of the
-                    accordion you need to change this value to <span class="highlight">true</span>
+                    Because collapse uses the accordion component, so to change the behavior of the accordion you need
+                    to change this value to <span class="highlight">true</span>
                   </p>
                 </td>
               </tr>

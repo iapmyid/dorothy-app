@@ -21,9 +21,8 @@ import ExampleDuration from './example-duration.vue'
     </div>
     <div class="main-content-body">
       <p>
-        The toast component can be used to enhance your website’s interactivity by pushing
-        notifications to your visitors. You can choose from multiple styles, colors, sizes, and
-        positions and even dismiss the component
+        The toast component can be used to enhance your website’s interactivity by pushing notifications to your
+        visitors. You can choose from multiple styles, colors, sizes, and positions and even dismiss the component
       </p>
       <component :is="ExampleBasic" />
       <component :is="ExampleDuration" />

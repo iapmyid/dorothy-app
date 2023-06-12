@@ -13,9 +13,7 @@ const codeToggle = ref(false)
       <component :is="BaseSwitch" v-model="codeToggle" label="code" />
     </div>
     <div class="flex gap-4">
-      <button class="btn btn-primary" v-tippy="{ content: 'Hi, this is tooltip' }">
-        Hover this button
-      </button>
+      <button class="btn btn-primary" v-tippy="{ content: 'Hi, this is tooltip' }">Hover this button</button>
       <button class="btn btn-primary" v-tippy="'Hi, this is tooltip'">Hover this button</button>
     </div>
     <div

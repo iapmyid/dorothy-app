@@ -35,8 +35,7 @@ const value = computed({
       class="form-checkbox h-5 w-5 rounded"
       :class="{
         'checked:border-primary checked:bg-primary border-primary': props.theme === 'primary',
-        'checked:border-secondary checked:bg-secondary border-secondary':
-          props.theme === 'secondary',
+        'checked:border-secondary checked:bg-secondary border-secondary': props.theme === 'secondary',
         'checked:border-info checked:bg-info border-info': props.theme === 'info',
         'checked:border-success checked:bg-success border-success': props.theme === 'success',
         'checked:border-warning checked:bg-warning border-warning': props.theme === 'warning',

@@ -20,10 +20,7 @@ import ExampleSlot from './example-slot.vue'
       />
     </div>
     <div class="main-content-body">
-      <p>
-        A tree view represents a hierarchical view of information, where each item can have a number
-        of subitems.
-      </p>
+      <p>A tree view represents a hierarchical view of information, where each item can have a number of subitems.</p>
       <component :is="ExampleBasic" />
       <component :is="ExampleSlot" />
     </div>
