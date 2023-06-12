@@ -49,7 +49,10 @@ const onDelete = async () => {
     <div class="main-content-header">
       <h1>User</h1>
       <base-divider orientation="horizontal" />
-      <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'User', path: '/user' }, { name: route.params.id.toString() }]" />
+      <component
+        :is="BaseBreadcrumb"
+        :breadcrumbs="[{ name: 'User', path: '/user' }, { name: route.params.id.toString() }]"
+      />
     </div>
     <div class="main-content-body">
       <div class="card card-template">
@@ -63,7 +66,10 @@ const onDelete = async () => {
               </router-link>
             </div>
             <div>
-              <router-link :to="`/user/${route.params.id}/edit`" class="btn btn-secondary btn-sm rounded-none space-x-1">
+              <router-link
+                :to="`/user/${route.params.id}/edit`"
+                class="btn btn-secondary btn-sm rounded-none space-x-1"
+              >
                 <i class="i-far-pen-to-square block"></i>
                 <span>Edit</span>
               </router-link>

@@ -21,9 +21,7 @@ export default function presetIcon(): Preset {
           fad: async (iconName: string) =>
             await fetch(`${fontawesomeUrl}/duotone/${iconName}.svg`).then((res) => res.text()),
           fasr: async (iconName: string) =>
-            await fetch(`${fontawesomeUrl}/sharp-regular/${iconName}.svg`).then((res) =>
-              res.text()
-            ),
+            await fetch(`${fontawesomeUrl}/sharp-regular/${iconName}.svg`).then((res) => res.text()),
           fass: async (iconName: string) =>
             await fetch(`${fontawesomeUrl}/sharp-solid/${iconName}.svg`).then((res) => res.text()),
           fasl: async (iconName: string) =>

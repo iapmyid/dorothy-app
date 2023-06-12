@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { BaseBreadcrumb } from '@/components/index'
 import { BaseDivider } from '@/components/index'
 import { BaseInput } from '@/components/index'
@@ -15,7 +15,7 @@ const router = useRouter()
 const searchAll = ref('')
 const isLoadingSearch = ref(false)
 
-interface UserInterface {
+export interface UserInterface {
   _id: string
   name: string
   username: string
@@ -32,13 +32,13 @@ const getUsers = async (page = 1, search = '') => {
       filter: {
         username: search,
         name: search,
-        role: search,
-      },
-    },
+        role: search
+      }
+    }
   })
 
   users.value = result.data.data
-  
+
   pagination.page.value = result.data.pagination.page
   pagination.pageCount.value = result.data.pagination.pageCount
   pagination.pageSize.value = result.data.pagination.pageSize
@@ -117,13 +117,7 @@ const paginate = async (page: number) => {
                 <i class="i-far-pen-to-square block"></i>
                 <router-link to="/user/create">Add New</router-link>
               </button>
-              <component
-                :is="BaseInput"
-                v-model="searchAll"
-                placeholder="Search"
-                border="full"
-                class="flex-1"
-              >
+              <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
                 </template>
@@ -153,7 +147,7 @@ const paginate = async (page: number) => {
               </thead>
               <tbody>
                 <template v-if="users.length > 0">
-                  <tr v-for="(user, index) in users" :key="user._id" class="basic-table-row">
+                  <tr v-for="user in users" :key="user._id" class="basic-table-row">
                     <td class="basic-table-body">
                       <router-link :to="`/user/${user._id}`" class="text-info">{{ user.name }}</router-link>
                     </td>
@@ -164,21 +158,28 @@ const paginate = async (page: number) => {
               </tbody>
             </table>
           </div>
-
           <div class="w-full flex items-center justify-between">
             <div>
               <p class="text-sm text-slate-600 dark:text-slate-400">
-                Showing {{ pagination.dataFrom() }} to {{ pagination.dataTo() }} of {{ pagination.totalDocument }} entries
+                Showing {{ pagination.dataFrom() }} to {{ pagination.dataTo() }} of
+                {{ pagination.totalDocument }} entries
               </p>
             </div>
             <div class="btn-group" v-if="pagination.pageCount.value > 1">
               <button @click="paginatePrev()" type="button" class="btn btn-light-dark rounded-r-none">
                 <i class="i-fas-angle-left block"></i>
               </button>
-              <button v-for="page in pagination.pageCount.value" type="button" class="btn rounded border-r-none" :class="{
-                'btn-secondary': page === pagination.page.value,
-                'btn-light-dark': page !== pagination.page.value,
-              }" @click="paginate(page)">
+              <button
+                v-for="page in pagination.pageCount.value"
+                :key="page"
+                type="button"
+                class="btn rounded border-r-none"
+                :class="{
+                  'btn-secondary': page === pagination.page.value,
+                  'btn-light-dark': page !== pagination.page.value
+                }"
+                @click="paginate(page)"
+              >
                 {{ page }}
               </button>
               <button @click="paginateNext()" type="button" class="btn btn-light-dark rounded-l-none">
