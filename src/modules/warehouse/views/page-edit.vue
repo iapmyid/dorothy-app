@@ -1,12 +1,60 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { BaseBreadcrumb } from '@/components/index'
-import { BaseDivider } from '@/components/index'
-import { BaseInput } from '@/components/index'
+import { ref, onMounted } from 'vue'
+import { AxiosError } from 'axios'
+import { BaseBreadcrumb, BaseDivider, BaseInput } from '@/components/index'
+import { useBaseNotification, TypesEnum } from '@/composable/notification'
+import { useRoute, useRouter } from 'vue-router'
+import axios from '@/axios'
+
+const { notification } = useBaseNotification()
+const route = useRoute()
+const router = useRouter()
+
+const _id = ref('')
 
 const form = ref({
   name: ''
 })
+
+onMounted(async () => {
+  try {
+    const result = await axios.get(`/v1/warehouses/${route.params.id}`)
+
+    if (result.status === 200) {
+      _id.value = result.data._id
+      form.value.name = result.data.name
+    } else {
+      router.push('/404')
+    }
+  } catch (error) {
+    router.push('/404')
+  }
+})
+
+const errors = ref()
+const isSubmitted = ref(false)
+
+const onSubmit = async () => {
+  try {
+    isSubmitted.value = true
+    const response = await axios.patch(`/v1/warehouses/${_id.value}`, form.value)
+
+    if (response.status === 204) {
+      router.push('/warehouse')
+    }
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      errors.value = error.response?.data.errors
+      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+    } else if (error instanceof AxiosError) {
+      notification(error.code as string, error.message, { type: TypesEnum.Warning })
+    } else {
+      notification('Unknown Error', '', { type: TypesEnum.Warning })
+    }
+  } finally {
+    isSubmitted.value = false
+  }
+}
 </script>
 
 <template>
@@ -18,7 +66,7 @@ const form = ref({
         :is="BaseBreadcrumb"
         :breadcrumbs="[
           { name: 'Warehouse', path: '/warehouse' },
-          { name: '1', path: '/warehouse/1' },
+          { name: route.params.id.toString(), path: `/warehouse/${route.params.id.toString()}` },
           { name: 'Edit' }
         ]"
       />
@@ -29,9 +77,9 @@ const form = ref({
           <h2>Edit Warehouse</h2>
         </div>
         <div class="flex flex-col gap-4">
-          <form action="" method="post" class="space-y-5">
+          <form @submit.prevent="onSubmit()" class="space-y-5">
             <div class="space-y-2">
-              <component :is="BaseInput" required v-model="form.name" label="name"></component>
+              <component :is="BaseInput" required v-model="form.name" label="Name"></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>
