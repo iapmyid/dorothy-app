@@ -1,10 +1,103 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { BaseBreadcrumb } from '@/components/index'
 import { BaseDivider } from '@/components/index'
 import { BaseInput } from '@/components/index'
+import { watchDebounced } from '@vueuse/core'
+import { useNumeric } from '@/composable/numeric'
+import { usePagination } from '@/composable/pagination'
+import { useRoute, useRouter } from 'vue-router'
+import axios from '@/axios'
+
+const pagination = usePagination()
+const numeric = useNumeric()
+const route = useRoute()
+const router = useRouter()
 
 const searchAll = ref('')
+const isLoadingSearch = ref(false)
+
+export interface ItemInterface {
+  _id: string
+  name: string
+  sellingPrice: number
+}
+const items = ref<ItemInterface[]>([])
+
+const getItems = async (page = 1, search = '') => {
+  const result = await axios.get('/v1/items', {
+    params: {
+      pageSize: 10,
+      page: page,
+      sort: 'name',
+      filter: {
+        name: search
+      }
+    }
+  })
+
+  items.value = result.data.data
+
+  pagination.page.value = result.data.pagination.page
+  pagination.pageCount.value = result.data.pagination.pageCount
+  pagination.pageSize.value = result.data.pagination.pageSize
+  pagination.totalDocument.value = result.data.pagination.totalDocument
+}
+
+watchDebounced(
+  searchAll,
+  async () => {
+    router.replace({
+      path: route.path,
+      query: {
+        ...route.query,
+        page: pagination.previousPage(),
+        search: searchAll.value
+      }
+    })
+    isLoadingSearch.value = true
+    await getItems(1, searchAll.value)
+    isLoadingSearch.value = false
+  },
+  { debounce: 500, maxWait: 1000 }
+)
+
+onMounted(async () => {
+  const page = Number(route.query.page ?? 1)
+  searchAll.value = route.query.search?.toString() ?? ''
+  await getItems(page, searchAll.value)
+})
+
+const paginatePrev = async () => {
+  router.replace({
+    path: route.path,
+    query: {
+      ...route.query,
+      page: pagination.previousPage()
+    }
+  })
+  await getItems(pagination.previousPage(), searchAll.value)
+}
+const paginateNext = async () => {
+  router.replace({
+    path: route.path,
+    query: {
+      ...route.query,
+      page: pagination.nextPage()
+    }
+  })
+  await getItems(pagination.nextPage(), searchAll.value)
+}
+const paginate = async (page: number) => {
+  router.replace({
+    path: route.path,
+    query: {
+      ...route.query,
+      page: page
+    }
+  })
+  await getItems(page, searchAll.value)
+}
 </script>
 
 <template>
@@ -20,8 +113,7 @@ const searchAll = ref('')
           <div class="w-full flex items-center gap-4">
             <div class="w-full flex space-x-2">
               <router-link to="/item/create" class="btn btn-secondary rounded-none space-x-1">
-                <i class="i-far-pen-to-square block"></i>
-                <span>Add New</span>
+                <i class="i-far-pen-to-square block"></i> Add New
               </router-link>
               <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
@@ -39,31 +131,50 @@ const searchAll = ref('')
                       <p>Name</p>
                     </div>
                   </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
+                      <p>Selling Price</p>
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                <tr class="basic-table-row">
-                  <td class="basic-table-body">
-                    <router-link to="/item/1" class="text-info">Item</router-link>
-                  </td>
-                </tr>
+                <template v-if="items.length > 0">
+                  <tr v-for="item in items" :key="item._id" class="basic-table-row">
+                    <td class="basic-table-body">
+                      <router-link :to="`/item/${item._id}`" class="text-info">{{ item.name }}</router-link>
+                    </td>
+                    <td class="basic-table-body">{{ numeric.format(item.sellingPrice) }}</td>
+                  </tr>
+                </template>
               </tbody>
             </table>
           </div>
           <div class="w-full flex items-center justify-between">
             <div>
-              <p class="text-sm text-slate-600 dark:text-slate-400">Showing 1 to 10 of 23 entries</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">
+                Showing {{ pagination.dataFrom() }} to {{ pagination.dataTo() }} of
+                {{ pagination.totalDocument }} entries
+              </p>
             </div>
-            <div class="btn-group">
-              <button type="button" class="btn btn-light-dark rounded-r-none">
+            <div class="btn-group" v-if="pagination.pageCount.value > 1">
+              <button @click="paginatePrev()" type="button" class="btn btn-light-dark rounded-r-none">
                 <i class="i-fas-angle-left block"></i>
               </button>
-              <button type="button" class="btn btn-secondary rounded border-r-none">1</button>
-              <button type="button" class="btn btn-light-dark rounded-none border-r-none">2</button>
-              <button type="button" class="btn btn-light-dark rounded-none border-r-none">3</button>
-              <button type="button" class="btn btn-light-dark rounded-none border-r-none">4</button>
-              <button type="button" class="btn btn-light-dark rounded-none border-r-none">5</button>
-              <button type="button" class="btn btn-light-dark rounded-l-none">
+              <button
+                v-for="page in pagination.pageCount.value"
+                :key="page"
+                type="button"
+                class="btn rounded border-r-none"
+                :class="{
+                  'btn-secondary': page === pagination.page.value,
+                  'btn-light-dark': page !== pagination.page.value
+                }"
+                @click="paginate(page)"
+              >
+                {{ page }}
+              </button>
+              <button @click="paginateNext()" type="button" class="btn btn-light-dark rounded-l-none">
                 <i class="i-fas-angle-right block"></i>
               </button>
             </div>
