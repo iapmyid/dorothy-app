@@ -21,8 +21,6 @@ const onSubmit = async () => {
   try {
     isSubmitted.value = true
 
-    form.value.sellingPrice.toString().replace(/(\d+),(?=\d+(\D|$))/g, '$1')
-
     const response = await axios.post('/v1/items', form.value)
 
     if (response.status === 201) {
