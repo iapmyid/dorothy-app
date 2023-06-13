@@ -9,13 +9,16 @@ export interface Props {
   placeholder?: string
   border?: 'full' | 'simple' | 'none'
   list: OptionsInterface[]
+  required?: boolean
+  readonly?: boolean
+  disabled?: boolean
   helper?: string
   errors?: string[]
 }
 </script>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import {
   Combobox,
   ComboboxInput,
@@ -27,7 +30,15 @@ import {
 
 const props = withDefaults(defineProps<Props>(), {
   border: 'simple',
-  placeholder: 'Choose one'
+  placeholder: 'Choose one',
+  required: false,
+  readonly: false,
+  disabled: false
+})
+
+watch(props, () => {}, {
+  deep: true,
+  immediate: true
 })
 
 const emit = defineEmits<{
@@ -54,10 +65,14 @@ let filtered = computed(() =>
 
 <template>
   <Combobox v-model="selected">
-    <div class="relative mt-1">
+    <div class="relative w-full mt-1">
       <div class="relative">
         <ComboboxInput
           class="form-input"
+          autocomplete="off"
+          :required="props.required"
+          :readonly="props.readonly"
+          :disabled="props.disabled"
           :placeholder="placeholder"
           :class="{
             border: props.border === 'full',
@@ -68,13 +83,14 @@ let filtered = computed(() =>
           @change="query = $event.target.value"
         />
         <ComboboxButton
-          v-if="Object.keys(selected).length === 0"
+          v-if="Object.keys(selected ?? {}).length === 0"
           class="absolute inset-y-0 right-0 flex items-center pr-2"
         >
           <i class="i-far-angle-down block"></i>
         </ComboboxButton>
         <button
-          v-if="Object.keys(selected).length > 0"
+          type="button"
+          v-if="Object.keys(selected ?? {}).length > 0"
           class="absolute inset-y-0 right-0 flex items-center pr-2"
           @click="selected = {}"
         >
