@@ -38,20 +38,19 @@ const emit = defineEmits<{
 }>()
 
 watch(
-  props,
+  () => props.modelValue,
   () => {
     inputValue.value = numeric.format(props.modelValue)
   },
   {
-    immediate: true,
-    deep: true
+    immediate: true
   }
 )
 
 watch(
   inputValue,
   () => {
-    emit('update:modelValue', inputValue.value.toString().replace(/(\d+),(?=\d+(\D|$))/g, '$1'))
+    emit('update:modelValue', parseFloat(inputValue.value.toString().replace(/(\d+),(?=\d+(\D|$))/g, '$1')))
   },
   {
     immediate: true

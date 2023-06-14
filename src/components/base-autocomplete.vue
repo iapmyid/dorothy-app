@@ -36,11 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false
 })
 
-watch(props, () => {}, {
-  deep: true,
-  immediate: true
-})
-
 const emit = defineEmits<{
   (e: 'update:modelValue', value: any): void
 }>()
