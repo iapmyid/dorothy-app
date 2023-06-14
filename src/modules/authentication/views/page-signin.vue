@@ -1,12 +1,45 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { AxiosError } from 'axios'
+import { ref, onMounted } from 'vue'
 import { BaseInput } from '@/components/index'
+import { useRoute, useRouter } from 'vue-router'
+import { useBaseNotification, TypesEnum } from '@/composable/notification'
+import { useAuthStore } from '@/stores/auth'
+import axios from '@/axios'
+
+const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
+const { notification } = useBaseNotification()
 
 const form = ref({
-  email: '',
   username: '',
   password: ''
 })
+
+const errors = ref()
+const isSubmitted = ref(false)
+const onSignin = async () => {
+  try {
+    isSubmitted.value = true
+    const response = await authStore.login(form.value.username, form.value.password)
+
+    if (response.status === 200) {
+      router.push('/')
+    }
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      errors.value = error.response?.data.errors
+      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+    } else if (error instanceof AxiosError) {
+      notification(error.code as string, error.message, { type: TypesEnum.Warning })
+    } else {
+      notification('Unknown Error', '', { type: TypesEnum.Warning })
+    }
+  } finally {
+    isSubmitted.value = false
+  }
+}
 </script>
 
 <template>
@@ -26,7 +59,7 @@ const form = ref({
             </div>
           </div>
         </div>
-        <form @submit.prevent="" method="post" class="space-y-10">
+        <form @submit.prevent="onSignin()" method="post" class="space-y-10">
           <div class="space-y-5">
             <component :is="BaseInput" required border="simple" v-model="form.username" label="Username">
               <template #prefix>

@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth'
 import { useSidebarStore } from '@/stores/sidebar'
 import { useSidebarMenuStore } from '@/stores/sidebar-menu'
 
 const sidebarMenuStore = useSidebarMenuStore()
 const sidebarStore = useSidebarStore()
+const authStore = useAuthStore()
 </script>
 
 <template>
@@ -32,7 +34,7 @@ const sidebarStore = useSidebarStore()
         </router-link>
       </div>
       <div class="my-2">
-        <button class="sidebar-shortcut-link">
+        <button type="button" @click="authStore.logout()" class="sidebar-shortcut-link">
           <i class="i-fas-power-off block text-2xl"></i>
         </button>
       </div>

@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/auth'
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
 export const routes = {
@@ -14,6 +15,11 @@ export const routes = {
     }
   ],
   beforeEnter: async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    next()
+    const authStore = useAuthStore()
+    if (!(await authStore.isAuthenticated())) {
+      next('/signin')
+    } else {
+      next()
+    }
   }
 }

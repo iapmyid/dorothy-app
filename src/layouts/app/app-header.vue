@@ -1,8 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { BaseDropdown } from '@/components/index'
-import ComponentToggleSidebar from './component-toggle-sidebar.vue'
 import { appName } from '@/config/app'
+import ComponentToggleSidebar from './component-toggle-sidebar.vue'
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+
+const authStore = useAuthStore()
+const router = useRouter()
+
+const onSignout = () => {
+  authStore.logout()
+  router.push('/signin')
+}
 
 const htmlTag = document.getElementsByTagName('html')[0]
 const isDarkMode = ref(htmlTag.classList.contains('dark'))
@@ -43,21 +53,11 @@ function toggleDarkMode() {
                   <img class="mask mask-squircle" src="https://via.placeholder.com/150" />
                 </div>
                 <div class="hidden lg:block">
-                  <span class="block">John Doe</span>
-                  <span class="block text-xs">Admin Purchasing</span>
+                  <span class="block">{{ authStore.$state.user.name }}</span>
+                  <span class="block text-xs">{{ authStore.$state.user.role }}</span>
                 </div>
               </div>
             </template>
-            <div class="p-1">
-              <div class="flex items-center gap-2 p-2">
-                <i class="i-far-circle-user block"></i>
-                <span>Profile</span>
-              </div>
-              <div class="flex items-center gap-2 p-2">
-                <i class="i-far-gear block"></i>
-                <span>Setting</span>
-              </div>
-            </div>
             <div class="p-1">
               <button @click="toggleDarkMode()" class="w-full flex items-center rounded-md px-2 py-2 text-sm space-x-2">
                 <i v-if="isDarkMode" class="i-ph-sun block"></i>
@@ -66,10 +66,10 @@ function toggleDarkMode() {
               </button>
             </div>
             <div class="p-1">
-              <div class="flex items-center gap-2 p-2">
+              <button @click="onSignout()" class="flex items-center gap-2 p-2">
                 <i class="i-far-power-off block"></i>
                 <span>Logout</span>
-              </div>
+              </button>
             </div>
           </component>
         </div>
