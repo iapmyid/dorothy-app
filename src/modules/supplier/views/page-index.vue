@@ -117,7 +117,7 @@ const paginate = async (page: number) => {
             <div class="w-full flex space-x-2">
               <router-link class="btn btn-secondary rounded-none space-x-1" to="/supplier/create">
                 <i class="i-far-pen-to-square block"></i>
-                Add New
+                <p>Add New</p>
               </router-link>
               <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
