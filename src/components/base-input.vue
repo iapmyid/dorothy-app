@@ -20,6 +20,7 @@ interface Props {
 import { computed, onMounted, ref } from 'vue'
 
 const props = withDefaults(defineProps<Props>(), {
+  modelValue: '',
   border: 'simple',
   layout: 'vertical',
   type: 'text',
@@ -46,6 +47,12 @@ const paddingRight = ref(0)
 onMounted(() => {
   paddingLeft.value = prefixRef.value.clientWidth === 0 ? 10 : prefixRef.value.clientWidth
   paddingRight.value = suffixRef.value.clientWidth === 0 ? 10 : suffixRef.value.clientWidth
+
+  // need delay to be able read clientWidth properly
+  setTimeout(() => {
+    paddingLeft.value = prefixRef.value.clientWidth === 0 ? 10 : prefixRef.value.clientWidth
+    paddingRight.value = suffixRef.value.clientWidth === 0 ? 10 : suffixRef.value.clientWidth
+  }, 100)
 })
 </script>
 
