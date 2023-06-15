@@ -34,7 +34,7 @@ const form = ref({
   name: '',
   size: [
     {
-      label: 'allSize',
+      label: 'all size',
       quantity: 0
     },
     {

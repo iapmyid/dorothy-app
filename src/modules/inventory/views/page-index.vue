@@ -20,7 +20,7 @@ const item_id = ref('')
 const size = ref('')
 
 const listSize = [
-  { id: 1, label: 'allSize' },
+  { id: 1, label: 'all size' },
   { id: 2, label: 's' },
   { id: 3, label: 'm' },
   { id: 4, label: 'l' },
