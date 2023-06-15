@@ -19,6 +19,7 @@ export interface ShortcutInterface {
 
 export interface MenuInterface {
   name: string
+  allowed: string[]
   path?: string
   link?: string
   separator?: boolean
@@ -104,51 +105,63 @@ const menuMain = {
   menu: [
     {
       name: 'Dashboard',
-      path: '/dashboard'
+      path: '/dashboard',
+      allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
     },
     {
       name: 'User',
-      path: '/user'
+      path: '/user',
+      allowed: ['administrator']
     },
     {
       name: 'Warehouse',
-      path: '/warehouse'
+      path: '/warehouse',
+      allowed: ['administrator']
     },
     {
       name: 'Supplier',
-      path: '/supplier'
+      path: '/supplier',
+      allowed: ['administrator', 'admin purchasing', 'admin stock']
     },
     {
       name: 'Customer',
-      path: '/customer'
+      path: '/customer',
+      allowed: ['administrator', 'cashier']
     },
     {
       name: 'Item Category',
-      path: '/item-category'
+      path: '/item-category',
+      allowed: ['administrator', 'admin purchasing', 'admin stock']
     },
     {
       name: 'Item',
-      path: '/item'
+      path: '/item',
+      allowed: ['administrator', 'admin purchasing', 'admin stock']
     },
     {
       name: 'Inventory Report',
-      path: '/inventory-report'
+      path: '/inventory-report',
+      allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
     },
     {
       name: 'Stock Correction',
-      path: '/stock-correction'
+      path: '/stock-correction',
+      allowed: ['administrator', 'admin purchasing', 'admin stock']
     },
     {
       name: 'Transfer Item',
-      path: '/transfer-item'
+      path: '/transfer-item',
+      allowed: ['administrator', 'admin purchasing', 'admin stock']
     },
     {
       name: 'Purchase',
-      path: '/purchase'
+      path: '/purchase',
+      allowed: ['administrator', 'admin purchasing']
     },
     {
       name: 'Point of Sales',
-      path: '/pos'
+      path: '/pos',
+      allowed: ['administrator', 'cashier']
     }
   ]
 }

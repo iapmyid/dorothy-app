@@ -3,7 +3,9 @@ import { useSidebar } from '@/composable/sidebar'
 import { useSidebarStore } from '@/stores/sidebar'
 import { useSidebarMenuStore } from '@/stores/sidebar-menu'
 import { useMobileBreakpoint } from '@/composable/mobile-breakpoint'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const sidebarMenuStore = useSidebarMenuStore()
 const sidebarStore = useSidebarStore()
 const { isMobileBreakpoint } = useMobileBreakpoint()
@@ -27,77 +29,82 @@ useSidebar()
       <!-- Sidebar Panel Body -->
       <div class="sidebar-panel-body">
         <ul class="flex flex-1 flex-col px-4">
-          <li v-for="menu in sidebarMenuStore.shortcut[sidebarMenuStore.activeShortcutIndex].menu" :key="menu.name">
-            <!-- Sub Menu Wrapper -->
-            <template v-if="menu.submenu">
-              <router-link
-                v-if="menu.path"
-                :to="menu.path"
-                class="menu-link-button"
-                @click="sidebarMenuStore.toggleMenu(menu.name)"
-              >
-                <p>{{ menu.name }}</p>
-                <i
-                  v-if="menu.submenu"
-                  class="i-fas-angle-right block"
+          <template
+            v-for="menu in sidebarMenuStore.shortcut[sidebarMenuStore.activeShortcutIndex].menu"
+            :key="menu.name"
+          >
+            <li v-if="menu.allowed.includes(authStore.$state.user.role)">
+              <!-- Sub Menu Wrapper -->
+              <template v-if="menu.submenu">
+                <router-link
+                  v-if="menu.path"
+                  :to="menu.path"
+                  class="menu-link-button"
+                  @click="sidebarMenuStore.toggleMenu(menu.name)"
+                >
+                  <p>{{ menu.name }}</p>
+                  <i
+                    v-if="menu.submenu"
+                    class="i-fas-angle-right block"
+                    :class="{
+                      'rotate-90 transition transform-gpu': sidebarMenuStore.$state.activeMenuName === menu.name
+                    }"
+                  />
+                </router-link>
+                <div
+                  v-else
+                  class="menu-link-button"
+                  @click="sidebarMenuStore.toggleMenu(menu.name)"
+                  :class="{ 'font-extrabold': sidebarMenuStore.$state.activeMenuName === menu.name }"
+                >
+                  <p>{{ menu.name }}</p>
+                  <i
+                    v-if="menu.submenu"
+                    class="i-fas-angle-right block"
+                    :class="{
+                      'rotate-90 transition transform-gpu': sidebarMenuStore.$state.activeMenuName === menu.name
+                    }"
+                  />
+                </div>
+              </template>
+              <template v-else>
+                <!-- Internal Menu -->
+                <router-link v-if="menu.path" :to="menu.path as string" class="menu-link-button">
+                  {{ menu.name }}
+                </router-link>
+                <!-- External Menu -->
+                <a
+                  v-if="menu.link"
+                  :href="menu.link as string"
+                  target="_blank"
+                  class="menu-link-button !text-slate-200/80"
+                >
+                  {{ menu.name }}
+                  <i class="i-fas-up-right-from-square block"></i>
+                </a>
+              </template>
+              <div v-if="menu.submenu && menu.submenu.length > 0">
+                <ul
+                  class="submenu"
                   :class="{
-                    'rotate-90 transition transform-gpu': sidebarMenuStore.$state.activeMenuName === menu.name
+                    'max-h-[1000px]! overflow-auto bg-slate-700 p-1 rounded-lg':
+                      menu.name === sidebarMenuStore.$state.activeMenuName
                   }"
-                />
-              </router-link>
-              <div
-                v-else
-                class="menu-link-button"
-                @click="sidebarMenuStore.toggleMenu(menu.name)"
-                :class="{ 'font-extrabold': sidebarMenuStore.$state.activeMenuName === menu.name }"
-              >
-                <p>{{ menu.name }}</p>
-                <i
-                  v-if="menu.submenu"
-                  class="i-fas-angle-right block"
-                  :class="{
-                    'rotate-90 transition transform-gpu': sidebarMenuStore.$state.activeMenuName === menu.name
-                  }"
-                />
+                >
+                  <li v-for="submenu in menu.submenu" :key="submenu.name" class="overflow-hidden">
+                    <router-link :to="submenu.path as string" class="submenu-link">
+                      <div class="flex items-center space-x-2">
+                        <div class="bullet-list"></div>
+                        <p>{{ submenu.name }}</p>
+                      </div>
+                    </router-link>
+                    <div v-if="submenu.separator" class="submenu-separator"></div>
+                  </li>
+                </ul>
               </div>
-            </template>
-            <template v-else>
-              <!-- Internal Menu -->
-              <router-link v-if="menu.path" :to="menu.path as string" class="menu-link-button">
-                {{ menu.name }}
-              </router-link>
-              <!-- External Menu -->
-              <a
-                v-if="menu.link"
-                :href="menu.link as string"
-                target="_blank"
-                class="menu-link-button !text-slate-200/80"
-              >
-                {{ menu.name }}
-                <i class="i-fas-up-right-from-square block"></i>
-              </a>
-            </template>
-            <div v-if="menu.submenu && menu.submenu.length > 0">
-              <ul
-                class="submenu"
-                :class="{
-                  'max-h-[1000px]! overflow-auto bg-slate-700 p-1 rounded-lg':
-                    menu.name === sidebarMenuStore.$state.activeMenuName
-                }"
-              >
-                <li v-for="submenu in menu.submenu" :key="submenu.name" class="overflow-hidden">
-                  <router-link :to="submenu.path as string" class="submenu-link">
-                    <div class="flex items-center space-x-2">
-                      <div class="bullet-list"></div>
-                      <p>{{ submenu.name }}</p>
-                    </div>
-                  </router-link>
-                  <div v-if="submenu.separator" class="submenu-separator"></div>
-                </li>
-              </ul>
-            </div>
-            <div v-if="menu.separator" class="menu-separator"></div>
-          </li>
+              <div v-if="menu.separator" class="menu-separator"></div>
+            </li>
+          </template>
         </ul>
       </div>
     </div>
