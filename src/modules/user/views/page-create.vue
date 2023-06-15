@@ -1,19 +1,22 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { AxiosError } from 'axios'
-import { BaseBreadcrumb, BaseDivider, BaseSelect, BaseInput } from '@/components/index'
+import { BaseAutocomplete, BaseBreadcrumb, BaseDivider, BaseSelect, BaseInput } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRouter } from 'vue-router'
+import { useWarehouseApi } from '../api/warehouse'
 import axios from '@/axios'
 
 const { notification } = useBaseNotification()
 const router = useRouter()
+const warehouseApi = useWarehouseApi()
 
 const form = ref({
   name: '',
   username: '',
   password: '',
-  role: 'cashier'
+  role: 'cashier',
+  warehouse_id: ''
 })
 
 const list = [
@@ -22,9 +25,13 @@ const list = [
   { id: 3, label: 'Admin Stock' },
   { id: 4, label: 'Cashier' }
 ]
-const selected = ref(list[3])
-watch(selected, () => {
-  form.value.role = selected.value?.label?.toLowerCase() ?? ''
+const selectedRole = ref(list[3])
+watch(selectedRole, () => {
+  form.value.role = selectedRole.value?.label?.toLowerCase() ?? ''
+})
+const selectedWarehouse = ref<{ id: string; label: string }>()
+watch(selectedWarehouse, () => {
+  form.value.warehouse_id = selectedWarehouse.value?.id ?? ''
 })
 
 const errors = ref()
@@ -36,8 +43,6 @@ const onSubmit = async () => {
     const response = await axios.post('/v1/users', form.value)
 
     if (response.status === 201) {
-      form.value.name = ''
-      form.value.username = ''
       router.push('/user')
     }
   } catch (error) {
@@ -53,6 +58,10 @@ const onSubmit = async () => {
     isSubmitted.value = false
   }
 }
+
+onMounted(async () => {
+  await warehouseApi.fetchListWarehouse()
+})
 </script>
 
 <template>
@@ -71,14 +80,39 @@ const onSubmit = async () => {
           <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
             <div class="space-y-2">
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
-              <component :is="BaseInput" required v-model="form.username" label="Username"></component>
-              <component :is="BaseInput" type="password" required v-model="form.password" label="Password"></component>
-              <div class="flex flex-col items-start gap-5">
+              <component
+                :is="BaseInput"
+                required
+                v-model="form.username"
+                label="Username"
+                helper="used for user login"
+              ></component>
+              <component
+                :is="BaseInput"
+                type="password"
+                helper="minimum 8 digit"
+                required
+                v-model="form.password"
+                label="Password"
+              ></component>
+              <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Role
                   <span class="text-xs text-slate-400">(required)</span>
                 </label>
-                <component :is="BaseSelect" v-model="selected" :list="list"></component>
+                <component :is="BaseSelect" v-model="selectedRole" required :list="list"></component>
+              </div>
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold">
+                  Warehouse
+                  <span class="text-xs text-slate-400">(required)</span>
+                </label>
+                <component
+                  :is="BaseAutocomplete"
+                  required
+                  v-model="selectedWarehouse"
+                  :list="warehouseApi.listWarehouse.value"
+                ></component>
               </div>
             </div>
             <button class="btn btn-primary">Submit</button>

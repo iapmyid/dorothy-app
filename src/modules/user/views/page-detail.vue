@@ -11,10 +11,22 @@ const route = useRoute()
 const router = useRouter()
 const { notification } = useBaseNotification()
 
-const form = ref({
+export interface UserInterface {
+  name: string
+  username: string
+  role: string
+  warehouse: {
+    name: string
+  }
+}
+
+const form = ref<UserInterface>({
   name: '',
   username: '',
-  role: ''
+  role: '',
+  warehouse: {
+    name: ''
+  }
 })
 
 onMounted(async () => {
@@ -22,9 +34,11 @@ onMounted(async () => {
     const result = await axios.get(`/v1/users/${route.params.id}`)
 
     if (result.status === 200) {
+      console.log(result.data)
       form.value.name = result.data.name
       form.value.username = result.data.username
       form.value.role = result.data.role
+      form.value.warehouse.name = result.data.warehouse?.name ?? ''
     } else {
       router.push('/404')
     }
@@ -88,6 +102,7 @@ const onDelete = async () => {
               <component :is="BaseInput" readonly v-model="form.name" label="Name"></component>
               <component :is="BaseInput" readonly v-model="form.username" label="Username"></component>
               <component :is="BaseInput" readonly v-model="form.role" label="Role"></component>
+              <component :is="BaseInput" readonly v-model="form.warehouse.name" label="Warehouse"></component>
             </div>
           </div>
         </div>

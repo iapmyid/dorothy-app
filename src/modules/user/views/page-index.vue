@@ -20,6 +20,9 @@ export interface UserInterface {
   name: string
   username: string
   role: string
+  warehouse: {
+    name: string
+  }
 }
 const users = ref<UserInterface[]>([])
 
@@ -143,6 +146,11 @@ const paginate = async (page: number) => {
                       <p>Role</p>
                     </div>
                   </th>
+                  <th class="basic-table-head">
+                    <div class="flex items-center justify-between">
+                      <p>Warehouse</p>
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -153,6 +161,7 @@ const paginate = async (page: number) => {
                     </td>
                     <td class="basic-table-body">{{ user.username }}</td>
                     <td class="basic-table-body">{{ user.role }}</td>
+                    <td class="basic-table-body">{{ user.warehouse?.name }}</td>
                   </tr>
                 </template>
               </tbody>

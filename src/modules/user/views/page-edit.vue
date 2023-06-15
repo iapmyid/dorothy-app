@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { AxiosError } from 'axios'
-import { BaseBreadcrumb, BaseDivider, BaseSelect, BaseInput } from '@/components/index'
+import { BaseAutocomplete, BaseBreadcrumb, BaseDivider, BaseSelect, BaseInput } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRoute, useRouter } from 'vue-router'
+import { useWarehouseApi } from '../api/warehouse'
 import axios from '@/axios'
 
 const { notification } = useBaseNotification()
 const route = useRoute()
 const router = useRouter()
+const warehouseApi = useWarehouseApi()
 
 const _id = ref('')
 
 const form = ref({
   name: '',
   username: '',
-  role: 'cashier'
+  role: '',
+  warehouse_id: ''
 })
 
 const list = [
@@ -24,14 +27,19 @@ const list = [
   { id: 3, label: 'Admin Stock' },
   { id: 4, label: 'Cashier' }
 ]
-const selected = ref(list[1])
-
-watch(selected, () => {
-  form.value.role = selected.value.label.toLowerCase()
+const selectedRole = ref()
+watch(selectedRole, () => {
+  form.value.role = selectedRole.value.label.toLowerCase()
+})
+const selectedWarehouse = ref<{ id: string; label: string }>()
+watch(selectedWarehouse, () => {
+  form.value.warehouse_id = selectedWarehouse.value?.id ?? ''
 })
 
 onMounted(async () => {
   try {
+    warehouseApi.fetchListWarehouse()
+
     const result = await axios.get(`/v1/users/${route.params.id}`)
 
     if (result.status === 200) {
@@ -44,7 +52,10 @@ onMounted(async () => {
       const index = list.findIndex((el) => {
         return el.label.toLowerCase() === result.data.role.toLowerCase()
       })
-      selected.value = list[index < 0 ? 1 : index]
+      selectedRole.value = list[index < 0 ? 1 : index]
+      if (result.data.warehouse) {
+        selectedWarehouse.value = { id: result.data.warehouse._id, label: result.data.warehouse.name }
+      }
     } else {
       router.push('/404')
     }
@@ -103,13 +114,25 @@ const onSubmit = async () => {
             <div class="space-y-2">
               <component :is="BaseInput" required readonly v-model="form.name" label="Name"></component>
               <component :is="BaseInput" required readonly v-model="form.username" label="Username"></component>
-              <div class="flex flex-col items-start gap-5">
+              <div class="flex flex-col items-start gap-1">
                 <label class="text-sm font-bold">
                   Role
                   <span class="text-xs text-slate-400">(required)</span>
                 </label>
-                <component :is="BaseSelect" v-model="selected" :list="list"></component>
+                <component :is="BaseSelect" v-model="selectedRole" :list="list"></component>
               </div>
+            </div>
+            <div class="flex flex-col items-start gap-1">
+              <label class="text-sm font-bold">
+                Warehouse
+                <span class="text-xs text-slate-400">(required)</span>
+              </label>
+              <component
+                :is="BaseAutocomplete"
+                required
+                v-model="selectedWarehouse"
+                :list="warehouseApi.listWarehouse.value"
+              ></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>
