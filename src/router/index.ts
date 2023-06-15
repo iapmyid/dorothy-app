@@ -9,7 +9,6 @@ import { routes as customerRoutes } from '@/modules/customer/routes'
 import { routes as itemCategoryRoutes } from '@/modules/item-category/routes'
 import { routes as itemRoutes } from '@/modules/item/routes'
 import { routes as purchaseRoutes } from '@/modules/purchase/routes'
-import { routes as templateRoutes } from '@/modules/template/routes'
 
 const routes = [
   mainRoutes,
@@ -21,7 +20,6 @@ const routes = [
   itemCategoryRoutes,
   itemRoutes,
   purchaseRoutes,
-  templateRoutes,
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
