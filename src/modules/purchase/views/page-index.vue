@@ -26,6 +26,7 @@ export interface PurchaseInterface {
   totalQuantity: number
   price: number
   sellingPrice: number
+  item: object
   warehouse: object
   supplier: object
   itemCategory: object
@@ -139,17 +140,17 @@ const paginate = async (page: number) => {
                   <th class="basic-table-head">
                     <p>Date</p>
                   </th>
-                  <th class="basic-table-head text-right">
+                  <th class="basic-table-head">
                     <p>Name</p>
                   </th>
-                  <th class="basic-table-head text-right">
+                  <th class="basic-table-head">
                     <p>Warehouse</p>
                   </th>
-                  <th class="basic-table-head text-right">
+                  <th class="basic-table-head">
                     <p>Supplier</p>
                   </th>
-                  <th class="basic-table-head text-right">
-                    <p>Item Category</p>
+                  <th class="basic-table-head">
+                    <p>Category</p>
                   </th>
                   <th class="basic-table-head text-right">
                     <p>Quantity</p>
@@ -169,11 +170,13 @@ const paginate = async (page: number) => {
                       {{ format(new Date(purchase.createdAt), 'dd MMM yyyy HH:mm') }}
                     </td>
                     <td class="basic-table-body">
-                      <router-link :to="`/purchase/${purchase._id}`" class="text-info">{{ purchase.name }}</router-link>
+                      <router-link :to="`/purchase/${purchase._id}`" class="text-info">{{
+                        purchase.item?.name
+                      }}</router-link>
                     </td>
-                    <td class="basic-table-body text-right">{{ purchase.warehouse?.name }}</td>
-                    <td class="basic-table-body text-right">{{ purchase.supplier?.name }}</td>
-                    <td class="basic-table-body text-right">{{ purchase.itemCategory?.name }}</td>
+                    <td class="basic-table-body">{{ purchase.warehouse?.name }}</td>
+                    <td class="basic-table-body">{{ purchase.supplier?.name }}</td>
+                    <td class="basic-table-body">{{ purchase.itemCategory?.name }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.totalQuantity) }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.price) }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.sellingPrice) }}</td>

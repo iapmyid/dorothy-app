@@ -1,29 +1,43 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { AxiosError } from 'axios'
-import { BaseBreadcrumb, BaseDivider, BaseInput, BaseNumeric } from '@/components/index'
+import { BaseAutocomplete, BaseBreadcrumb, BaseDivider, BaseInput, BaseNumeric } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRoute, useRouter } from 'vue-router'
+import { useItemCategoryApi } from '../api/item-category'
 import axios from '@/axios'
 
 const { notification } = useBaseNotification()
 const route = useRoute()
 const router = useRouter()
+const itemCategoryApi = useItemCategoryApi()
 
 const _id = ref('')
 
 const form = ref({
   name: '',
+  itemCategory: {
+    name: ''
+  },
   sellingPrice: ''
+})
+const selectedItemCategory = ref<{ id: string; label: string }>()
+watch(selectedItemCategory, () => {
+  form.value.itemCategory_id = selectedItemCategory.value?.id ?? ''
 })
 
 onMounted(async () => {
   try {
+    itemCategoryApi.fetchListItemCategory()
+
     const result = await axios.get(`/v1/items/${route.params.id}`)
+
+    selectedItemCategory.value = { id: result.data.itemCategory._id, label: result.data.itemCategory.name }
 
     if (result.status === 200) {
       _id.value = result.data._id
       form.value.name = result.data.name
+      form.value.itemCategory.name = result.data.itemCategory.name
       form.value.sellingPrice = result.data.sellingPrice
     } else {
       router.push('/404')
@@ -82,7 +96,19 @@ const onSubmit = async () => {
           <form @submit.prevent="onSubmit()" class="space-y-5">
             <div class="space-y-2">
               <component :is="BaseInput" required v-model="form.name" label="Name"></component>
-              <component :is="BaseNumeric" v-model="form.sellingPrice" label="Selling Price"></component>
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold">
+                  Item Category
+                  <span class="text-xs text-slate-400">(required)</span>
+                </label>
+                <component
+                  :is="BaseAutocomplete"
+                  required
+                  v-model="selectedItemCategory"
+                  :list="itemCategoryApi.listItemCategory.value"
+                ></component>
+              </div>
+              <component :is="BaseNumeric" required v-model="form.sellingPrice" label="Selling Price"></component>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>

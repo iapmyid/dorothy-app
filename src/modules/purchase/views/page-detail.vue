@@ -109,15 +109,6 @@ const onDelete = async () => {
               </router-link>
             </div>
             <div>
-              <router-link
-                :to="`/purchase/${route.params.id}/edit`"
-                class="btn btn-secondary btn-sm rounded-none space-x-1"
-              >
-                <i class="i-far-pen-to-square block"></i>
-                <span>Edit</span>
-              </router-link>
-            </div>
-            <div>
               <button @click="onDelete()" type="button" class="btn btn-danger btn-sm rounded-none space-x-1">
                 <i class="i-far-trash block"></i>
                 <span>Delete</span>

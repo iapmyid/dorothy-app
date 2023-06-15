@@ -136,7 +136,7 @@ const menuMain = {
     {
       name: 'Item',
       path: '/item',
-      allowed: ['administrator', 'admin purchasing', 'admin stock']
+      allowed: ['administrator', 'admin purchasing']
     },
     {
       name: 'Inventory Report',

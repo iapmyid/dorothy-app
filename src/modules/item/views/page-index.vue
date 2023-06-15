@@ -20,6 +20,9 @@ const isLoadingSearch = ref(false)
 export interface ItemInterface {
   _id: string
   name: string
+  itemCategory: {
+    name: string
+  }
   sellingPrice: number
 }
 const items = ref<ItemInterface[]>([])
@@ -112,9 +115,6 @@ const paginate = async (page: number) => {
         <div class="flex flex-col gap-4">
           <div class="w-full flex items-center gap-4">
             <div class="w-full flex space-x-2">
-              <router-link to="/item/create" class="btn btn-secondary rounded-none space-x-1">
-                <i class="i-far-pen-to-square block"></i> Add New
-              </router-link>
               <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
@@ -131,11 +131,8 @@ const paginate = async (page: number) => {
                       <p>Name</p>
                     </div>
                   </th>
-                  <th class="basic-table-head">
-                    <div class="flex items-center justify-between">
-                      <p>Selling Price</p>
-                    </div>
-                  </th>
+                  <th class="basic-table-head">Category</th>
+                  <th class="basic-table-head text-right">Selling Price</th>
                 </tr>
               </thead>
               <tbody>
@@ -144,7 +141,8 @@ const paginate = async (page: number) => {
                     <td class="basic-table-body">
                       <router-link :to="`/item/${item._id}`" class="text-info">{{ item.name }}</router-link>
                     </td>
-                    <td class="basic-table-body">{{ numeric.format(item.sellingPrice) }}</td>
+                    <td class="basic-table-body">{{ item.itemCategory.name }}</td>
+                    <td class="basic-table-body text-right">{{ numeric.format(item.sellingPrice) }}</td>
                   </tr>
                 </template>
               </tbody>

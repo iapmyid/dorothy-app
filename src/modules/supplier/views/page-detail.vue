@@ -6,6 +6,7 @@ import { BaseInput } from '@/components/index'
 import { useRoute, useRouter } from 'vue-router'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import axios from '@/axios'
+import { AxiosError } from 'axios'
 
 const route = useRoute()
 const router = useRouter()
@@ -36,11 +37,21 @@ onMounted(async () => {
 })
 
 const onDelete = async () => {
-  if (confirm('Are you sure want to delete this data?')) {
-    const result = await axios.delete(`/v1/suppliers/${route.params.id}`)
-    if (result.status === 204) {
-      notification('', 'Delete supplier data success', { type: TypesEnum.Success })
-      router.push('/supplier')
+  try {
+    if (confirm('Are you sure want to delete this data?')) {
+      const result = await axios.delete(`/v1/suppliers/${route.params.id}`)
+      if (result.status === 204) {
+        notification('', 'Delete supplier data success', { type: TypesEnum.Success })
+        router.push('/supplier')
+      }
+    }
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+    } else if (error instanceof AxiosError) {
+      notification(error.code as string, error.message, { type: TypesEnum.Warning })
+    } else {
+      notification('Unknown Error', '', { type: TypesEnum.Warning })
     }
   }
 }

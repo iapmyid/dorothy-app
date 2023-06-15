@@ -11,10 +11,6 @@ export const routes = {
       component: () => import('./views/page-index.vue')
     },
     {
-      path: 'create',
-      component: () => import('./views/page-create.vue')
-    },
-    {
       path: ':id',
       component: () => import('./views/page-detail.vue')
     },
