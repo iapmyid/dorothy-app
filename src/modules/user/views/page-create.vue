@@ -56,7 +56,6 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  {{ form }}
   <div class="main-content-container">
     <div class="main-content-header">
       <h1>User</h1>
