@@ -19,8 +19,10 @@ const form = ref({
 })
 
 const list = [
-  { id: 1, label: 'Admin' },
-  { id: 2, label: 'Cashier' }
+  { id: 1, label: 'Administrator' },
+  { id: 2, label: 'Admin Purchasing' },
+  { id: 3, label: 'Admin Stock' },
+  { id: 4, label: 'Cashier' }
 ]
 const selected = ref(list[1])
 
