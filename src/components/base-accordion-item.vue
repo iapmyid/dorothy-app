@@ -6,7 +6,7 @@ const activeItemId = inject('activeItemId') as Ref
 
 const PADDING_HEIGHT = 32
 
-const content = ref()
+const contentRef = ref()
 const height = ref(0)
 const activeState = ref(false)
 
@@ -19,7 +19,7 @@ watch(activeItemId, () => {
 
 const updateHeight = () => {
   if (activeState.value && height.value === 0) {
-    height.value = content.value.scrollHeight + PADDING_HEIGHT
+    height.value = contentRef.value.scrollHeight + PADDING_HEIGHT
   } else {
     height.value = 0
   }
@@ -61,7 +61,7 @@ const props = withDefaults(
       ></i>
     </button>
     <div
-      ref="content"
+      ref="contentRef"
       class="transform-gpu overflow-hidden border-slate-300 px-4 transition-all duration-200 dark:border-slate-700"
       :class="{
         'rounded-lg border-t py-4': activeState

@@ -16,9 +16,7 @@ const _id = ref('')
 
 const form = ref({
   name: '',
-  itemCategory: {
-    name: ''
-  },
+  itemCategory_id: '',
   sellingPrice: ''
 })
 const selectedItemCategory = ref<{ id: string; label: string }>()
@@ -32,13 +30,13 @@ onMounted(async () => {
 
     const result = await axios.get(`/v1/items/${route.params.id}`)
 
-    selectedItemCategory.value = { id: result.data.itemCategory._id, label: result.data.itemCategory.name }
-
     if (result.status === 200) {
       _id.value = result.data._id
       form.value.name = result.data.name
-      form.value.itemCategory.name = result.data.itemCategory.name
+      form.value.itemCategory_id = result.data.itemCategory._id
       form.value.sellingPrice = result.data.sellingPrice
+
+      selectedItemCategory.value = { id: result.data.itemCategory._id, label: result.data.itemCategory.name }
     } else {
       router.push('/404')
     }

@@ -2,12 +2,10 @@
 import { ref, onMounted } from 'vue'
 import { BaseBreadcrumb, BaseDivider, BaseInput, BaseNumeric } from '@/components/index'
 import { useRoute, useRouter } from 'vue-router'
-import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import axios from '@/axios'
 
 const route = useRoute()
 const router = useRouter()
-const { notification } = useBaseNotification()
 
 const form = ref({
   name: '',

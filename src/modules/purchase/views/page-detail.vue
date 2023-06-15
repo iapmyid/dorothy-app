@@ -12,9 +12,15 @@ const { notification } = useBaseNotification()
 
 const form = ref({
   date: '',
-  warehouse: {},
-  supplier: {},
-  itemCategory: {},
+  warehouse: {
+    name: ''
+  },
+  supplier: {
+    name: ''
+  },
+  itemCategory: {
+    name: ''
+  },
   code: '',
   name: '',
   size: [

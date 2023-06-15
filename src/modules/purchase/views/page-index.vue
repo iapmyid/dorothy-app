@@ -26,10 +26,18 @@ export interface PurchaseInterface {
   totalQuantity: number
   price: number
   sellingPrice: number
-  item: object
-  warehouse: object
-  supplier: object
-  itemCategory: object
+  item: {
+    name: string
+  }
+  warehouse: {
+    name: string
+  }
+  supplier: {
+    name: string
+  }
+  itemCategory: {
+    name: string
+  }
   createdAt: Date
 }
 const purchases = ref<PurchaseInterface[]>([])

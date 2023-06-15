@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { AxiosError } from 'axios'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { BaseInput } from '@/components/index'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useAuthStore } from '@/stores/auth'
-import axios from '@/axios'
 
-const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const { notification } = useBaseNotification()

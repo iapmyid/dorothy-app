@@ -1,5 +1,5 @@
 import axios from '@/axios'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 export function useItemCategoryApi() {
   const listItemCategory = ref([{ id: '', label: '' }])
