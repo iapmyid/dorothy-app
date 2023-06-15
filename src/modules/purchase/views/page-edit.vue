@@ -122,6 +122,10 @@ watch(selectedItemCategory, () => {
 
 onMounted(async () => {
   try {
+    await warehouseApi.fetchListWarehouse()
+    await supplierApi.fetchListSupplier()
+    await itemCategoryApi.fetchListItemCategory()
+
     const result = await axios.get(`/v1/purchases/${route.params.id}`)
 
     if (result.status === 200) {

@@ -1,10 +1,10 @@
 import axios from '@/axios'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 export function useSupplierApi() {
   const listSupplier = ref([{ id: '', label: '' }])
 
-  onMounted(async () => {
+  const fetchListSupplier = async () => {
     const result = await axios.get('/v1/suppliers', {
       params: {
         pageSize: 1000,
@@ -19,9 +19,10 @@ export function useSupplierApi() {
         label: item.name
       }
     })
-  })
+  }
 
   return {
-    listSupplier
+    listSupplier,
+    fetchListSupplier
   }
 }

@@ -23,9 +23,8 @@ const list = [
   { id: 4, label: 'Cashier' }
 ]
 const selected = ref(list[3])
-
 watch(selected, () => {
-  form.value.role = selected.value.label.toLowerCase()
+  form.value.role = selected.value?.label?.toLowerCase() ?? ''
 })
 
 const errors = ref()
@@ -57,6 +56,7 @@ const onSubmit = async () => {
 </script>
 
 <template>
+  {{ form }}
   <div class="main-content-container">
     <div class="main-content-header">
       <h1>User</h1>

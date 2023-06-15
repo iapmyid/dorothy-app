@@ -117,8 +117,11 @@ watch(selectedItemCategory, () => {
   form.value.itemCategory_id = selectedItemCategory.value?.id ?? ''
 })
 
-onMounted(() => {
+onMounted(async () => {
+  await warehouseApi.fetchListWarehouse()
   selectedWarehouse.value = warehouseApi.listWarehouse.value[0]
+  await supplierApi.fetchListSupplier()
+  await itemCategoryApi.fetchListItemCategory()
 })
 
 const errors = ref()

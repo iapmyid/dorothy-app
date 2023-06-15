@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 export function useItemCategoryApi() {
   const listItemCategory = ref([{ id: '', label: '' }])
 
-  onMounted(async () => {
+  const fetchListItemCategory = async () => {
     const result = await axios.get('/v1/item-categories', {
       params: {
         pageSize: 1000,
@@ -19,9 +19,10 @@ export function useItemCategoryApi() {
         label: item.name
       }
     })
-  })
+  }
 
   return {
-    listItemCategory
+    listItemCategory,
+    fetchListItemCategory
   }
 }

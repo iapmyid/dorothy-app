@@ -1,10 +1,9 @@
 import axios from '@/axios'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 export function useWarehouseApi() {
   const listWarehouse = ref([{ id: '', label: '' }])
-
-  onMounted(async () => {
+  const fetchListWarehouse = async () => {
     const result = await axios.get('/v1/warehouses', {
       params: {
         pageSize: 1000,
@@ -19,9 +18,10 @@ export function useWarehouseApi() {
         label: item.name
       }
     })
-  })
+  }
 
   return {
-    listWarehouse
+    listWarehouse,
+    fetchListWarehouse
   }
 }

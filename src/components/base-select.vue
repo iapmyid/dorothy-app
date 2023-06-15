@@ -47,12 +47,12 @@ const selected = computed({
           'border-b': props.border === 'simple'
         }"
       >
-        <span v-if="!selected.label" class="block text-slate-400">
+        <span v-if="!selected || !selected.label" class="block text-slate-400">
           {{ props.placeholder }}
         </span>
         <span v-else class="block">{{ selected.label }}</span>
         <span class="list-box-button-icon">
-          <i v-if="!selected.label" class="i-fas-angle-down block h-5 w-5 text-gray-400"></i>
+          <i v-if="!selected || !selected.label" class="i-fas-angle-down block h-5 w-5 text-gray-400"></i>
           <i v-else class="i-fas-xmark block h-5 w-5 text-gray-400" @click="clearSelect()"></i>
         </span>
       </ListboxButton>
