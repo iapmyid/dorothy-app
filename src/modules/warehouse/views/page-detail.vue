@@ -5,6 +5,7 @@ import { BaseDivider } from '@/components/index'
 import { BaseInput } from '@/components/index'
 import { useRoute, useRouter } from 'vue-router'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
+import { AxiosError } from 'axios'
 import axios from '@/axios'
 
 const route = useRoute()
@@ -30,11 +31,21 @@ onMounted(async () => {
 })
 
 const onDelete = async () => {
-  if (confirm('Are you sure want to delete this data?')) {
-    const result = await axios.delete(`/v1/warehouses/${route.params.id}`)
-    if (result.status === 204) {
-      notification('', 'Delete warehouse data success', { type: TypesEnum.Success })
-      router.push('/warehouse')
+  try {
+    if (confirm('Are you sure want to delete this data?')) {
+      const result = await axios.delete(`/v1/warehouses/${route.params.id}`)
+      if (result.status === 204) {
+        notification('', 'Delete warehouse data success', { type: TypesEnum.Success })
+        router.push('/warehouse')
+      }
+    }
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+    } else if (error instanceof AxiosError) {
+      notification(error.code as string, error.message, { type: TypesEnum.Warning })
+    } else {
+      notification('Unknown Error', '', { type: TypesEnum.Warning })
     }
   }
 }
