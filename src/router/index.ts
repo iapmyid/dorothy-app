@@ -9,6 +9,7 @@ import { routes as customerRoutes } from '@/modules/customer/routes'
 import { routes as itemCategoryRoutes } from '@/modules/item-category/routes'
 import { routes as itemRoutes } from '@/modules/item/routes'
 import { routes as purchaseRoutes } from '@/modules/purchase/routes'
+import { routes as inventoryRoutes } from '@/modules/inventory/routes'
 
 const routes = [
   mainRoutes,
@@ -20,6 +21,7 @@ const routes = [
   itemCategoryRoutes,
   itemRoutes,
   purchaseRoutes,
+  inventoryRoutes,
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

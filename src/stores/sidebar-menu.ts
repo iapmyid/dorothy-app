@@ -139,8 +139,8 @@ const menuMain = {
       allowed: ['administrator', 'admin purchasing']
     },
     {
-      name: 'Inventory Report',
-      path: '/inventory-report',
+      name: 'Inventory',
+      path: '/inventory',
       allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
     },
     {
