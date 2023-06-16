@@ -2,13 +2,11 @@
 import { ref, onMounted } from 'vue'
 import { BaseBreadcrumb, BaseDivider, BaseInput, BaseNumeric } from '@/components/index'
 import { useRoute, useRouter } from 'vue-router'
-import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { format } from 'date-fns'
 import axios from '@/axios'
 
 const route = useRoute()
 const router = useRouter()
-const { notification } = useBaseNotification()
 
 const form = ref({
   date: '',
@@ -81,16 +79,6 @@ onMounted(async () => {
     router.push('/404')
   }
 })
-
-const onDelete = async () => {
-  if (confirm('Are you sure want to delete this data?')) {
-    const result = await axios.delete(`/v1/purchases/${route.params.id}`)
-    if (result.status === 204) {
-      notification('', 'Delete purchase data success', { type: TypesEnum.Success })
-      router.push('/purchase')
-    }
-  }
-}
 </script>
 
 <template>
@@ -113,12 +101,6 @@ const onDelete = async () => {
                 <i class="i-far-circle-plus block"></i>
                 <span>Add</span>
               </router-link>
-            </div>
-            <div>
-              <button @click="onDelete()" type="button" class="btn btn-danger btn-sm rounded-none space-x-1">
-                <i class="i-far-trash block"></i>
-                <span>Delete</span>
-              </button>
             </div>
           </div>
         </div>
