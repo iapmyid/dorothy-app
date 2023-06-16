@@ -193,9 +193,20 @@ const paginate = async (page: number) => {
                   <tr v-for="inventory in inventories" :key="inventory._id" class="basic-table-row">
                     <td class="basic-table-body">{{ format(new Date(inventory.createdAt), 'dd-MM-yyyy HH:mm') }}</td>
                     <td class="basic-table-body">
-                      <router-link class="text-blue-500" :to="`/purchase/${inventory.reference_id}`">{{
-                        inventory.reference
-                      }}</router-link>
+                      <router-link
+                        v-if="inventory.reference === 'purchase'"
+                        class="text-blue-500"
+                        :to="`/purchase/${inventory.reference_id}`"
+                      >
+                        {{ inventory.reference }}
+                      </router-link>
+                      <router-link
+                        v-if="inventory.reference === 'transfer item'"
+                        class="text-blue-500"
+                        :to="`/transfer-item/${inventory.reference_id}`"
+                      >
+                        {{ inventory.reference }}
+                      </router-link>
                     </td>
                     <td class="basic-table-body">{{ inventory.item?.name }}</td>
                     <td class="basic-table-body">{{ inventory.warehouse?.name }}</td>
