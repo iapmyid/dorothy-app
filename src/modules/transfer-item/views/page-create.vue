@@ -148,7 +148,6 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  sas {{ inventories }} sas {{ inventory }}
   <div class="main-content-container">
     <div class="main-content-header">
       <h1>Transfer Item</h1>

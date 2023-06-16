@@ -183,7 +183,6 @@ const paginate = async (page: number) => {
                     </td>
                     <td class="basic-table-body">{{ transferItem.warehouseOrigin.name }}</td>
                     <td class="basic-table-body">{{ transferItem.warehouseDestination.name }}</td>
-                    <td class="basic-table-body">{{ transferItem.item.name }}</td>
                     <td class="basic-table-body text-right">
                       {{ numeric.format(transferItem.size[0]?.quantity ?? 0) }}
                     </td>
@@ -195,6 +194,9 @@ const paginate = async (page: number) => {
                     </td>
                     <td class="basic-table-body text-right">
                       {{ numeric.format(transferItem.size[3]?.quantity ?? 0) }}
+                    </td>
+                    <td class="basic-table-body text-right">
+                      {{ numeric.format(transferItem.size[4]?.quantity ?? 0) }}
                     </td>
                     <td class="basic-table-body text-right">{{ numeric.format(transferItem.totalQuantity) }}</td>
                   </tr>
