@@ -10,6 +10,7 @@ import { routes as itemCategoryRoutes } from '@/modules/item-category/routes'
 import { routes as itemRoutes } from '@/modules/item/routes'
 import { routes as purchaseRoutes } from '@/modules/purchase/routes'
 import { routes as inventoryRoutes } from '@/modules/inventory/routes'
+import { routes as transferItemRoutes } from '@/modules/transfer-item/routes'
 
 const routes = [
   mainRoutes,
@@ -22,6 +23,7 @@ const routes = [
   itemRoutes,
   purchaseRoutes,
   inventoryRoutes,
+  transferItemRoutes,
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
@@ -31,7 +33,12 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: routes
+  routes: routes,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  scrollBehavior(to, from, savedPosition) {
+    // always scroll to top
+    return { top: 0 }
+  }
 })
 
 export default router
