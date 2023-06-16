@@ -21,6 +21,7 @@ import { computed, ref, onMounted, nextTick } from 'vue'
 
 const props = withDefaults(defineProps<Props>(), {
   border: 'simple',
+  placeholder: 'Type, paste, cut text here...',
   layout: 'vertical',
   type: 'text',
   required: false,
@@ -78,7 +79,7 @@ const resize = () => {
     <div class="flex flex-1 flex-col">
       <textarea
         ref="textareaRef"
-        placeholder="Type, paste, cut text here..."
+        :placeholder="placeholder"
         class="form-input resize-none overflow-hidden"
         :class="{
           'border-b border-x-none border-t-none px-1': border === 'simple',

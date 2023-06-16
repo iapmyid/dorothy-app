@@ -11,6 +11,7 @@ import { routes as itemRoutes } from '@/modules/item/routes'
 import { routes as purchaseRoutes } from '@/modules/purchase/routes'
 import { routes as inventoryRoutes } from '@/modules/inventory/routes'
 import { routes as transferItemRoutes } from '@/modules/transfer-item/routes'
+import { routes as stockCorrectionRoutes } from '@/modules/stock-correction/routes'
 
 const routes = [
   mainRoutes,
@@ -24,6 +25,7 @@ const routes = [
   purchaseRoutes,
   inventoryRoutes,
   transferItemRoutes,
+  stockCorrectionRoutes,
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
