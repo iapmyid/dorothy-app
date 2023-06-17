@@ -292,16 +292,14 @@ const onSubmit = async () => {
             <button @click="resetForm()" type="button" class="btn btn-sm rounded-full">+</button>
           </div>
 
-          <div class="card card-template flex flex-col gap-4 print:border-none!">
+          <div class="card card-template flex flex-col gap-4 print:border-none! print:text-black! print:bg-white!">
             <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
               <div
-                id="print-me"
                 style="
                   display: flex;
                   flex-direction: column;
                   gap: 6px;
                   font-size: 11px;
-                  font-family: Roboto, sans-serif !important;
                   -webkit-print-color-adjust: exact;
                 "
               >
