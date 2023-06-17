@@ -214,6 +214,13 @@ const paginate = async (page: number) => {
                       >
                         {{ inventory.reference }}
                       </router-link>
+                      <router-link
+                        v-if="inventory.reference === 'pos'"
+                        class="text-blue-500"
+                        :to="`/pos/${inventory.reference_id}`"
+                      >
+                        {{ inventory.reference }}
+                      </router-link>
                     </td>
                     <td class="basic-table-body">{{ inventory.item?.name }}</td>
                     <td class="basic-table-body">{{ inventory.warehouse?.name }}</td>

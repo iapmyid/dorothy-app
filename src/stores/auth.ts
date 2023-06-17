@@ -7,7 +7,8 @@ export const useAuthStore = defineStore('auth', {
     user: {
       name: '',
       username: '',
-      role: ''
+      role: '',
+      warehouse_id: ''
     }
   }),
   actions: {
@@ -21,6 +22,7 @@ export const useAuthStore = defineStore('auth', {
         this.$state.user.name = response.data.name
         this.$state.user.username = response.data.username
         this.$state.user.role = response.data.role
+        this.$state.user.warehouse_id = response.data.warehouse_id
         cookie.set('accessToken', response.data.accessToken)
         cookie.set('refreshToken', response.data.refreshToken)
         axios.defaults.headers.common['Authorization'] = `Bearer ${cookie.get('accessToken')}`
@@ -36,6 +38,7 @@ export const useAuthStore = defineStore('auth', {
           this.$state.user.name = response.data.name
           this.$state.user.username = response.data.username
           this.$state.user.role = response.data.role
+          this.$state.user.warehouse_id = response.data.warehouse_id
         }
       } catch (error) {
         this.logout()
@@ -45,6 +48,7 @@ export const useAuthStore = defineStore('auth', {
       this.$state.user.name = ''
       this.$state.user.username = ''
       this.$state.user.role = ''
+      this.$state.user.warehouse_id = ''
       cookie.remove('accessToken')
       cookie.remove('refreshToken')
     },

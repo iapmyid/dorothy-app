@@ -13,15 +13,15 @@ import AppFooter from './app-footer.vue'
   <!-- Page Wrapper -->
   <div class="h-100vh flex grow bg-slate-50 dark:bg-slate-900">
     <!-- Header -->
-    <app-header class="print:hidden"></app-header>
+    <app-header class="print:hidden!"></app-header>
     <!-- Sidebar -->
-    <app-sidebar class="print:hidden"></app-sidebar>
+    <app-sidebar class="print:hidden!"></app-sidebar>
     <!-- Main Content -->
     <div class="main-container">
       <main class="main-content">
         <router-view />
       </main>
-      <app-footer class="pt-4"></app-footer>
+      <app-footer class="pt-4 print:hidden!"></app-footer>
     </div>
   </div>
 </template>

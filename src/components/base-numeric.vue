@@ -1,6 +1,6 @@
 <script lang="ts">
 interface Props {
-  modelValue: string | number
+  modelValue: number
   id?: string
   label?: string
   description?: string
@@ -17,10 +17,20 @@ interface Props {
 </script>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useNumeric } from '@/composable/numeric'
+import { ref } from 'vue'
+import Cleave from 'cleave.js'
+import { onMounted } from 'vue'
+import { computed } from 'vue'
 
-const numeric = useNumeric()
+const inputRef = ref()
+const cleave = ref()
+
+onMounted(() => {
+  cleave.value = new Cleave(inputRef.value, {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand'
+  })
+})
 
 const props = withDefaults(defineProps<Props>(), {
   border: 'simple',
@@ -31,31 +41,18 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false
 })
 
-const inputValue = ref(props.modelValue)
-
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | number): void
+  (e: 'update:modelValue', value: number): void
 }>()
 
-watch(
-  () => props.modelValue,
-  () => {
-    inputValue.value = numeric.format(props.modelValue)
+const inputValue = computed({
+  set: (text: string) => {
+    setTimeout(() => {
+      emit('update:modelValue', Number(cleave.value.getRawValue()))
+    }, 100)
   },
-  {
-    immediate: true
-  }
-)
-
-watch(
-  inputValue,
-  () => {
-    emit('update:modelValue', parseFloat(inputValue.value.toString().replace(/(\d+),(?=\d+(\D|$))/g, '$1')))
-  },
-  {
-    immediate: true
-  }
-)
+  get: () => new Intl.NumberFormat('en-US').format(props.modelValue)
+})
 </script>
 
 <template>
@@ -83,14 +80,14 @@ watch(
 
     <div class="flex flex-1 flex-col">
       <input
+        ref="inputRef"
         class="form-input"
         :class="{
           'border-b border-x-none border-t-none px-1': border === 'simple',
           'border mt-1': border === 'full',
           'border-none': border === 'none'
         }"
-        v-model.lazy="inputValue"
-        v-cleave="{ numeral: true, numeralThousandsGroupStyle: 'thousand' }"
+        v-model="inputValue"
         :placeholder="props.placeholder"
         :required="props.required"
         :readonly="props.readonly"
