@@ -9,7 +9,7 @@ const router = useRouter()
 
 const form = ref({
   name: '',
-  sellingPrice: '',
+  sellingPrice: 0,
   itemCategory: {
     name: ''
   }

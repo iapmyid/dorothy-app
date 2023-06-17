@@ -17,7 +17,7 @@ const _id = ref('')
 const form = ref({
   name: '',
   itemCategory_id: '',
-  sellingPrice: ''
+  sellingPrice: 0
 })
 const selectedItemCategory = ref<{ id: string; label: string }>()
 watch(selectedItemCategory, () => {

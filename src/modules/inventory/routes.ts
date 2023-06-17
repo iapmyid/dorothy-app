@@ -18,7 +18,10 @@ export const routes = {
   beforeEnter: async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     const authStore = useAuthStore()
     const authorization = useAuthorization()
-    if (!(await authStore.isAuthenticated()) || !authorization.isAuthorize(['administrator', 'admin purchashing'])) {
+    if (
+      !(await authStore.isAuthenticated()) ||
+      !authorization.isAuthorize(['administrator', 'admin purchasing', 'admin stock', 'cashier'])
+    ) {
       next('/signin')
     } else {
       next()

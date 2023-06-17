@@ -25,10 +25,7 @@ export interface StockCorrectionInterface {
   item: {
     name: string
   }
-  warehouseOrigin: {
-    name: string
-  }
-  warehouseDestination: {
+  warehouse: {
     name: string
   }
   createdAt: Date

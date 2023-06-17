@@ -177,7 +177,7 @@ const paginate = async (page: number) => {
               <tbody>
                 <template v-if="listPos.length > 0">
                   <template v-for="pos in listPos" :key="pos._id">
-                    <tr v-for="posItem in pos.items" :key="pos._id" class="basic-table-row">
+                    <tr v-for="posItem in pos.items" :key="posItem._id" class="basic-table-row">
                       <td class="basic-table-body">
                         <router-link :to="`/pos/${pos._id}`" class="text-info">
                           {{ format(new Date(pos.createdAt), 'dd MMM yyyy HH:mm') }}
