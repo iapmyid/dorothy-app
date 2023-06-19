@@ -29,6 +29,7 @@
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.7",
     "highlight.js": "^11.7.0",
+    "jsbarcode": "^3.11.5",
     "pinia": "^2.0.36",
     "vue": "^3.3.2",
     "vue-router": "^4.2.0",

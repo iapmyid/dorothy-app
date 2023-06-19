@@ -133,6 +133,7 @@ const paginate = async (page: number) => {
                   </th>
                   <th class="basic-table-head">Category</th>
                   <th class="basic-table-head text-right">Selling Price</th>
+                  <th class="basic-table-head text-center">Barcode</th>
                 </tr>
               </thead>
               <tbody>
@@ -143,6 +144,11 @@ const paginate = async (page: number) => {
                     </td>
                     <td class="basic-table-body">{{ item.itemCategory.name }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(item.sellingPrice) }}</td>
+                    <td class="basic-table-body text-center justify-center flex">
+                      <router-link :to="`/item/${item._id}/barcode`">
+                        <i class="i-far-barcode-read block"></i>
+                      </router-link>
+                    </td>
                   </tr>
                 </template>
               </tbody>

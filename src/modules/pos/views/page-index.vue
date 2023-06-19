@@ -166,7 +166,7 @@ const paginate = async (page: number) => {
                   <th class="basic-table-head">
                     <p>Warehouse</p>
                   </th>
-                  <th class="basic-table-head text-right">
+                  <th class="basic-table-head">
                     <p>Payment Type</p>
                   </th>
                   <th class="basic-table-head">

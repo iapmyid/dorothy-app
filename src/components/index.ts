@@ -1,6 +1,7 @@
 import BaseAccordionVue from './base-accordion.vue'
 import BaseAccordionItemVue from './base-accordion-item.vue'
 import BaseAutocompleteVue from './base-autocomplete.vue'
+import BaseBarcodeVue from './base-barcode.vue'
 import BaseBreadcrumbVue from './base-breadcrumb.vue'
 import BaseCheckboxVue from './base-checkbox.vue'
 import BaseDatepickerVue from './base-datepicker.vue'
@@ -22,6 +23,7 @@ import BaseTreeviewVue from './base-treeview.vue'
 export const BaseAccordion = BaseAccordionVue
 export const BaseAccordionItem = BaseAccordionItemVue
 export const BaseAutocomplete = BaseAutocompleteVue
+export const BaseBarcode = BaseBarcodeVue
 export const BaseBreadcrumb = BaseBreadcrumbVue
 export const BaseCheckbox = BaseCheckboxVue
 export const BaseDatepicker = BaseDatepickerVue

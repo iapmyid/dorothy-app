@@ -13,24 +13,16 @@ interface Props {
   disabled?: boolean
   helper?: string
   error?: string
+  max?: number
 }
 </script>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import Cleave from 'cleave.js'
-import { onMounted } from 'vue'
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const inputRef = ref()
 const cleave = ref()
-
-onMounted(() => {
-  cleave.value = new Cleave(inputRef.value, {
-    numeral: true,
-    numeralThousandsGroupStyle: 'thousand'
-  })
-})
 
 const props = withDefaults(defineProps<Props>(), {
   border: 'simple',
@@ -41,18 +33,31 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false
 })
 
+const inputValue = computed({
+  set: (text: string) => {},
+  get: () => new Intl.NumberFormat('en-US').format(props.modelValue)
+})
+
+onMounted(() => {
+  cleave.value = new Cleave(inputRef.value, {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    onValueChanged: onValueChanged
+  })
+})
+
+const onValueChanged = (e: any) => {
+  let rawValue = e.target.rawValue
+  if (props.max && rawValue > props.max) {
+    rawValue = props.max
+    inputValue.value = props.max.toString()
+  }
+  emit('update:modelValue', Number(rawValue))
+}
+
 const emit = defineEmits<{
   (e: 'update:modelValue', value: number): void
 }>()
-
-const inputValue = computed({
-  set: (text: string) => {
-    setTimeout(() => {
-      emit('update:modelValue', Number(cleave.value.getRawValue()))
-    }, 100)
-  },
-  get: () => new Intl.NumberFormat('en-US').format(props.modelValue)
-})
 </script>
 
 <template>
