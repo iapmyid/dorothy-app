@@ -294,60 +294,44 @@ const onSubmit = async () => {
 
           <div class="card card-template flex flex-col gap-4 print:border-none! print:text-black! print:bg-white!">
             <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
-              <div
-                style="
-                  display: flex;
-                  flex-direction: column;
-                  gap: 6px;
-                  font-size: 11px;
-                  -webkit-print-color-adjust: exact;
-                "
-              >
+              <div class="flex flex-col gap-6px text-11px font-bold">
                 <!-- Header -->
-                <div style="display: flex; flex-direction: column">
-                  <p style="font-weight: bold; text-align: center; font-size: 18px" class="text-center mb-3">
-                    Dorothy Boutique
-                  </p>
-                  <p style="text-align: center; font-size: 12px; margin-top: -10px">
-                    PTC UG F5 NO 11-12 <br />031-7392043
-                  </p>
-                  <hr style="margin-top: 5px; margin-bottom: 5px" />
-                  <p style="display: flex; flex-direction: column">
+                <div class="flex flex-col">
+                  <p class="font-extrabold text-center mb-3 text-18px">Dorothy Boutique</p>
+                  <p class="text-center text-12px -mt-10px">PTC UG F5 NO 11-12 <br />031-7392043</p>
+                  <hr class="my-5px" />
+                  <p class="flex flex-col">
                     <span>Date: {{ format(new Date(), 'dd MMM yyyy HH:mm') }}</span>
                     <span>Cashier: {{ authStore.$state.user.name }}</span>
                   </p>
-                  <hr style="margin-top: 5px" />
+                  <hr class="mt-5px" />
                 </div>
 
                 <!-- Items -->
-                <div
-                  style="display: flex; flex-direction: column; min-height: 100px; max-height: 350px; overflow-y: auto"
-                >
-                  <div
-                    style="display: flex; flex-direction: row; width: 100%"
-                    v-for="item in form.items"
-                    :key="item._id"
-                  >
-                    <div style="display: flex; flex-direction: column; flex-grow: 1">
-                      <span style="margin: 0; padding: 0">x{{ item.quantity }} {{ item.name }} ({{ item.size }})</span>
+                <div class="flex flex-col min-h-50px max-h-350px overflow-y-auto">
+                  <div class="flex flex-row w-full" v-for="item in form.items" :key="item._id">
+                    <div class="flex flex-col flex-1">
+                      <span class="m-0 p-0">x{{ item.quantity }} {{ item.name }} ({{ item.size }})</span>
                     </div>
-                    <div style="flex-grow: 0">
-                      <span style="text-align: right">{{ numeric.format(item.total) }}</span>
+                    <div class="flex-0">
+                      <span class="text-right">{{ numeric.format(item.total) }}</span>
                     </div>
                   </div>
                 </div>
 
                 <!-- Summary -->
-                <div style="display: flex; flex-direction: column">
-                  <div style="display: flex; flex-direction: row; width: 100%">
-                    <div style="display: flex; flex-direction: column; flex-grow: 1">
-                      <span style="margin: 0; padding: 0; font-weight: bold">Total</span>
+                <div class="flex flex-col">
+                  <div class="flex w-full text-14px">
+                    <div class="flex-1">
+                      <span class="m-0 p-0">Total</span>
                     </div>
-                    <div style="flex-grow: 0">
-                      <span style="text-align: right">{{ numeric.format(form.totalPrice) }}</span>
+                    <div class="flex-0">
+                      <span class="text-right">{{ numeric.format(form.totalPrice) }}</span>
                     </div>
                   </div>
                 </div>
+
+                <p class="hidden print:block text-center print:my-10!">- Terima Kasih -</p>
               </div>
               <div class="flex flex-col gap-2 print:hidden!">
                 <div class="grid grid-cols-2 gap-2">
