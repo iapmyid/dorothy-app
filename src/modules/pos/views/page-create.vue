@@ -292,7 +292,9 @@ const onSubmit = async () => {
             <button @click="resetForm()" type="button" class="btn btn-sm rounded-full">+</button>
           </div>
 
-          <div class="card card-template flex flex-col gap-4 print:border-none! print:text-black! print:bg-white!">
+          <div
+            class="card card-template flex flex-col gap-4 print:fixed print:top-0 print:w-80mm print:shadow-none print:border-none! print:text-black! print:bg-white!"
+          >
             <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
               <div class="flex flex-col gap-6px text-11px font-bold">
                 <!-- Header -->
@@ -331,7 +333,7 @@ const onSubmit = async () => {
                   </div>
                 </div>
 
-                <p class="hidden print:block text-center print:my-10!">- Terima Kasih -</p>
+                <p class="hidden print:block text-center print:my-6!">- Thankyou -</p>
               </div>
               <div class="flex flex-col gap-2 print:hidden!">
                 <div class="grid grid-cols-2 gap-2">
