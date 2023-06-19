@@ -27,6 +27,7 @@ export interface PurchaseInterface {
   price: number
   sellingPrice: number
   item: {
+    _id: string
     name: string
   }
   warehouse: {
@@ -169,6 +170,9 @@ const paginate = async (page: number) => {
                   <th class="basic-table-head text-right">
                     <p>Selling Price</p>
                   </th>
+                  <th class="basic-table-head text-center">
+                    <p>Barcode</p>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -188,6 +192,11 @@ const paginate = async (page: number) => {
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.totalQuantity) }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.price) }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.sellingPrice) }}</td>
+                    <td class="basic-table-body text-center justify-center flex">
+                      <a :href="`/item/${purchase.item._id}/barcode?count=${purchase.totalQuantity}`" target="_blank">
+                        <i class="i-far-barcode-read block"></i>
+                      </a>
+                    </td>
                   </tr>
                 </template>
               </tbody>

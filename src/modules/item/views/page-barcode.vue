@@ -27,7 +27,7 @@ onMounted(async () => {
   }
 })
 
-const rows = ref(1)
+const rows = ref(Math.ceil(Number(route.query.count) / 3))
 const width = ref(320)
 const gapX = ref(4)
 const gapY = ref(4)
