@@ -43,6 +43,8 @@ const form = ref({
       quantity: 0
     }
   ],
+  color: '',
+  photoUrl: '',
   totalQuantity: 0,
   price: 0,
   totalPrice: 0,
@@ -64,6 +66,8 @@ onMounted(async () => {
       form.value.itemCategory = result.data.itemCategory
       form.value.name = result.data.name
       form.value.size = result.data.size
+      form.value.color = result.data.color
+      form.value.photoUrl = result.data.photoUrl
       form.value.totalQuantity = result.data.totalQuantity
       form.value.price = result.data.price
       form.value.totalPrice = result.data.totalPrice
@@ -106,11 +110,15 @@ onMounted(async () => {
         </div>
         <div class="flex flex-col gap-4">
           <div class="space-y-2">
+            <div>
+              <img :src="form.photoUrl" class="w-320px" alt="" />
+            </div>
             <component :is="BaseInput" readonly v-model="form.createdAt" label="Date"></component>
             <component :is="BaseInput" readonly v-model="form.warehouse.name" label="Warehouse"></component>
             <component :is="BaseInput" readonly v-model="form.supplier.name" label="Supplier"></component>
             <component :is="BaseInput" readonly v-model="form.itemCategory.name" label="Item Category"></component>
             <component :is="BaseInput" readonly v-model="form.name" label="Item Name"></component>
+            <component :is="BaseInput" readonly v-model="form.color" label="Color"></component>
 
             <h3>Quantity per Size</h3>
             <component

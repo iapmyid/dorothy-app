@@ -16,22 +16,25 @@ import { useItemCategoryApi } from '../api/item-category'
 import { useSupplierApi } from '../api/supplier'
 import { useWarehouseApi } from '../api/warehouse'
 import axios from '@/axios'
+import WebCamUI from '@/components/base-webcam-ui.vue'
 
 const { notification } = useBaseNotification()
 const router = useRouter()
 const itemCategoryApi = useItemCategoryApi()
 const supplierApi = useSupplierApi()
 const warehouseApi = useWarehouseApi()
-
 const formDate = ref(format(new Date(), 'dd/MM/yyyy'))
 
 const form = ref({
   date: format(new Date(), 'yyyy-MM-dd'),
+  photo: '',
+  files: [],
   warehouse_id: '',
   supplier_id: '',
   itemCategory_id: '',
   code: '',
   name: '',
+  color: '',
   size: [
     {
       label: 'all size',
@@ -88,6 +91,10 @@ const calculateProfit = () => {
   }
 }
 
+const photoTaken = (event: any) => {
+  form.value.files.push(event)
+}
+
 watch(
   () => [
     form.value.size[0].quantity,
@@ -127,11 +134,33 @@ onMounted(async () => {
 const errors = ref()
 const isSubmitted = ref(false)
 
+const reverseCalculation = () => {
+  calculateQuantity()
+  calculatePrice()
+
+  form.value.totalProfit = Number(form.value.sellingPrice) - Number(form.value.price)
+  form.value.profitMargin = (form.value.totalProfit / form.value.price) * 100
+}
+
 const onSubmit = async () => {
   try {
     isSubmitted.value = true
 
     const response = await axios.post('/v1/purchases', form.value)
+    if (form.value.files.length) {
+      const formData = new FormData()
+      formData.append('_id', response.data._id)
+      formData.append('name', form.value.name)
+      formData.append('color', form.value.color)
+      for (let i = 0; i < form.value.files.length; i++) {
+        formData.append('files[]', form.value.files[i].blob)
+      }
+      await axios.post('/v1/purchases/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+    }
 
     if (response.status === 201) {
       router.push('/purchase')
@@ -143,6 +172,7 @@ const onSubmit = async () => {
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {
+      console.log(error)
       notification('Unknown Error', '', { type: TypesEnum.Warning })
     }
   } finally {
@@ -160,12 +190,15 @@ const onSubmit = async () => {
     </div>
     <div class="main-content-body">
       <div class="card card-template">
-        <div class="card-header">
+        <div class="card-header bg-slate-200 p-4 -mx-4 -my-2 font-extrabold">
           <h2>New Purchase</h2>
         </div>
         <div class="flex flex-col gap-4">
           <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
             <div class="space-y-2">
+              <div class="w-full">
+                <WebCamUI @photoTaken="photoTaken" />
+              </div>
               <component
                 :is="BaseDatepicker"
                 required
@@ -211,8 +244,9 @@ const onSubmit = async () => {
                 ></component>
               </div>
               <component :is="BaseInput" required v-model="form.name" label="Item Name"></component>
+              <component :is="BaseInput" required v-model="form.color" label="Color"></component>
 
-              <h3>Quantity per Size</h3>
+              <h3 class="bg-slate-200 -mx-4 px-4 py-1">Quantity per Size</h3>
               <component
                 :is="BaseNumeric"
                 v-model="form.size[0].quantity"
@@ -286,6 +320,7 @@ const onSubmit = async () => {
                 :is="BaseNumeric"
                 layout="horizontal"
                 v-model="form.sellingPrice"
+                @keyup="reverseCalculation()"
                 label="Selling Price"
               ></component>
             </div>

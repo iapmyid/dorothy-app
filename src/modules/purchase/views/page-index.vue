@@ -23,6 +23,7 @@ export interface PurchaseInterface {
   code: string
   name: string
   size: []
+  color: string
   totalQuantity: number
   price: number
   sellingPrice: number
@@ -135,6 +136,10 @@ const paginate = async (page: number) => {
                 <i class="i-far-pen-to-square block"></i>
                 <p>Add New</p>
               </router-link>
+              <router-link to="/purchase/create" class="btn btn-secondary rounded-none space-x-1">
+                <i class="i-far-print block"></i>
+                <p>Print Barcode</p>
+              </router-link>
               <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
@@ -160,6 +165,9 @@ const paginate = async (page: number) => {
                   </th>
                   <th class="basic-table-head">
                     <p>Category</p>
+                  </th>
+                  <th class="basic-table-head">
+                    <p>Color</p>
                   </th>
                   <th class="basic-table-head text-right">
                     <p>Quantity</p>
@@ -189,6 +197,7 @@ const paginate = async (page: number) => {
                     <td class="basic-table-body">{{ purchase.warehouse?.name }}</td>
                     <td class="basic-table-body">{{ purchase.supplier?.name }}</td>
                     <td class="basic-table-body">{{ purchase.itemCategory?.name }}</td>
+                    <td class="basic-table-body">{{ purchase.color }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.totalQuantity) }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.price) }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.sellingPrice) }}</td>
