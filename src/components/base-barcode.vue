@@ -5,6 +5,8 @@ import { onMounted, ref, watch } from 'vue'
 export interface Props {
   value: string
   label?: string
+  size?: string
+  color?: string
   height?: number
   showCode?: boolean
   showName?: boolean
@@ -42,10 +44,14 @@ watch(
 
 <template>
   <div class="flex flex-col text-center justify-center items-center relative">
+    <span class="text-9px z-1 leading-none -mb-2" v-if="props.showName">
+      <span>{{ props.label.substring(0, 20) }}</span>
+    </span>
     <svg ref="barcodeRef" id="barcode" class="z-0"></svg>
     <div class="flex flex-col -mt-2">
-      <span class="text-9px z-1 leading-none" v-if="props.showName">{{ props.label.substring(0, 20) }}</span>
-      <span class="text-8px z-1 leading-none" v-if="props.showCode">{{ value }}</span>
+      <span class="text-8px w-full flex justify-between z-1 leading-none" v-if="props.showCode">
+        {{ props.size }} - {{ props.color }}
+      </span>
     </div>
   </div>
 </template>

@@ -7,18 +7,23 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const item = ref<{ barcode: string; name: string }>({
+const item = ref<{ barcode: string; name: string; size: [{ label: string; quantity: number }]; color: string }>({
   barcode: '',
-  name: ''
+  name: '',
+  color: '',
+  size: [{ label: '', quantity: 0 }]
 })
 
 onMounted(async () => {
   try {
-    const result = await axios.get(`/v1/items/${route.params.id}`)
+    const result = await axios.get(`/v1/purchases/${route.params.id}`)
+    console.log(result)
 
     if (result.status === 200) {
       item.value.barcode = result.data.barcode
       item.value.name = result.data.name
+      item.value.size = result.data.size
+      item.value.color = result.data.color
     } else {
       router.push('/404')
     }
@@ -27,7 +32,6 @@ onMounted(async () => {
   }
 })
 
-const rows = ref(Math.ceil(Number(route.query.count) / 3))
 const width = ref(320)
 const gapX = ref(4)
 const gapY = ref(4)
@@ -56,21 +60,24 @@ const onPrint = () => {
             class="grid grid-cols-3 text-sm!"
             :style="{ 'column-gap': gapX + 'px', 'row-gap': gapY + 'px' }"
           >
-            <component
-              :is="BaseBarcode"
-              :showCode="showCode"
-              :showName="showName"
-              :height="height"
-              :label="item.name"
-              :value="item.barcode"
-              v-for="i in rows * 3"
-              :key="i"
-            />
+            <template v-for="size in item.size" :key="size">
+              <template v-for="i in size.quantity" :key="i">
+                <component
+                  :is="BaseBarcode"
+                  :showCode="showCode"
+                  :showName="showName"
+                  :height="height"
+                  :size="size.label"
+                  :color="item.color"
+                  :label="item.name"
+                  :value="item.barcode"
+                />
+              </template>
+            </template>
           </div>
         </div>
       </div>
       <div class="print:hidden! flex flex-col gap-4">
-        <component :is="BaseNumeric" layout="horizontal" v-model="rows" label="Rows" :max="10" description="max 10" />
         <component
           :is="BaseNumeric"
           layout="horizontal"

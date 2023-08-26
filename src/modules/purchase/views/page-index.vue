@@ -136,10 +136,10 @@ const paginate = async (page: number) => {
                 <i class="i-far-pen-to-square block"></i>
                 <p>Add New</p>
               </router-link>
-              <router-link to="/purchase/create" class="btn btn-secondary rounded-none space-x-1">
+              <!-- <router-link to="/purchase/create" class="btn btn-secondary rounded-none space-x-1">
                 <i class="i-far-print block"></i>
                 <p>Print Barcode</p>
-              </router-link>
+              </router-link> -->
               <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
@@ -202,7 +202,7 @@ const paginate = async (page: number) => {
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.price) }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.sellingPrice) }}</td>
                     <td class="basic-table-body text-center justify-center flex">
-                      <a :href="`/item/${purchase.item._id}/barcode?count=${purchase.totalQuantity}`" target="_blank">
+                      <a :href="`/purchase/${purchase._id}/barcode?count=${purchase.totalQuantity}`" target="_blank">
                         <i class="i-far-barcode-read block"></i>
                       </a>
                     </td>

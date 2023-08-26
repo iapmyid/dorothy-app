@@ -17,6 +17,10 @@ export const routes = {
     {
       path: ':id',
       component: () => import('./views/page-detail.vue')
+    },
+    {
+      path: ':id/barcode',
+      component: () => import('./views/page-barcode.vue')
     }
   ],
   beforeEnter: async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
