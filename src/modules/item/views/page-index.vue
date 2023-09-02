@@ -20,6 +20,8 @@ const isLoadingSearch = ref(false)
 export interface ItemInterface {
   _id: string
   name: string
+  size: string
+  color: string
   itemCategory: {
     name: string
   }
@@ -131,6 +133,8 @@ const paginate = async (page: number) => {
                       <p>Name</p>
                     </div>
                   </th>
+                  <th class="basic-table-head">Color</th>
+                  <th class="basic-table-head">Size</th>
                   <th class="basic-table-head">Category</th>
                   <th class="basic-table-head text-right">Selling Price</th>
                 </tr>
@@ -141,6 +145,8 @@ const paginate = async (page: number) => {
                     <td class="basic-table-body">
                       <router-link :to="`/item/${item._id}`" class="text-info">{{ item.name }}</router-link>
                     </td>
+                    <td class="basic-table-body">{{ item.color }}</td>
+                    <td class="basic-table-body">{{ item.size }}</td>
                     <td class="basic-table-body">{{ item.itemCategory.name }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(item.sellingPrice) }}</td>
                   </tr>

@@ -190,9 +190,7 @@ const paginate = async (page: number) => {
                       {{ format(new Date(purchase.createdAt), 'dd MMM yyyy HH:mm') }}
                     </td>
                     <td class="basic-table-body">
-                      <router-link :to="`/purchase/${purchase._id}`" class="text-info">{{
-                        purchase.item?.name
-                      }}</router-link>
+                      <router-link :to="`/purchase/${purchase._id}`" class="text-info">{{ purchase.name }}</router-link>
                     </td>
                     <td class="basic-table-body">{{ purchase.warehouse?.name }}</td>
                     <td class="basic-table-body">{{ purchase.supplier?.name }}</td>

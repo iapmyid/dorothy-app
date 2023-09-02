@@ -26,11 +26,14 @@ const form = ref<{
     _id: string
     name: string
     size: string
+    color: string
     quantity: number
     price: number
     total: number
   }[]
   totalQuantity: number
+  subtotal: number
+  discount: number
   totalPrice: number
   paymentType: string
 }>({
@@ -38,6 +41,8 @@ const form = ref<{
   warehouse_id: '',
   items: [],
   totalQuantity: 0,
+  subtotal: 0,
+  discount: 0,
   totalPrice: 0,
   paymentType: ''
 })
@@ -79,11 +84,15 @@ const getItemCategories = async (page = 1, search = '') => {
 const selectedCustomer = ref<{ id: string; label: string }>()
 watch(selectedCustomer, () => {
   form.value.customer_id = selectedCustomer.value?.id ?? ''
+  calculatePrice()
 })
 
 export interface ItemInterface {
   _id: string
   name: string
+  color: string
+  size: string
+  photoUrl: string
   itemCategory: {
     name: string
   }
@@ -123,24 +132,86 @@ watchDebounced(
 watch(
   () => form.value.items,
   () => {
-    let totalPrice = 0
-    let totalQuantity = 0
-    for (const iterator of form.value.items) {
-      totalPrice += iterator.total
-      totalQuantity += iterator.quantity
-    }
-    form.value.totalPrice = totalPrice
-    form.value.totalQuantity = totalQuantity
+    calculatePrice()
   },
   { deep: true }
 )
 
-const onChooseItem = async (item: ItemInterface, size: string) => {
-  const index = form.value.items.findIndex((el) => {
-    return el._id === item._id && size === el.size
+const findBarcode = async () => {
+  if (!searchAll.value) {
+    return
+  }
+  const result = await axios.get('/v1/items', {
+    params: {
+      pageSize: 100,
+      page: 1,
+      sort: 'name',
+      filter: {
+        barcode: searchAll.value
+      }
+    }
   })
 
-  await getInventories(item._id, form.value.warehouse_id, size)
+  items.value = result.data.data
+
+  const index = form.value.items.findIndex((el) => {
+    return el._id === items.value[0]._id && el.size === items.value[0].size && el.color === items.value[0].color
+  })
+
+  await getInventories(items.value[0]._id, form.value.warehouse_id, items.value[0].color, items.value[0].size)
+
+  let qty = 1
+  if (index >= 0) {
+    qty = form.value.items[index]?.quantity + 1
+  }
+
+  // stock unavailable
+  if (inventories.value.length === 0 || qty > inventories.value[0].quantity) {
+    notification('Stock Unavailable', '', { type: TypesEnum.Warning })
+    return
+  }
+
+  if (index >= 0) {
+    form.value.items[index].quantity += 1
+    form.value.items[index].total += items.value[0].sellingPrice
+  } else {
+    form.value.items.push({
+      _id: items.value[0]._id,
+      name: items.value[0].name,
+      size: items.value[0].size,
+      color: items.value[0].color,
+      quantity: 1,
+      price: items.value[0].sellingPrice,
+      total: items.value[0].sellingPrice
+    })
+  }
+
+  searchAll.value = ''
+}
+
+const calculatePrice = () => {
+  let totalPrice = 0
+  let totalQuantity = 0
+  for (const iterator of form.value.items) {
+    totalPrice += iterator.total
+    totalQuantity += iterator.quantity
+  }
+  if (form.value.customer_id) {
+    form.value.subtotal = totalPrice
+    form.value.discount = (totalPrice * 5) / 100
+    form.value.totalPrice = totalPrice - (totalPrice * 5) / 100
+  } else {
+    form.value.totalPrice = totalPrice
+  }
+  form.value.totalQuantity = totalQuantity
+}
+
+const onChooseItem = async (item: ItemInterface) => {
+  const index = form.value.items.findIndex((el) => {
+    return el._id === item._id && el.size === item.size && el.color === item.color
+  })
+
+  await getInventories(item._id, form.value.warehouse_id, item.color, item.size)
 
   let qty = 1
   if (index >= 0) {
@@ -160,7 +231,8 @@ const onChooseItem = async (item: ItemInterface, size: string) => {
     form.value.items.push({
       _id: item._id,
       name: item.name,
-      size: size,
+      size: item.size,
+      color: item.color,
       quantity: 1,
       price: item.sellingPrice,
       total: item.sellingPrice
@@ -183,7 +255,7 @@ export interface InventoryInterface {
   createdAt: Date
 }
 const inventories = ref<InventoryInterface[]>([])
-const getInventories = async (item_id: string, warehouse_id: string, size: string) => {
+const getInventories = async (item_id: string, warehouse_id: string, color: string, size: string) => {
   const result = await axios.get('/v1/inventories', {
     params: {
       pageSize: 5,
@@ -192,7 +264,8 @@ const getInventories = async (item_id: string, warehouse_id: string, size: strin
       filter: {
         item_id: item_id,
         warehouse_id: warehouse_id,
-        size: size
+        size: size,
+        color: color
       }
     }
   })
@@ -206,6 +279,12 @@ const choosePaymentMethod = (type: string) => {
 
 const resetForm = () => {
   form.value.items = []
+  form.value.customer_id = ''
+  form.value.paymentType = ''
+  if (selectedCustomer.value) {
+    selectedCustomer.value.id = ''
+    selectedCustomer.value.label = ''
+  }
 }
 
 const onSubmit = async () => {
@@ -252,7 +331,14 @@ const onSubmit = async () => {
             </div>
           </div>
           <div class="mt-5">
-            <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
+            <component
+              :is="BaseInput"
+              v-model="searchAll"
+              placeholder="Search"
+              border="full"
+              class="flex-1"
+              @keyup.enter="findBarcode()"
+            >
               <template #prefix>
                 <i class="i-far-magnifying-glass mx-3 block"></i>
               </template>
@@ -260,19 +346,11 @@ const onSubmit = async () => {
           </div>
           <div class="py-4 grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
             <template v-for="item in items" :key="item._id">
-              <div class="btn py-4 btn-light-dark flex flex-col shadow">
-                <p class="text-sm">{{ item.name }}</p>
-                <p class="text-xs">Rp {{ numeric.format(item.sellingPrice) }}</p>
-                <br />
-                <div class="flex flex-wrap items-center justify-center gap-1">
-                  <button class="btn btn-secondary text-xs btn-sm" @click="onChooseItem(item, 'all size')">
-                    All Size
-                  </button>
-                  <button class="btn btn-secondary text-xs btn-sm" @click="onChooseItem(item, 's')">S</button>
-                  <button class="btn btn-secondary text-xs btn-sm" @click="onChooseItem(item, 'm')">M</button>
-                  <button class="btn btn-secondary text-xs btn-sm" @click="onChooseItem(item, 'l')">L</button>
-                  <button class="btn btn-secondary text-xs btn-sm" @click="onChooseItem(item, 'xl')">XL</button>
-                </div>
+              <div class="btn py-4 btn-light-dark flex flex-col shadow" @click="onChooseItem(item)">
+                <div><img :src="item.photoUrl" alt="" /></div>
+                <p class="text-14px font-bold">{{ item.name }}</p>
+                <p class="text-xs uppercase">{{ item.size }} - {{ item.color }}</p>
+                <p class="text-16px">Rp {{ numeric.format(item.sellingPrice) }}</p>
               </div>
             </template>
           </div>
@@ -313,7 +391,8 @@ const onSubmit = async () => {
                 <div class="flex flex-col min-h-50px max-h-350px overflow-y-auto">
                   <div class="flex flex-row w-full" v-for="item in form.items" :key="item._id">
                     <div class="flex flex-col flex-1">
-                      <span class="m-0 p-0">x{{ item.quantity }} {{ item.name }} ({{ item.size }})</span>
+                      <span class="m-0 p-0">x{{ item.quantity }} {{ item.name }}</span>
+                      <span class="text-8px uppercase font-light">{{ item.size }} - {{ item.color }}</span>
                     </div>
                     <div class="flex-0">
                       <span class="text-right">{{ numeric.format(item.total) }}</span>
@@ -323,6 +402,22 @@ const onSubmit = async () => {
 
                 <!-- Summary -->
                 <div class="flex flex-col">
+                  <div class="flex w-full text-14px font-normal" v-if="form.customer_id">
+                    <div class="flex-1">
+                      <span class="m-0 p-0">Sub Total</span>
+                    </div>
+                    <div class="flex-0">
+                      <span class="text-right">{{ numeric.format(form.subtotal) }}</span>
+                    </div>
+                  </div>
+                  <div class="flex w-full text-14px font-normal" v-if="form.customer_id">
+                    <div class="flex-1">
+                      <span class="m-0 p-0">Discount</span>
+                    </div>
+                    <div class="flex-0">
+                      <span class="text-right">{{ numeric.format(form.discount) }}</span>
+                    </div>
+                  </div>
                   <div class="flex w-full text-14px">
                     <div class="flex-1">
                       <span class="m-0 p-0">Total</span>

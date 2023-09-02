@@ -9,6 +9,8 @@ const router = useRouter()
 
 const form = ref({
   name: '',
+  color: '',
+  size: '',
   sellingPrice: 0,
   itemCategory: {
     name: ''
@@ -21,6 +23,8 @@ onMounted(async () => {
 
     if (result.status === 200) {
       form.value.name = result.data.name
+      form.value.color = result.data.color
+      form.value.size = result.data.size
       form.value.sellingPrice = result.data.sellingPrice
       form.value.itemCategory.name = result.data.itemCategory?.name ?? ''
     } else {
@@ -62,6 +66,8 @@ onMounted(async () => {
           <div class="space-y-5">
             <div class="space-y-2">
               <component :is="BaseInput" readonly v-model="form.name" label="Name"></component>
+              <component :is="BaseInput" readonly v-model="form.color" label="Color"></component>
+              <component :is="BaseInput" readonly v-model="form.size" label="Size"></component>
               <component :is="BaseInput" readonly v-model="form.itemCategory.name" label="Category"></component>
               <component :is="BaseNumeric" readonly v-model="form.sellingPrice" label="Selling Price"></component>
             </div>

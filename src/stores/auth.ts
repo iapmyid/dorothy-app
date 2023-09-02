@@ -17,7 +17,6 @@ export const useAuthStore = defineStore('auth', {
         username: username,
         password: password
       })
-
       if (response.status === 200) {
         this.$state.user.name = response.data.name
         this.$state.user.username = response.data.username
@@ -34,7 +33,6 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await axios.post('/v1/users/verify-token')
         if (response.status === 200) {
-          console.log(response.data)
           this.$state.user.name = response.data.name
           this.$state.user.username = response.data.username
           this.$state.user.role = response.data.role
