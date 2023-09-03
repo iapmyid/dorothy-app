@@ -20,14 +20,6 @@ const warehouse_id = ref('')
 const item_id = ref('')
 const size = ref('')
 
-const listSize = [
-  { id: 1, label: 'all size' },
-  { id: 2, label: 's' },
-  { id: 3, label: 'm' },
-  { id: 4, label: 'l' },
-  { id: 5, label: 'xl' }
-]
-
 const selectedSize = ref()
 watch(selectedSize, async () => {
   size.value = selectedSize.value?.label ?? ''

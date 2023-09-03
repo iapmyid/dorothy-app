@@ -84,6 +84,8 @@ const getItemCategories = async (page = 1, search = '') => {
 const selectedCustomer = ref<{ id: string; label: string }>()
 watch(selectedCustomer, () => {
   form.value.customer_id = selectedCustomer.value?.id ?? ''
+  form.value.discount = (form.value.totalPrice * 5) / 100
+  form.value.subtotal = form.value.totalPrice - form.value.discount
   calculatePrice()
 })
 
@@ -200,8 +202,10 @@ const calculatePrice = () => {
     form.value.subtotal = totalPrice
     form.value.discount = (totalPrice * 5) / 100
     form.value.totalPrice = totalPrice - (totalPrice * 5) / 100
+    form.value.subtotal = totalPrice
   } else {
     form.value.totalPrice = totalPrice
+    form.value.subtotal = totalPrice
   }
   form.value.totalQuantity = totalQuantity
 }

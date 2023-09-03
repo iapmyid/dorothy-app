@@ -30,6 +30,8 @@ export interface PosInterface {
     quantity: number
     total: number
   }[]
+  subtotal: number
+  discount: number
   totalQuantity: number
   totalPrice: number
   paymentType: string
@@ -47,6 +49,8 @@ const form = ref<PosInterface>({
   },
   items: [],
   totalQuantity: 0,
+  subtotal: 0,
+  discount: 0,
   totalPrice: 0,
   paymentType: '',
   createdAt: '',
@@ -60,12 +64,15 @@ onMounted(async () => {
     const result = await axios.get(`/v1/pos/${route.params.id}`)
 
     if (result.status === 200) {
+      console.log(result.data)
       form.value._id = result.data._id
       form.value.date = format(new Date(result.data.createdAt), 'dd MMM yyyy HH:mm')
       form.value.warehouse.name = result.data.warehouse?.name
       form.value.customer.name = result.data.customer?.name
       form.value.items = result.data.items
       form.value.totalQuantity = result.data.totalQuantity
+      form.value.subtotal = result.data.subtotal
+      form.value.discount = result.data.discount
       form.value.totalPrice = result.data.totalPrice
       form.value.paymentType = result.data.paymentType
       form.value.createdAt = format(new Date(result.data.createdAt), 'dd MMM yyyy HH:mm')
@@ -92,7 +99,7 @@ onMounted(async () => {
     <div class="main-content-body">
       <div class="card card-template">
         <div class="card-header">
-          <h2>Show Purchase</h2>
+          <h2>Show Sales</h2>
           <div class="flex gap-2 overflow-x-hidden">
             <div>
               <router-link to="/pos/create" class="btn btn-secondary btn-sm rounded-none space-x-1">
@@ -132,6 +139,20 @@ onMounted(async () => {
               layout="horizontal"
               v-model="form.totalQuantity"
               label="Total Quantity"
+            ></component>
+            <component
+              :is="BaseNumeric"
+              readonly
+              layout="horizontal"
+              v-model="form.subtotal"
+              label="Subtotal"
+            ></component>
+            <component
+              :is="BaseNumeric"
+              readonly
+              layout="horizontal"
+              v-model="form.discount"
+              label="Discount"
             ></component>
             <component
               :is="BaseNumeric"
