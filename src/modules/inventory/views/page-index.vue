@@ -155,10 +155,6 @@ const paginate = async (page: number) => {
                   :list="warehouseApi.listWarehouse.value"
                 ></component>
               </div>
-              <div class="flex flex-col items-start gap-1">
-                <label class="text-sm font-bold">Size</label>
-                <component :is="BaseAutocomplete" v-model="selectedSize" required :list="listSize"></component>
-              </div>
             </div>
           </div>
           <div class="table-container">

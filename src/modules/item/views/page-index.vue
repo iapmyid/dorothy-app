@@ -136,6 +136,7 @@ const paginate = async (page: number) => {
                   <th class="basic-table-head">Color</th>
                   <th class="basic-table-head">Size</th>
                   <th class="basic-table-head">Category</th>
+                  <th class="basic-table-head">Barcode</th>
                   <th class="basic-table-head text-right">Selling Price</th>
                 </tr>
               </thead>
@@ -148,6 +149,7 @@ const paginate = async (page: number) => {
                     <td class="basic-table-body">{{ item.color }}</td>
                     <td class="basic-table-body">{{ item.size }}</td>
                     <td class="basic-table-body">{{ item.itemCategory.name }}</td>
+                    <td class="basic-table-body">{{ item.barcode }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(item.sellingPrice) }}</td>
                   </tr>
                 </template>

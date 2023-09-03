@@ -15,7 +15,7 @@ export function useItemApi() {
     listItem.value = result.data.data.map((item: any) => {
       return {
         id: item._id,
-        label: item.name
+        label: `${item.name} [${item.color} ${item.size}]`
       }
     })
   }

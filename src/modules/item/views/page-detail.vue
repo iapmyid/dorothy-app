@@ -11,6 +11,7 @@ const form = ref({
   name: '',
   color: '',
   size: '',
+  barcode: '',
   sellingPrice: 0,
   itemCategory: {
     name: ''
@@ -26,6 +27,7 @@ onMounted(async () => {
       form.value.color = result.data.color
       form.value.size = result.data.size
       form.value.sellingPrice = result.data.sellingPrice
+      form.value.barcode = result.data.barcode
       form.value.itemCategory.name = result.data.itemCategory?.name ?? ''
     } else {
       router.push('/404')
@@ -69,6 +71,7 @@ onMounted(async () => {
               <component :is="BaseInput" readonly v-model="form.color" label="Color"></component>
               <component :is="BaseInput" readonly v-model="form.size" label="Size"></component>
               <component :is="BaseInput" readonly v-model="form.itemCategory.name" label="Category"></component>
+              <component :is="BaseInput" readonly v-model="form.barcode" label="Barcode"></component>
               <component :is="BaseNumeric" readonly v-model="form.sellingPrice" label="Selling Price"></component>
             </div>
           </div>

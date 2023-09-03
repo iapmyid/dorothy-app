@@ -1,89 +1,121 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { AxiosError } from 'axios'
-import { BaseBreadcrumb, BaseDivider, BaseDatepicker, BaseNumeric, BaseAutocomplete } from '@/components/index'
+import { BaseBreadcrumb, BaseDivider, BaseDatepicker, BaseInput, BaseAutocomplete } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { useRouter } from 'vue-router'
 import { format } from 'date-fns'
 import { useItemApi } from '../api/item'
 import { useWarehouseApi } from '../api/warehouse'
+import { useNumeric } from '@/composable/numeric'
 import axios from '@/axios'
 
 const { notification } = useBaseNotification()
 const router = useRouter()
 const itemApi = useItemApi()
 const warehouseApi = useWarehouseApi()
+const numeric = useNumeric()
+
+const searchAll = ref()
+
+export interface ItemInterface {
+  _id: string
+  name: string
+  color: string
+  size: string
+  photoUrl: string
+  itemCategory: {
+    name: string
+  }
+  sellingPrice: number
+}
+
+const items = ref<ItemInterface[]>([])
+
+const findBarcode = async () => {
+  if (!searchAll.value) {
+    return
+  }
+
+  const result = await axios.get('/v1/items', {
+    params: {
+      pageSize: 100,
+      page: 1,
+      sort: 'name',
+      filter: {
+        barcode: searchAll.value
+      }
+    }
+  })
+  items.value = result.data.data
+  console.log(result.data.data)
+
+  const index = form.value.items.findIndex((el: any) => {
+    return el._id === items.value[0]._id && el.size === items.value[0].size && el.color === items.value[0].color
+  })
+  console.log(index)
+
+  await getInventories(items.value[0]._id, form.value.warehouseOrigin_id, items.value[0].color, items.value[0].size)
+
+  let qty = 1
+  if (index >= 0) {
+    qty = form.value.items[index]?.quantity + 1
+  }
+
+  // stock unavailable
+  if (inventories.value.length === 0 || qty > inventories.value[0].quantity) {
+    notification('Stock Unavailable', '', { type: TypesEnum.Warning })
+    return
+  }
+
+  if (index >= 0) {
+    form.value.items[index].quantity += 1
+    form.value.items[index].total += items.value[0].sellingPrice
+  } else {
+    form.value.items.push({
+      _id: items.value[0]._id,
+      name: items.value[0].name,
+      size: items.value[0].size,
+      color: items.value[0].color,
+      quantity: 1,
+      price: items.value[0].sellingPrice,
+      total: items.value[0].sellingPrice
+    })
+  }
+
+  searchAll.value = ''
+}
 
 const formDate = ref(format(new Date(), 'dd/MM/yyyy'))
 
-const form = ref({
+const form = ref<{
+  date: string
+  warehouseOrigin_id: string
+  warehouseDestination_id: string
+  items: {
+    _id: string
+    name: string
+    size: string
+    color: string
+    quantity: number
+    price: number
+    total: number
+  }[]
+}>({
   date: format(new Date(), 'yyyy-MM-dd'),
   warehouseOrigin_id: '',
   warehouseDestination_id: '',
-  item_id: '',
-  size: [
-    {
-      label: 'all size',
-      quantity: 0
-    },
-    {
-      label: 's',
-      quantity: 0
-    },
-    {
-      label: 'm',
-      quantity: 0
-    },
-    {
-      label: 'l',
-      quantity: 0
-    },
-    {
-      label: 'xl',
-      quantity: 0
-    }
-  ],
-  totalQuantity: 0
+  items: []
 })
-
-const calculateForm = () => {
-  calculateQuantity()
-}
-
-const calculateQuantity = () => {
-  form.value.totalQuantity = 0
-  form.value.size.forEach((el) => {
-    form.value.totalQuantity += Number(el.quantity)
-  })
-}
-
-watch(
-  () => [
-    form.value.size[0].quantity,
-    form.value.size[1].quantity,
-    form.value.size[2].quantity,
-    form.value.size[3].quantity,
-    form.value.size[4].quantity
-  ],
-  () => {
-    calculateForm()
-  },
-  { immediate: true }
-)
 
 const selectedWarehouseOrigin = ref<{ id: string; label: string }>()
 watch(selectedWarehouseOrigin, async () => {
   form.value.warehouseOrigin_id = selectedWarehouseOrigin.value?.id ?? ''
-  await getInventories()
+  form.value.items = []
 })
 const selectedWarehouseDestination = ref<{ id: string; label: string }>()
 watch(selectedWarehouseDestination, () => {
   form.value.warehouseDestination_id = selectedWarehouseDestination.value?.id ?? ''
-})
-const selectedItem = ref<{ id: string; label: string }>()
-watch(selectedItem, async () => {
-  form.value.item_id = selectedItem.value?.id ?? ''
-  await getInventories()
 })
 
 onMounted(async () => {
@@ -92,32 +124,23 @@ onMounted(async () => {
   await itemApi.fetchListItem()
 })
 
-const inventory = ref<{ [key: string]: number }>({})
 const inventories = ref()
-const getInventories = async () => {
-  if (form.value.item_id && form.value.warehouseOrigin_id) {
-    const result = await axios.get('/v1/inventories', {
-      params: {
-        pageSize: 20,
-        page: 1,
-        sort: 'item.name',
-        filter: {
-          item_id: form.value.item_id,
-          warehouse_id: form.value.warehouseOrigin_id
-        }
+const getInventories = async (item_id: string, warehouse_id: string, color: string, size: string) => {
+  const result = await axios.get('/v1/inventories', {
+    params: {
+      pageSize: 5,
+      page: 1,
+      sort: 'item.name',
+      filter: {
+        item_id: item_id,
+        warehouse_id: warehouse_id,
+        size: size,
+        color: color
       }
-    })
-
-    inventories.value = result.data.data
-
-    inventory.value = {}
-
-    for (const iterator of inventories.value) {
-      inventory.value[iterator.size] = iterator.quantity
     }
-  } else {
-    inventory.value = {}
-  }
+  })
+
+  inventories.value = result.data.data
 }
 
 const errors = ref()
@@ -163,7 +186,7 @@ const onSubmit = async () => {
           <h2>New Transfer Item</h2>
         </div>
         <div class="flex flex-col gap-4">
-          <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
+          <form @submit.prevent="" method="post" class="space-y-5">
             <div class="space-y-2">
               <component
                 :is="BaseDatepicker"
@@ -203,57 +226,50 @@ const onSubmit = async () => {
                   <span class="text-xs text-slate-400">(required)</span>
                 </label>
                 <component
-                  :is="BaseAutocomplete"
-                  required
-                  v-model="selectedItem"
-                  :list="itemApi.listItem.value"
-                ></component>
+                  :is="BaseInput"
+                  v-model="searchAll"
+                  placeholder="Search"
+                  border="simple"
+                  class="flex-1"
+                  @keyup.enter="findBarcode()"
+                >
+                  <template #prefix>
+                    <i class="i-far-magnifying-glass mx-3 block"></i>
+                  </template>
+                </component>
               </div>
-              <h3>Quantity per Size</h3>
-              <component
-                :is="BaseNumeric"
-                v-model="form.size[0].quantity"
-                :helper="`Current Stock ${inventory['all size'] ?? 0}`"
-                layout="horizontal"
-                label="All Size"
-              ></component>
-              <component
-                :is="BaseNumeric"
-                layout="horizontal"
-                :helper="`Current Stock ${inventory['s'] ?? 0}`"
-                v-model="form.size[1].quantity"
-                label="Size S"
-              ></component>
-              <component
-                :is="BaseNumeric"
-                layout="horizontal"
-                :helper="`Current Stock ${inventory['m'] ?? 0}`"
-                v-model="form.size[2].quantity"
-                label="Size M"
-              ></component>
-              <component
-                :is="BaseNumeric"
-                layout="horizontal"
-                :helper="`Current Stock ${inventory['l'] ?? 0}`"
-                v-model="form.size[3].quantity"
-                label="Size L"
-              ></component>
-              <component
-                :is="BaseNumeric"
-                layout="horizontal"
-                :helper="`Current Stock ${inventory['xl'] ?? 0}`"
-                v-model="form.size[4].quantity"
-                label="Size XL"
-              ></component>
-              <component
-                :is="BaseNumeric"
-                readonly
-                layout="horizontal"
-                v-model="form.totalQuantity"
-                label="Total"
-              ></component>
+              <div class="table-container">
+                <table class="table text-sm">
+                  <thead>
+                    <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
+                      <th class="basic-table-head">
+                        <p>Item</p>
+                      </th>
+                      <th class="basic-table-head">
+                        <p>Size</p>
+                      </th>
+                      <th class="basic-table-head">
+                        <p>Color</p>
+                      </th>
+                      <th class="basic-table-head text-right">
+                        <p>Quantity</p>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template v-if="form.items.length > 0">
+                      <tr v-for="item in form.items" :key="item._id">
+                        <td class="basic-table-body">{{ item.name }}</td>
+                        <td class="basic-table-body">{{ item.size }}</td>
+                        <td class="basic-table-body">{{ item.color }}</td>
+                        <td class="basic-table-body text-right">{{ numeric.format(item.quantity) }}</td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <button class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-primary" @click="onSubmit()">Submit</button>
           </form>
         </div>
       </div>
