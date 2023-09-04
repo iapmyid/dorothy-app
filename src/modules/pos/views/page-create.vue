@@ -281,13 +281,15 @@ const choosePaymentMethod = (type: string) => {
   form.value.paymentType = type
 }
 
-const resetForm = () => {
+const resetForm = async () => {
   form.value.items = []
   form.value.customer_id = ''
   form.value.paymentType = ''
   if (selectedCustomer.value) {
-    selectedCustomer.value.id = ''
+    selectedCustomer.value._id = ''
     selectedCustomer.value.label = ''
+    selectedCustomer.value = undefined
+    await customerApi.fetchListCustomer()
   }
 }
 
@@ -299,7 +301,7 @@ const onSubmit = async () => {
 
     if (response.status === 201) {
       window.print()
-      resetForm()
+      await resetForm()
     }
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
