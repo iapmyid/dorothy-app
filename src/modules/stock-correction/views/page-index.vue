@@ -18,21 +18,23 @@ const router = useRouter()
 const searchAll = ref('')
 const isLoadingSearch = ref(false)
 
-export interface StockCorrectionInterface {
+export interface TransferItemInterface {
   _id: string
-  size: { label: string; quantity: number }[]
-  totalQuantity: number
-  item: {
+  items: {
     name: string
-  }
+    color: string
+    size: string
+    _id: string
+    quantity: number
+  }[]
   warehouse: {
     name: string
   }
   createdAt: Date
 }
-const stockCorrections = ref<StockCorrectionInterface[]>([])
+const transferItems = ref<TransferItemInterface[]>([])
 
-const getStockCorrections = async (page = 1, search = '') => {
+const getTransferItems = async (page = 1, search = '') => {
   const result = await axios.get('/v1/stock-corrections', {
     params: {
       pageSize: 10,
@@ -44,7 +46,7 @@ const getStockCorrections = async (page = 1, search = '') => {
     }
   })
 
-  stockCorrections.value = result.data.data
+  transferItems.value = result.data.data
 
   pagination.page.value = result.data.pagination.page
   pagination.pageCount.value = result.data.pagination.pageCount
@@ -64,7 +66,7 @@ watchDebounced(
       }
     })
     isLoadingSearch.value = true
-    await getStockCorrections(1, searchAll.value)
+    await getTransferItems(1, searchAll.value)
     isLoadingSearch.value = false
   },
   { debounce: 500, maxWait: 1000 }
@@ -73,7 +75,7 @@ watchDebounced(
 onMounted(async () => {
   const page = Number(route.query.page ?? 1)
   searchAll.value = route.query.search?.toString() ?? ''
-  await getStockCorrections(page, searchAll.value)
+  await getTransferItems(page, searchAll.value)
 })
 
 const paginatePrev = async () => {
@@ -84,7 +86,7 @@ const paginatePrev = async () => {
       page: pagination.previousPage()
     }
   })
-  await getStockCorrections(pagination.previousPage(), searchAll.value)
+  await getTransferItems(pagination.previousPage(), searchAll.value)
 }
 const paginateNext = async () => {
   router.replace({
@@ -94,7 +96,7 @@ const paginateNext = async () => {
       page: pagination.nextPage()
     }
   })
-  await getStockCorrections(pagination.nextPage(), searchAll.value)
+  await getTransferItems(pagination.nextPage(), searchAll.value)
 }
 const paginate = async (page: number) => {
   router.replace({
@@ -104,7 +106,7 @@ const paginate = async (page: number) => {
       page: page
     }
   })
-  await getStockCorrections(page, searchAll.value)
+  await getTransferItems(page, searchAll.value)
 }
 </script>
 
@@ -118,7 +120,7 @@ const paginate = async (page: number) => {
     <div class="main-content-body">
       <div class="card card-template">
         <div class="flex flex-col gap-4">
-          <div class="w-full flex stockCorrections-center gap-4">
+          <div class="w-full flex transferItems-center gap-4">
             <div class="w-full flex space-x-2">
               <router-link to="/stock-correction/create" class="btn btn-secondary rounded-none space-x-1">
                 <i class="i-far-pen-to-square block"></i>
@@ -142,62 +144,46 @@ const paginate = async (page: number) => {
                     <p>Item</p>
                   </th>
                   <th class="basic-table-head">
+                    <p>Color</p>
+                  </th>
+                  <th class="basic-table-head">
+                    <p>Size</p>
+                  </th>
+                  <th class="basic-table-head">
                     <p>Warehouse</p>
                   </th>
                   <th class="basic-table-head text-right">
-                    <p>Quantity (All Size)</p>
-                  </th>
-                  <th class="basic-table-head text-right">
-                    <p>Quantity (S)</p>
-                  </th>
-                  <th class="basic-table-head text-right">
-                    <p>Quantity (M)</p>
-                  </th>
-                  <th class="basic-table-head text-right">
-                    <p>Quantity (L)</p>
-                  </th>
-                  <th class="basic-table-head text-right">
-                    <p>Quantity (XL)</p>
-                  </th>
-                  <th class="basic-table-head text-right">
-                    <p>Total Quantity</p>
+                    <p>Quantity</p>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <template v-if="stockCorrections.length > 0">
-                  <tr v-for="stockCorrection in stockCorrections" :key="stockCorrection._id" class="basic-table-row">
-                    <td class="basic-table-body">
-                      {{ format(new Date(stockCorrection.createdAt), 'dd MMM yyyy HH:mm') }}
-                    </td>
-                    <td class="basic-table-body">
-                      <router-link :to="`/stock-correction/${stockCorrection._id}`" class="text-info">{{
-                        stockCorrection.item?.name
-                      }}</router-link>
-                    </td>
-                    <td class="basic-table-body">{{ stockCorrection.warehouse.name }}</td>
-                    <td class="basic-table-body text-right">
-                      {{ numeric.format(stockCorrection.size[0]?.quantity ?? 0) }}
-                    </td>
-                    <td class="basic-table-body text-right">
-                      {{ numeric.format(stockCorrection.size[1]?.quantity ?? 0) }}
-                    </td>
-                    <td class="basic-table-body text-right">
-                      {{ numeric.format(stockCorrection.size[2]?.quantity ?? 0) }}
-                    </td>
-                    <td class="basic-table-body text-right">
-                      {{ numeric.format(stockCorrection.size[3]?.quantity ?? 0) }}
-                    </td>
-                    <td class="basic-table-body text-right">
-                      {{ numeric.format(stockCorrection.size[4]?.quantity ?? 0) }}
-                    </td>
-                    <td class="basic-table-body text-right">{{ numeric.format(stockCorrection.totalQuantity) }}</td>
-                  </tr>
+                <template v-if="transferItems.length > 0">
+                  <template v-for="transferItem in transferItems" :key="transferItem._id">
+                    <tr v-for="item in transferItem.items" :key="transferItem._id + item._id" class="basic-table-row">
+                      <td class="basic-table-body">
+                        {{ format(new Date(transferItem.createdAt), 'dd MMM yyyy HH:mm') }}
+                      </td>
+                      <td class="basic-table-body">
+                        <router-link :to="`/stock-correction/${transferItem._id}`" class="text-info">
+                          {{ item.name }}
+                        </router-link>
+                      </td>
+                      <td class="basic-table-body">
+                        {{ item.color }}
+                      </td>
+                      <td class="basic-table-body">
+                        {{ item.size }}
+                      </td>
+                      <td class="basic-table-body">{{ transferItem.warehouse.name }}</td>
+                      <td class="basic-table-body text-right">{{ numeric.format(item.quantity) }}</td>
+                    </tr>
+                  </template>
                 </template>
               </tbody>
             </table>
           </div>
-          <div class="w-full flex stockCorrections-center justify-between">
+          <div class="w-full flex transferItems-center justify-between">
             <div>
               <p class="text-sm text-slate-600 dark:text-slate-400">
                 Showing {{ pagination.dataFrom() }} to {{ pagination.dataTo() }} of
