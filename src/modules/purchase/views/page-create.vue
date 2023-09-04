@@ -245,7 +245,9 @@ const onSubmit = async () => {
               <component :is="BaseInput" required v-model="form.name" label="Item Name"></component>
               <component :is="BaseInput" required v-model="form.color" label="Color"></component>
 
-              <h3 class="bg-slate-200 -mx-4 px-4 py-1">Quantity per Size</h3>
+              <div class="bg-slate-200 px-4 py-2 -mx-4 -my-2 font-extrabold">
+                <h3>Quantity per Size</h3>
+              </div>
               <component
                 :is="BaseNumeric"
                 v-model="form.size[0].quantity"
@@ -284,7 +286,9 @@ const onSubmit = async () => {
                 label="Total"
               ></component>
 
-              <h3>Buying Price</h3>
+              <div class="bg-slate-200 px-4 py-2 -mx-4 -my-2 font-extrabold">
+                <h3>Buying Price</h3>
+              </div>
               <component :is="BaseNumeric" layout="horizontal" v-model="form.price" label="Price"></component>
               <component
                 :is="BaseNumeric"
@@ -294,7 +298,9 @@ const onSubmit = async () => {
                 label="Total"
               ></component>
 
-              <h3>Selling Price</h3>
+              <div class="bg-slate-200 px-4 py-2 -mx-4 -my-2 font-extrabold">
+                <h3>Selling Price</h3>
+              </div>
               <component
                 :is="BaseNumeric"
                 layout="horizontal"
