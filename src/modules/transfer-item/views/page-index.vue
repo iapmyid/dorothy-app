@@ -20,11 +20,13 @@ const isLoadingSearch = ref(false)
 
 export interface TransferItemInterface {
   _id: string
-  size: { label: string; quantity: number }[]
-  totalQuantity: number
-  item: {
+  items: {
     name: string
-  }
+    color: string
+    size: string
+    _id: string
+    quantity: number
+  }[]
   warehouseOrigin: {
     name: string
   }
@@ -145,61 +147,45 @@ const paginate = async (page: number) => {
                     <p>Item</p>
                   </th>
                   <th class="basic-table-head">
+                    <p>Color</p>
+                  </th>
+                  <th class="basic-table-head">
+                    <p>Size</p>
+                  </th>
+                  <th class="basic-table-head">
                     <p>Warehouse Origin</p>
                   </th>
                   <th class="basic-table-head">
                     <p>Warehouse Destination</p>
                   </th>
                   <th class="basic-table-head text-right">
-                    <p>Quantity (All Size)</p>
-                  </th>
-                  <th class="basic-table-head text-right">
-                    <p>Quantity (S)</p>
-                  </th>
-                  <th class="basic-table-head text-right">
-                    <p>Quantity (M)</p>
-                  </th>
-                  <th class="basic-table-head text-right">
-                    <p>Quantity (L)</p>
-                  </th>
-                  <th class="basic-table-head text-right">
-                    <p>Quantity (XL)</p>
-                  </th>
-                  <th class="basic-table-head text-right">
-                    <p>Total Quantity</p>
+                    <p>Quantity</p>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <template v-if="transferItems.length > 0">
-                  <tr v-for="transferItem in transferItems" :key="transferItem._id" class="basic-table-row">
-                    <td class="basic-table-body">
-                      {{ format(new Date(transferItem.createdAt), 'dd MMM yyyy HH:mm') }}
-                    </td>
-                    <td class="basic-table-body">
-                      <router-link :to="`/transfer-item/${transferItem._id}`" class="text-info">{{
-                        transferItem.item?.name
-                      }}</router-link>
-                    </td>
-                    <td class="basic-table-body">{{ transferItem.warehouseOrigin.name }}</td>
-                    <td class="basic-table-body">{{ transferItem.warehouseDestination.name }}</td>
-                    <td class="basic-table-body text-right">
-                      {{ numeric.format(transferItem.size[0]?.quantity ?? 0) }}
-                    </td>
-                    <td class="basic-table-body text-right">
-                      {{ numeric.format(transferItem.size[1]?.quantity ?? 0) }}
-                    </td>
-                    <td class="basic-table-body text-right">
-                      {{ numeric.format(transferItem.size[2]?.quantity ?? 0) }}
-                    </td>
-                    <td class="basic-table-body text-right">
-                      {{ numeric.format(transferItem.size[3]?.quantity ?? 0) }}
-                    </td>
-                    <td class="basic-table-body text-right">
-                      {{ numeric.format(transferItem.size[4]?.quantity ?? 0) }}
-                    </td>
-                    <td class="basic-table-body text-right">{{ numeric.format(transferItem.totalQuantity) }}</td>
-                  </tr>
+                  <template v-for="transferItem in transferItems" :key="transferItem._id">
+                    <tr v-for="item in transferItem.items" :key="transferItem._id + item._id" class="basic-table-row">
+                      <td class="basic-table-body">
+                        {{ format(new Date(transferItem.createdAt), 'dd MMM yyyy HH:mm') }}
+                      </td>
+                      <td class="basic-table-body">
+                        <router-link :to="`/transfer-item/${transferItem._id}`" class="text-info">
+                          {{ item.name }}
+                        </router-link>
+                      </td>
+                      <td class="basic-table-body">
+                        {{ item.color }}
+                      </td>
+                      <td class="basic-table-body">
+                        {{ item.size }}
+                      </td>
+                      <td class="basic-table-body">{{ transferItem.warehouseOrigin.name }}</td>
+                      <td class="basic-table-body">{{ transferItem.warehouseDestination.name }}</td>
+                      <td class="basic-table-body text-right">{{ numeric.format(item.quantity) }}</td>
+                    </tr>
+                  </template>
                 </template>
               </tbody>
             </table>

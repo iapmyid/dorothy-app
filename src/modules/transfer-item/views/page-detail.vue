@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { BaseBreadcrumb, BaseDivider, BaseInput, BaseNumeric } from '@/components/index'
+import { BaseBreadcrumb, BaseDivider, BaseInput } from '@/components/index'
 import { useRoute, useRouter } from 'vue-router'
 import { format } from 'date-fns'
 import axios from '@/axios'
+import { useNumeric } from '@/composable/numeric'
 
+const numeric = useNumeric()
 const route = useRoute()
 const router = useRouter()
 
@@ -16,32 +18,7 @@ const form = ref({
   warehouseDestination: {
     name: ''
   },
-  item: {
-    name: ''
-  },
-  size: [
-    {
-      label: 'all size',
-      quantity: 0
-    },
-    {
-      label: 's',
-      quantity: 0
-    },
-    {
-      label: 'm',
-      quantity: 0
-    },
-    {
-      label: 'l',
-      quantity: 0
-    },
-    {
-      label: 'xl',
-      quantity: 0
-    }
-  ],
-  totalQuantity: 0,
+  items: [],
   createdAt: ''
 })
 
@@ -53,9 +30,7 @@ onMounted(async () => {
       form.value.date = result.data.date
       form.value.warehouseOrigin = result.data.warehouseOrigin
       form.value.warehouseDestination = result.data.warehouseDestination
-      form.value.item = result.data.item
-      form.value.size = result.data.size
-      form.value.totalQuantity = result.data.totalQuantity
+      form.value.items = result.data.items
       form.value.createdAt = format(new Date(result.data.createdAt), 'dd MMM yyyy HH:mm')
     } else {
       router.push('/404')
@@ -92,53 +67,53 @@ onMounted(async () => {
         <div class="flex flex-col gap-4">
           <div class="space-y-2">
             <component :is="BaseInput" readonly v-model="form.createdAt" label="Date"></component>
-            <component :is="BaseInput" readonly v-model="form.warehouseOrigin.name" label="Warehouse"></component>
-            <component :is="BaseInput" readonly v-model="form.warehouseDestination.name" label="Supplier"></component>
-            <component :is="BaseInput" readonly v-model="form.item.name" label="Item Category"></component>
-
-            <h3>Quantity per Size</h3>
             <component
-              :is="BaseNumeric"
+              :is="BaseInput"
               readonly
-              layout="horizontal"
-              v-model="form.size[0].quantity"
-              label="All Size"
+              v-model="form.warehouseOrigin.name"
+              label="Warehouse Origin"
             ></component>
             <component
-              :is="BaseNumeric"
+              :is="BaseInput"
               readonly
-              layout="horizontal"
-              v-model="form.size[1].quantity"
-              label="Size S"
-            ></component>
-            <component
-              :is="BaseNumeric"
-              readonly
-              layout="horizontal"
-              v-model="form.size[2].quantity"
-              label="Size M"
-            ></component>
-            <component
-              :is="BaseNumeric"
-              readonly
-              layout="horizontal"
-              v-model="form.size[3].quantity"
-              label="Size L"
-            ></component>
-            <component
-              :is="BaseNumeric"
-              layout="horizontal"
-              v-model="form.size[4].quantity"
-              label="Size XL"
-            ></component>
-            <component
-              :is="BaseNumeric"
-              readonly
-              layout="horizontal"
-              v-model="form.totalQuantity"
-              label="Total"
+              v-model="form.warehouseDestination.name"
+              label="Warehouse Destination"
             ></component>
           </div>
+        </div>
+        <div class="table-container">
+          <table class="table text-sm">
+            <thead>
+              <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
+                <th class="basic-table-head">
+                  <p>Item</p>
+                </th>
+                <th class="basic-table-head">
+                  <p>Color</p>
+                </th>
+                <th class="basic-table-head">
+                  <p>Size</p>
+                </th>
+                <th class="basic-table-head text-right">
+                  <p>Quantity</p>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in form.items" :key="form.items._id + item._id" class="basic-table-row">
+                <td class="basic-table-body">
+                  {{ item.name }}
+                </td>
+                <td class="basic-table-body">
+                  {{ item.color }}
+                </td>
+                <td class="basic-table-body">
+                  {{ item.size }}
+                </td>
+                <td class="basic-table-body text-right">{{ numeric.format(item.quantity) }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
