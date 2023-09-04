@@ -144,48 +144,31 @@ const paginate = async (page: number) => {
                     <p>Date</p>
                   </th>
                   <th class="basic-table-head">
-                    <p>Item</p>
-                  </th>
-                  <th class="basic-table-head">
-                    <p>Color</p>
-                  </th>
-                  <th class="basic-table-head">
-                    <p>Size</p>
-                  </th>
-                  <th class="basic-table-head">
                     <p>Warehouse Origin</p>
                   </th>
                   <th class="basic-table-head">
                     <p>Warehouse Destination</p>
                   </th>
-                  <th class="basic-table-head text-right">
-                    <p>Quantity</p>
+                  <th class="basic-table-head">
+                    <p>Status</p>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <template v-if="transferItems.length > 0">
-                  <template v-for="transferItem in transferItems" :key="transferItem._id">
-                    <tr v-for="item in transferItem.items" :key="transferItem._id + item._id" class="basic-table-row">
-                      <td class="basic-table-body">
+                  <tr v-for="transferItem in transferItems" :key="transferItem._id">
+                    <td class="basic-table-body">
+                      <router-link :to="`/transfer-item/${transferItem._id}`" class="text-info">
                         {{ format(new Date(transferItem.createdAt), 'dd MMM yyyy HH:mm') }}
-                      </td>
-                      <td class="basic-table-body">
-                        <router-link :to="`/transfer-item/${transferItem._id}`" class="text-info">
-                          {{ item.name }}
-                        </router-link>
-                      </td>
-                      <td class="basic-table-body">
-                        {{ item.color }}
-                      </td>
-                      <td class="basic-table-body">
-                        {{ item.size }}
-                      </td>
-                      <td class="basic-table-body">{{ transferItem.warehouseOrigin.name }}</td>
-                      <td class="basic-table-body">{{ transferItem.warehouseDestination.name }}</td>
-                      <td class="basic-table-body text-right">{{ numeric.format(item.quantity) }}</td>
-                    </tr>
-                  </template>
+                      </router-link>
+                    </td>
+                    <td class="basic-table-body">{{ transferItem.warehouseOrigin.name }}</td>
+                    <td class="basic-table-body">{{ transferItem.warehouseDestination.name }}</td>
+                    <td class="basic-table-body">
+                      <div class="btn btn-success btn-xs" v-if="transferItem.receivedAt">Received</div>
+                      <div class="btn btn-info btn-xs" v-else>Pending</div>
+                    </td>
+                  </tr>
                 </template>
               </tbody>
             </table>

@@ -38,52 +38,56 @@ const findBarcode = async () => {
     return
   }
 
-  const result = await axios.get('/v1/items', {
-    params: {
-      pageSize: 100,
-      page: 1,
-      sort: 'name',
-      filter: {
-        barcode: searchAll.value
+  try {
+    const result = await axios.get('/v1/items', {
+      params: {
+        pageSize: 100,
+        page: 1,
+        sort: 'name',
+        filter: {
+          barcode: searchAll.value
+        }
       }
-    }
-  })
-  items.value = result.data.data
-
-  const index = form.value.items.findIndex((el: any) => {
-    return el._id === items.value[0]._id && el.size === items.value[0].size && el.color === items.value[0].color
-  })
-
-  await getInventories(items.value[0]._id, form.value.warehouseOrigin_id, items.value[0].color, items.value[0].size)
-
-  let qty = 1
-  if (index >= 0) {
-    qty = form.value.items[index]?.quantity + 1
-  }
-
-  // stock unavailable
-  if (inventories.value.length === 0 || qty > inventories.value[0].quantity) {
-    notification('Stock Unavailable', '', { type: TypesEnum.Warning })
-    return
-  }
-
-  if (index >= 0) {
-    form.value.items[index].quantity += 1
-    form.value.items[index].total += items.value[0].sellingPrice
-  } else {
-    form.value.items.push({
-      _id: items.value[0]._id,
-      name: items.value[0].name,
-      size: items.value[0].size,
-      color: items.value[0].color,
-      barcode: items.value[0].barcode,
-      quantity: 1,
-      price: items.value[0].sellingPrice,
-      total: items.value[0].sellingPrice
     })
-  }
+    items.value = result.data.data
 
-  searchAll.value = ''
+    const index = form.value.items.findIndex((el: any) => {
+      return el._id === items.value[0]._id && el.size === items.value[0].size && el.color === items.value[0].color
+    })
+
+    await getInventories(items.value[0]._id, form.value.warehouseOrigin_id, items.value[0].color, items.value[0].size)
+
+    let qty = 1
+    if (index >= 0) {
+      qty = form.value.items[index]?.quantity + 1
+    }
+
+    // stock unavailable
+    if (inventories.value.length === 0 || qty > inventories.value[0].quantity) {
+      notification('Stock Unavailable', '', { type: TypesEnum.Warning })
+      return
+    }
+
+    if (index >= 0) {
+      form.value.items[index].quantity += 1
+      form.value.items[index].total += items.value[0].sellingPrice
+    } else {
+      form.value.items.push({
+        _id: items.value[0]._id,
+        name: items.value[0].name,
+        size: items.value[0].size,
+        color: items.value[0].color,
+        barcode: items.value[0].barcode,
+        quantity: 1,
+        price: items.value[0].sellingPrice,
+        total: items.value[0].sellingPrice
+      })
+    }
+  } catch (error) {
+    notification('Item not found', '', { type: TypesEnum.Warning })
+  } finally {
+    searchAll.value = ''
+  }
 }
 
 const formDate = ref(format(new Date(), 'dd/MM/yyyy'))

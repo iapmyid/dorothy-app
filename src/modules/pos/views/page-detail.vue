@@ -100,11 +100,15 @@ onMounted(async () => {
         <div class="card-header">
           <h2>Show Sales</h2>
           <div class="flex gap-2 overflow-x-hidden">
-            <div>
+            <div class="space-x-3">
               <router-link to="/pos/create" class="btn btn-secondary btn-sm rounded-none space-x-1">
                 <i class="i-far-circle-plus block"></i>
                 <span>Add</span>
               </router-link>
+              <!-- <button type="button" class="btn btn-danger btn-sm rounded-none space-x-1">
+                <i class="i-far-trash block"></i>
+                <span>Delete</span>
+              </button> -->
             </div>
           </div>
         </div>
