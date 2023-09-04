@@ -149,6 +149,11 @@ const menuMain = {
       allowed: ['administrator', 'admin purchasing', 'admin stock']
     },
     {
+      name: 'Stock Opname',
+      path: '/stock-opname',
+      allowed: ['administrator', 'admin purchasing', 'admin stock']
+    },
+    {
       name: 'Transfer Item',
       path: '/transfer-item',
       allowed: ['administrator', 'admin purchasing', 'admin stock']

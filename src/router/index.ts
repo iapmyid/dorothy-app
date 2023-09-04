@@ -12,6 +12,7 @@ import { routes as purchaseRoutes } from '@/modules/purchase/routes'
 import { routes as inventoryRoutes } from '@/modules/inventory/routes'
 import { routes as transferItemRoutes } from '@/modules/transfer-item/routes'
 import { routes as stockCorrectionRoutes } from '@/modules/stock-correction/routes'
+import { routes as stockOpnameRoutes } from '@/modules/stock-opname/routes'
 import { routes as posRoutes } from '@/modules/pos/routes'
 
 const routes = [
@@ -27,6 +28,7 @@ const routes = [
   inventoryRoutes,
   transferItemRoutes,
   stockCorrectionRoutes,
+  stockOpnameRoutes,
   posRoutes,
   {
     path: '/:pathMatch(.*)*',
