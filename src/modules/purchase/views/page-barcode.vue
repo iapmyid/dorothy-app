@@ -17,7 +17,6 @@ const item = ref<{ barcode: string; name: string; size: [{ label: string; quanti
 onMounted(async () => {
   try {
     const result = await axios.get(`/v1/purchases/${route.params.id}`)
-    console.log(result)
 
     if (result.status === 200) {
       item.value.barcode = result.data.barcode

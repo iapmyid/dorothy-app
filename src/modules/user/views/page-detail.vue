@@ -34,7 +34,6 @@ onMounted(async () => {
     const result = await axios.get(`/v1/users/${route.params.id}`)
 
     if (result.status === 200) {
-      console.log(result.data)
       form.value.name = result.data.name
       form.value.username = result.data.username
       form.value.role = result.data.role

@@ -172,7 +172,6 @@ const onSubmit = async () => {
     } else if (error instanceof AxiosError) {
       notification(error.code as string, error.message, { type: TypesEnum.Warning })
     } else {
-      console.log(error)
       notification('Unknown Error', '', { type: TypesEnum.Warning })
     }
   } finally {

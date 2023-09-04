@@ -48,12 +48,10 @@ const findBarcode = async () => {
     }
   })
   items.value = result.data.data
-  console.log(result.data.data)
 
   const index = form.value.items.findIndex((el: any) => {
     return el._id === items.value[0]._id && el.size === items.value[0].size && el.color === items.value[0].color
   })
-  console.log(index)
 
   await getInventories(items.value[0]._id, form.value.warehouseOrigin_id, items.value[0].color, items.value[0].size)
 
