@@ -24,6 +24,7 @@ export interface ItemInterface {
   color: string
   size: string
   photoUrl: string
+  barcode: string
   itemCategory: {
     name: string
   }
@@ -75,6 +76,7 @@ const findBarcode = async () => {
       name: items.value[0].name,
       size: items.value[0].size,
       color: items.value[0].color,
+      barcode: items.value[0].barcode,
       quantity: 1,
       price: items.value[0].sellingPrice,
       total: items.value[0].sellingPrice
@@ -241,6 +243,9 @@ const onSubmit = async () => {
                   <thead>
                     <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
                       <th class="basic-table-head">
+                        <p>Barcode</p>
+                      </th>
+                      <th class="basic-table-head">
                         <p>Item</p>
                       </th>
                       <th class="basic-table-head">
@@ -257,6 +262,7 @@ const onSubmit = async () => {
                   <tbody>
                     <template v-if="form.items.length > 0">
                       <tr v-for="item in form.items" :key="item._id">
+                        <td class="basic-table-body">{{ item.barcode }}</td>
                         <td class="basic-table-body">{{ item.name }}</td>
                         <td class="basic-table-body">{{ item.size }}</td>
                         <td class="basic-table-body">{{ item.color }}</td>
