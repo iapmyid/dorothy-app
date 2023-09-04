@@ -7,22 +7,22 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const item = ref<{ barcode: string; name: string; size: [{ label: string; quantity: number }]; color: string }>({
-  barcode: '',
-  name: '',
-  color: '',
-  size: [{ label: '', quantity: 0 }]
-})
+const items = ref<{ barcode: string; name: string; size: [{ label: string; quantity: number }]; color: string }[]>()
 
 onMounted(async () => {
   try {
     const result = await axios.get(`/v1/purchases/${route.params.id}`)
 
+    const purchases = await axios.get(`/v1/purchases`, {
+      params: {
+        filter: {
+          date: result.data.date
+        }
+      }
+    })
+
     if (result.status === 200) {
-      item.value.barcode = result.data.barcode
-      item.value.name = result.data.name
-      item.value.size = result.data.size
-      item.value.color = result.data.color
+      items.value = purchases.data.data
     } else {
       router.push('/404')
     }
@@ -55,22 +55,24 @@ const onPrint = () => {
           class="main-content-body print:m-0! print:p-0 print:fixed! print:top-0! print:left-0! bg-white"
         >
           <div
-            v-if="item.barcode"
+            v-if="items"
             class="grid grid-cols-3 text-sm!"
             :style="{ 'column-gap': gapX + 'px', 'row-gap': gapY + 'px' }"
           >
-            <template v-for="size in item.size" :key="size">
-              <template v-for="i in size.quantity" :key="i">
-                <component
-                  :is="BaseBarcode"
-                  :showCode="showCode"
-                  :showName="showName"
-                  :height="height"
-                  :size="size.label"
-                  :color="item.color"
-                  :label="item.name"
-                  :value="item.barcode"
-                />
+            <template v-for="item in items" :key="item">
+              <template v-for="size in item.size" :key="item + size">
+                <template v-for="i in size.quantity" :key="item + size + i">
+                  <component
+                    :is="BaseBarcode"
+                    :showCode="showCode"
+                    :showName="showName"
+                    :height="height"
+                    :size="size.label"
+                    :color="item.color"
+                    :label="item.name"
+                    :value="size.barcode"
+                  />
+                </template>
               </template>
             </template>
           </div>
