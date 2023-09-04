@@ -19,20 +19,6 @@ const warehouse_id = ref('')
 const item_id = ref('')
 const size = ref('')
 
-const listSize = [
-  { id: 1, label: 'all size' },
-  { id: 2, label: 's' },
-  { id: 3, label: 'm' },
-  { id: 4, label: 'l' },
-  { id: 5, label: 'xl' }
-]
-
-const selectedSize = ref()
-watch(selectedSize, async () => {
-  size.value = selectedSize.value?.label ?? ''
-  await getInventories()
-})
-
 const selectedWarehouse = ref<{ id: string; label: string }>()
 watch(selectedWarehouse, async () => {
   warehouse_id.value = selectedWarehouse.value?.id ?? ''
@@ -54,6 +40,9 @@ export interface InventoryInterface {
   item: {
     _id: string
     name: string
+    color: string
+    size: string
+    barcode: string
   }
   size: string
   quantity: number
@@ -162,10 +151,16 @@ const paginate = async (page: number) => {
               <thead>
                 <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
                   <th class="basic-table-head">
+                    <p>Warehouse</p>
+                  </th>
+                  <th class="basic-table-head">
+                    <p>Barcode</p>
+                  </th>
+                  <th class="basic-table-head">
                     <p>Item</p>
                   </th>
                   <th class="basic-table-head">
-                    <p>Warehouse</p>
+                    <p>Color</p>
                   </th>
                   <th class="basic-table-head">
                     <p>Size</p>
@@ -178,8 +173,10 @@ const paginate = async (page: number) => {
               <tbody>
                 <template v-if="inventories.length > 0">
                   <tr v-for="inventory in inventories" :key="inventory._id" class="basic-table-row">
-                    <td class="basic-table-body">{{ inventory.item?.name }}</td>
                     <td class="basic-table-body">{{ inventory.warehouse?.name }}</td>
+                    <td class="basic-table-body">{{ inventory.item?.barcode }}</td>
+                    <td class="basic-table-body">{{ inventory.item?.name }}</td>
+                    <td class="basic-table-body">{{ inventory.color }}</td>
                     <td class="basic-table-body">{{ inventory.size }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(inventory.quantity) }}</td>
                   </tr>

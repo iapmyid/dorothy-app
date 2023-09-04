@@ -47,6 +47,9 @@ export interface InventoryInterface {
   item: {
     _id: string
     name: string
+    barcode: string
+    color: string
+    size: string
   }
   size: string
   quantity: number
@@ -163,10 +166,16 @@ const paginate = async (page: number) => {
                     <p>Reference</p>
                   </th>
                   <th class="basic-table-head">
+                    <p>Warehouse</p>
+                  </th>
+                  <th class="basic-table-head">
+                    <p>Barcode</p>
+                  </th>
+                  <th class="basic-table-head">
                     <p>Item</p>
                   </th>
                   <th class="basic-table-head">
-                    <p>Warehouse</p>
+                    <p>Color</p>
                   </th>
                   <th class="basic-table-head">
                     <p>Size</p>
@@ -210,8 +219,10 @@ const paginate = async (page: number) => {
                         {{ inventory.reference }}
                       </router-link>
                     </td>
-                    <td class="basic-table-body">{{ inventory.item?.name }}</td>
                     <td class="basic-table-body">{{ inventory.warehouse?.name }}</td>
+                    <td class="basic-table-body">{{ inventory.item?.barcode }}</td>
+                    <td class="basic-table-body">{{ inventory.item?.name }}</td>
+                    <td class="basic-table-body">{{ inventory.color }}</td>
                     <td class="basic-table-body">{{ inventory.size }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(inventory.quantity) }}</td>
                   </tr>
