@@ -167,6 +167,11 @@ const menuMain = {
       name: 'Point of Sales',
       path: '/pos',
       allowed: ['administrator', 'cashier']
+    },
+    {
+      name: 'Sales Report',
+      path: '/sales-report',
+      allowed: ['administrator', 'cashier']
     }
   ]
 }

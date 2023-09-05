@@ -140,11 +140,11 @@ const paginate = async (page: number) => {
                 <i class="i-far-print block"></i>
                 <p>Print Barcode</p>
               </router-link> -->
-              <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
+              <!-- <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
                 </template>
-              </component>
+              </component> -->
             </div>
           </div>
           <div class="table-container">

@@ -1,22 +1,26 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { BaseBreadcrumb } from '@/components/index'
+import { onMounted, ref, watch } from 'vue'
+import { BaseBreadcrumb, BaseAutocomplete } from '@/components/index'
 import { BaseDivider } from '@/components/index'
-import { BaseInput } from '@/components/index'
-import { watchDebounced } from '@vueuse/core'
+import { BaseDatepicker } from '@/components/index'
 import { useNumeric } from '@/composable/numeric'
 import { usePagination } from '@/composable/pagination'
 import { useRoute, useRouter } from 'vue-router'
 import { format } from 'date-fns'
 import axios from '@/axios'
+import { useWarehouseApi } from '../api/warehouse'
 
+const warehouseApi = useWarehouseApi()
 const pagination = usePagination()
 const numeric = useNumeric()
 const route = useRoute()
 const router = useRouter()
 
 const searchAll = ref('')
-const isLoadingSearch = ref(false)
+
+const onSearch = async () => {
+  await getListPos()
+}
 
 export interface PosInterface {
   _id: string
@@ -40,17 +44,37 @@ export interface PosInterface {
   paymentType: number
   createdAt: Date
 }
+
+const formDateFrom = ref(format(new Date(), 'dd/MM/yyyy'))
+const formDateTo = ref(format(new Date(), 'dd/MM/yyyy'))
+const dateFrom = ref(format(new Date(), 'yyyy-MM-dd'))
+const dateTo = ref(format(new Date(), 'yyyy-MM-dd'))
+const warehouse_id = ref('')
+const total = ref(0)
 const listPos = ref<PosInterface[]>([])
+const selectedWarehouse = ref<{ id: string; label: string }>()
+watch(selectedWarehouse, () => {
+  warehouse_id.value = selectedWarehouse.value?.id ?? ''
+})
 
 const getListPos = async (page = 1, search = '') => {
   const result = await axios.get('/v1/pos', {
     params: {
-      pageSize: 10,
-      page: page
+      pageSize: 9999999,
+      page: 1,
+      filter: {
+        dateFrom: dateFrom.value,
+        dateTo: dateTo.value,
+        warehouse_id: warehouse_id.value
+      }
     }
   })
 
   listPos.value = result.data.data
+
+  listPos.value.forEach((el) => {
+    total.value += el.totalPrice
+  })
 
   pagination.page.value = result.data.pagination.page
   pagination.pageCount.value = result.data.pagination.pageCount
@@ -58,27 +82,12 @@ const getListPos = async (page = 1, search = '') => {
   pagination.totalDocument.value = result.data.pagination.totalDocument
 }
 
-watchDebounced(
-  searchAll,
-  async () => {
-    router.replace({
-      path: route.path,
-      query: {
-        ...route.query,
-        page: pagination.previousPage(),
-        search: searchAll.value
-      }
-    })
-    isLoadingSearch.value = true
-    await getListPos(1, searchAll.value)
-    isLoadingSearch.value = false
-  },
-  { debounce: 500, maxWait: 1000 }
-)
-
 onMounted(async () => {
   const page = Number(route.query.page ?? 1)
   searchAll.value = route.query.search?.toString() ?? ''
+  await warehouseApi.fetchListWarehouse()
+  selectedWarehouse.value = warehouseApi.listWarehouse.value[0]
+  warehouse_id.value = selectedWarehouse.value.id
   await getListPos(page, searchAll.value)
 })
 
@@ -117,7 +126,7 @@ const paginate = async (page: number) => {
 <template>
   <div class="main-content-container">
     <div class="main-content-header">
-      <h1>Pos</h1>
+      <h1>Sales Report</h1>
       <base-divider orientation="horizontal" />
       <component :is="BaseBreadcrumb" :breadcrumbs="[{ name: 'Pos' }]" />
     </div>
@@ -126,15 +135,35 @@ const paginate = async (page: number) => {
         <div class="flex flex-col gap-4">
           <div class="w-full flex item-center gap-4">
             <div class="w-full flex space-x-2">
-              <router-link to="/pos/create" class="btn btn-secondary rounded-none space-x-1">
-                <i class="i-far-pen-to-square block"></i>
-                <p>Add New</p>
-              </router-link>
-              <!-- <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
-                <template #prefix>
-                  <i class="i-far-magnifying-glass mx-3 block"></i>
-                </template>
-              </component> -->
+              <component
+                :is="BaseDatepicker"
+                required
+                v-model="formDateFrom"
+                @iso-value="(val) => (dateFrom = format(new Date(val), 'yyyy-MM-dd'))"
+                label="Date From"
+              ></component>
+              <component
+                :is="BaseDatepicker"
+                required
+                v-model="formDateTo"
+                @iso-value="(val) => (dateTo = format(new Date(val), 'yyyy-MM-dd'))"
+                label="Date To"
+              ></component>
+              <div class="flex flex-col items-start">
+                <label class="text-sm font-bold">
+                  Warehouse
+                  <span class="text-xs text-slate-400">(required)</span>
+                </label>
+                <component
+                  :is="BaseAutocomplete"
+                  required
+                  v-model="selectedWarehouse"
+                  :list="warehouseApi.listWarehouse.value"
+                ></component>
+              </div>
+              <div class="flex flex-col justify-end items-end">
+                <button class="btn btn-primary btn-sm" @click="onSearch">Search</button>
+              </div>
             </div>
           </div>
           <div class="table-container">
@@ -159,36 +188,46 @@ const paginate = async (page: number) => {
                   <th class="basic-table-head text-right">
                     <p>Total</p>
                   </th>
-                  <th class="basic-table-head">
-                    <p>Warehouse</p>
-                  </th>
-                  <th class="basic-table-head">
-                    <p>Payment Type</p>
-                  </th>
-                  <th class="basic-table-head">
-                    <p>Customer</p>
-                  </th>
                 </tr>
               </thead>
               <tbody>
                 <template v-if="listPos.length > 0">
                   <template v-for="pos in listPos" :key="pos._id">
-                    <tr v-for="posItem in pos.items" :key="posItem._id" class="basic-table-row">
+                    <template v-for="posItem in pos.items" :key="posItem._id">
+                      <tr class="basic-table-row">
+                        <td class="basic-table-body">
+                          <router-link :to="`/pos/${pos._id}`" class="text-info">
+                            {{ format(new Date(pos.createdAt), 'dd MMM yyyy HH:mm') }}
+                          </router-link>
+                        </td>
+                        <td class="basic-table-body">{{ posItem.name }}</td>
+                        <td class="basic-table-body">{{ posItem.size }}</td>
+                        <td class="basic-table-body text-right">{{ numeric.format(posItem.quantity) }}</td>
+                        <td class="basic-table-body text-right">{{ numeric.format(posItem.price) }}</td>
+                        <td class="basic-table-body text-right">{{ numeric.format(posItem.total) }}</td>
+                      </tr>
+                    </template>
+                    <tr class="basic-table-row" v-if="pos.discount > 0">
                       <td class="basic-table-body">
                         <router-link :to="`/pos/${pos._id}`" class="text-info">
                           {{ format(new Date(pos.createdAt), 'dd MMM yyyy HH:mm') }}
                         </router-link>
                       </td>
-                      <td class="basic-table-body">{{ posItem.name }}</td>
-                      <td class="basic-table-body">{{ posItem.size }}</td>
-                      <td class="basic-table-body text-right">{{ numeric.format(posItem.quantity) }}</td>
-                      <td class="basic-table-body text-right">{{ numeric.format(posItem.price) }}</td>
-                      <td class="basic-table-body text-right">{{ numeric.format(posItem.total) }}</td>
-                      <td class="basic-table-body">{{ pos.warehouse.name }}</td>
-                      <td class="basic-table-body">{{ pos.paymentType }}</td>
-                      <td class="basic-table-body">{{ pos.customer?.name }}</td>
+                      <td class="basic-table-body"></td>
+                      <td class="basic-table-body"></td>
+                      <td class="basic-table-body text-right"></td>
+                      <td class="basic-table-body text-right">Discount Member</td>
+                      <td class="basic-table-body text-right">-{{ numeric.format(pos.discount) }}</td>
                     </tr>
                   </template>
+                  <tr class="basic-table-row">
+                    <td class="basic-table-body"></td>
+                    <td class="basic-table-body"></td>
+                    <td class="basic-table-body"></td>
+                    <td class="basic-table-body text-right"></td>
+                    <td class="basic-table-body font-bold text-right">Total</td>
+                    <td class="basic-table-body font-bold text-right">{{ numeric.format(total) }}</td>
+                  </tr>
                 </template>
               </tbody>
             </table>
