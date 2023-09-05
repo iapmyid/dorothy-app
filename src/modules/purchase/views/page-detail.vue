@@ -99,7 +99,7 @@ onMounted(async () => {
     </div>
     <div class="main-content-body">
       <div class="card card-template">
-        <div class="card-header bg-slate-200 px-4 py-2 -mx-4 -my-2 font-extrabold">
+        <div class="card-header bg-slate-200 dark:bg-slate-700 px-4 py-2 -mx-4 -my-2 font-extrabold">
           <h2>Show Purchase</h2>
           <div class="flex gap-2 overflow-x-hidden">
             <div>
@@ -122,7 +122,7 @@ onMounted(async () => {
             <component :is="BaseInput" readonly v-model="form.name" label="Item Name"></component>
             <component :is="BaseInput" readonly v-model="form.color" label="Color"></component>
 
-            <div class="bg-slate-200 px-4 py-2 -mx-4 -my-2 font-extrabold">
+            <div class="bg-slate-200 dark:bg-slate-700 px-4 py-2 -mx-4 -my-2 font-extrabold">
               <h3>Quantity per Size</h3>
             </div>
             <component
@@ -167,7 +167,7 @@ onMounted(async () => {
               label="Total"
             ></component>
 
-            <div class="bg-slate-200 px-4 py-2 -mx-4 -my-2 font-extrabold">
+            <div class="bg-slate-200 dark:bg-slate-700 px-4 py-2 -mx-4 -my-2 font-extrabold">
               <h3>Buying Price</h3>
             </div>
             <component :is="BaseNumeric" layout="horizontal" v-model="form.price" label="Price per Item"></component>
@@ -180,7 +180,7 @@ onMounted(async () => {
               label="Total"
             ></component>
 
-            <div class="bg-slate-200 px-4 py-2 -mx-4 -my-2 font-extrabold">
+            <div class="bg-slate-200 dark:bg-slate-700 px-4 py-2 -mx-4 -my-2 font-extrabold">
               <h3>Selling Price</h3>
             </div>
             <component

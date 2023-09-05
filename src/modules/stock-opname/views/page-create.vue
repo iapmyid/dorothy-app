@@ -174,7 +174,7 @@ const onSubmit = async () => {
     </div>
     <div class="main-content-body">
       <div class="card card-template">
-        <div class="card-header bg-slate-200 px-4 py-2 -mx-4 -my-2 font-extrabold">
+        <div class="card-header bg-slate-200 dark:bg-slate-700 px-4 py-2 -mx-4 -my-2 font-extrabold">
           <h2>New Stock Opname</h2>
         </div>
         <div class="flex flex-col gap-4">
