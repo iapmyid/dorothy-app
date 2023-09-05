@@ -15,6 +15,7 @@ import { routes as stockCorrectionRoutes } from '@/modules/stock-correction/rout
 import { routes as stockOpnameRoutes } from '@/modules/stock-opname/routes'
 import { routes as salesReportRoutes } from '@/modules/sales-report/routes'
 import { routes as branchExpenseRoutes } from '@/modules/branch-expense/routes'
+import { routes as profitLossRoutes } from '@/modules/profit-loss/routes'
 import { routes as posRoutes } from '@/modules/pos/routes'
 
 const routes = [
@@ -33,6 +34,7 @@ const routes = [
   stockCorrectionRoutes,
   stockOpnameRoutes,
   salesReportRoutes,
+  profitLossRoutes,
   posRoutes,
   {
     path: '/:pathMatch(.*)*',

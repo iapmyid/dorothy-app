@@ -177,6 +177,11 @@ const menuMain = {
       name: 'Sales Report',
       path: '/sales-report',
       allowed: ['administrator', 'cashier']
+    },
+    {
+      name: 'Profit & Loss',
+      path: '/profit-loss',
+      allowed: ['administrator']
     }
   ]
 }
