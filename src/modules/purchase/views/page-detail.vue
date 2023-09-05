@@ -47,6 +47,7 @@ const form = ref({
   photoUrl: '',
   totalQuantity: 0,
   price: 0,
+  cargoPrice: 0,
   totalPrice: 0,
   profitMargin: 0,
   totalProfit: 0,
@@ -70,6 +71,7 @@ onMounted(async () => {
       form.value.photoUrl = result.data.photoUrl
       form.value.totalQuantity = result.data.totalQuantity
       form.value.price = result.data.price
+      form.value.cargoPrice = result.data.cargoPrice
       form.value.totalPrice = result.data.totalPrice
       form.value.profitMargin = result.data.profitMargin
       form.value.totalProfit = result.data.totalProfit
@@ -168,7 +170,8 @@ onMounted(async () => {
             <div class="bg-slate-200 px-4 py-2 -mx-4 -my-2 font-extrabold">
               <h3>Buying Price</h3>
             </div>
-            <component :is="BaseNumeric" layout="horizontal" v-model="form.price" label="Price"></component>
+            <component :is="BaseNumeric" layout="horizontal" v-model="form.price" label="Price per Item"></component>
+            <component :is="BaseNumeric" layout="horizontal" v-model="form.cargoPrice" label="Cargo Price"></component>
             <component
               :is="BaseNumeric"
               layout="horizontal"

@@ -37,6 +37,7 @@ interface FormInterface {
   size: { label: string; quantity: number }[]
   totalQuantity: number
   price: number
+  cargoPrice: number
   totalPrice: number
   profitMargin: number
   totalProfit: number
@@ -77,6 +78,7 @@ const form = ref<FormInterface>({
   ],
   totalQuantity: 0,
   price: 0,
+  cargoPrice: 0,
   totalPrice: 0,
   profitMargin: 0,
   totalProfit: 0,
@@ -98,7 +100,7 @@ const calculateQuantity = () => {
 }
 
 const calculatePrice = () => {
-  form.value.totalPrice = Number(form.value.totalQuantity) * Number(form.value.price)
+  form.value.totalPrice = Number(form.value.totalQuantity) * Number(form.value.price) + Number(form.value.cargoPrice)
 }
 
 const calculateProfit = () => {
@@ -112,22 +114,6 @@ const calculateProfit = () => {
 const photoTaken = (event: any) => {
   form.value.files.push(event)
 }
-
-watch(
-  () => [
-    form.value.size[0].quantity,
-    form.value.size[1].quantity,
-    form.value.size[2].quantity,
-    form.value.size[3].quantity,
-    form.value.size[4].quantity,
-    form.value.price,
-    form.value.profitMargin
-  ],
-  () => {
-    calculateForm()
-  },
-  { immediate: true }
-)
 
 const selectedWarehouse = ref<{ id: string; label: string }>()
 watch(selectedWarehouse, () => {
@@ -153,11 +139,9 @@ const errors = ref()
 const isSubmitted = ref(false)
 
 const reverseCalculation = () => {
-  calculateQuantity()
-  calculatePrice()
-
-  form.value.totalProfit = Number(form.value.sellingPrice) - Number(form.value.price)
-  form.value.profitMargin = (form.value.totalProfit / form.value.price) * 100
+  form.value.totalSelling = form.value.sellingPrice * form.value.totalQuantity
+  form.value.totalProfit = form.value.totalSelling - form.value.totalPrice
+  form.value.profitMargin = (form.value.totalProfit / form.value.totalPrice) * 100
 }
 
 const onSubmit = async () => {
@@ -271,30 +255,35 @@ const onSubmit = async () => {
                 v-model="form.size[0].quantity"
                 layout="horizontal"
                 label="All Size"
+                @keyup="calculateForm"
               ></component>
               <component
                 :is="BaseNumeric"
                 layout="horizontal"
                 v-model="form.size[1].quantity"
                 label="Size S"
+                @keyup="calculateForm"
               ></component>
               <component
                 :is="BaseNumeric"
                 layout="horizontal"
                 v-model="form.size[2].quantity"
                 label="Size M"
+                @keyup="calculateForm"
               ></component>
               <component
                 :is="BaseNumeric"
                 layout="horizontal"
                 v-model="form.size[3].quantity"
                 label="Size L"
+                @keyup="calculateForm"
               ></component>
               <component
                 :is="BaseNumeric"
                 layout="horizontal"
                 v-model="form.size[4].quantity"
                 label="Size XL"
+                @keyup="calculateForm"
               ></component>
               <component
                 :is="BaseNumeric"
@@ -307,7 +296,20 @@ const onSubmit = async () => {
               <div class="bg-slate-200 px-4 py-2 -mx-4 -my-2 font-extrabold">
                 <h3>Buying Price</h3>
               </div>
-              <component :is="BaseNumeric" layout="horizontal" v-model="form.price" label="Price"></component>
+              <component
+                :is="BaseNumeric"
+                layout="horizontal"
+                v-model="form.price"
+                @keyup="calculateForm"
+                label="Price per Item"
+              ></component>
+              <component
+                :is="BaseNumeric"
+                layout="horizontal"
+                v-model="form.cargoPrice"
+                label="Cargo Price"
+                @keyup="calculateForm"
+              ></component>
               <component
                 :is="BaseNumeric"
                 layout="horizontal"
@@ -324,6 +326,7 @@ const onSubmit = async () => {
                 layout="horizontal"
                 v-model="form.profitMargin"
                 label="Profit Margin (%)"
+                @keyup="calculateForm"
               ></component>
               <component
                 :is="BaseNumeric"
