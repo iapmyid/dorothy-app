@@ -164,6 +164,11 @@ const menuMain = {
       allowed: ['administrator', 'admin purchasing']
     },
     {
+      name: 'Branch Expense',
+      path: '/branch-expense',
+      allowed: ['administrator', 'cashier']
+    },
+    {
       name: 'Point of Sales',
       path: '/pos',
       allowed: ['administrator', 'cashier']
