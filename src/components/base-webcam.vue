@@ -42,6 +42,7 @@ const buildConstraints = (deviceId: string = '') => {
 
 const loadCameras = async () => {
   try {
+    await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
     const deviceInfos = await navigator.mediaDevices.enumerateDevices()
 
     for (let i = 0; i !== deviceInfos.length; i++) {

@@ -286,7 +286,7 @@ const resetForm = async () => {
   form.value.customer_id = ''
   form.value.paymentType = ''
   if (selectedCustomer.value) {
-    selectedCustomer.value._id = ''
+    selectedCustomer.value.id = ''
     selectedCustomer.value.label = ''
     selectedCustomer.value = undefined
     await customerApi.fetchListCustomer()

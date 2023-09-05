@@ -40,6 +40,7 @@ export interface PosInterface {
     total: number
   }[]
   totalQuantity: number
+  discount: number
   totalPrice: number
   paymentType: number
   createdAt: Date
@@ -57,6 +58,7 @@ watch(selectedWarehouse, () => {
   warehouse_id.value = selectedWarehouse.value?.id ?? ''
 })
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getListPos = async (page = 1, search = '') => {
   const result = await axios.get('/v1/pos', {
     params: {

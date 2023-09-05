@@ -44,6 +44,7 @@ export interface InventoryInterface {
     size: string
     barcode: string
   }
+  color: string
   size: string
   quantity: number
   createdAt: Date

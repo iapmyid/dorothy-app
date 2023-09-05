@@ -30,6 +30,7 @@ export interface BranchExpenseInterface {
 }
 const branchExpenses = ref<BranchExpenseInterface[]>([])
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getTransferItems = async (page = 1, search = '') => {
   const result = await axios.get('/v1/branch-expenses', {
     params: {
@@ -146,7 +147,11 @@ const paginate = async (page: number) => {
               <tbody>
                 <template v-if="branchExpenses.length > 0">
                   <template v-for="branchExpense in branchExpenses" :key="branchExpense._id">
-                    <tr v-for="item in branchExpense.items" :key="branchExpense._id + item._id" class="basic-table-row">
+                    <tr
+                      v-for="item in branchExpense.items"
+                      :key="branchExpense._id + item.description"
+                      class="basic-table-row"
+                    >
                       <td class="basic-table-body">
                         <router-link :to="`/branch-expense/${branchExpense._id}`" class="text-info">
                           {{ format(new Date(branchExpense.createdAt), 'dd MMM yyyy HH:mm') }}

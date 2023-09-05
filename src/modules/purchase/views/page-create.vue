@@ -24,8 +24,26 @@ const itemCategoryApi = useItemCategoryApi()
 const supplierApi = useSupplierApi()
 const warehouseApi = useWarehouseApi()
 const formDate = ref(format(new Date(), 'dd/MM/yyyy'))
-
-const form = ref({
+interface FormInterface {
+  date: string
+  photo: string
+  files: any[]
+  warehouse_id: string
+  supplier_id: string
+  itemCategory_id: string
+  code: string
+  name: string
+  color: string
+  size: { label: string; quantity: number }[]
+  totalQuantity: number
+  price: number
+  totalPrice: number
+  profitMargin: number
+  totalProfit: number
+  totalSelling: number
+  sellingPrice: number
+}
+const form = ref<FormInterface>({
   date: format(new Date(), 'yyyy-MM-dd'),
   photo: '',
   files: [],

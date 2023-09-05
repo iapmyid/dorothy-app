@@ -31,7 +31,28 @@ const findBarcode = async () => {
   searchAll.value = ''
 }
 
-const form = ref({
+export interface FormInterface {
+  _id: string
+  date: string
+  warehouseOrigin: {
+    name: string
+  }
+  warehouseDestination: {
+    name: string
+  }
+  items: {
+    name: string
+    color: string
+    size: string
+    quantity: number
+    quantityReceived: number
+    quantityDiff: number
+  }[]
+  createdAt: string
+  receivedAt: string
+}
+
+const form = ref<FormInterface>({
   _id: '',
   date: '',
   warehouseOrigin: {
@@ -172,7 +193,7 @@ onMounted(async () => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in form.items" :key="form.items._id + item._id" class="basic-table-row">
+              <tr v-for="item in form.items" :key="item" class="basic-table-row">
                 <td class="basic-table-body">
                   {{ item.name }}
                 </td>

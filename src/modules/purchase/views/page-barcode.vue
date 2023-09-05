@@ -7,7 +7,10 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const items = ref<{ barcode: string; name: string; size: [{ label: string; quantity: number }]; color: string }[]>()
+const items =
+  ref<
+    { barcode: string; name: string; size: [{ label: string; quantity: number; barcode: string }]; color: string }[]
+  >()
 
 onMounted(async () => {
   try {

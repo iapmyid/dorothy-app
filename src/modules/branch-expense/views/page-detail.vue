@@ -10,7 +10,12 @@ const numeric = useNumeric()
 const route = useRoute()
 const router = useRouter()
 const total = ref(0)
-const form = ref({
+const form = ref<{
+  date: string
+  warehouse: { name: string }
+  items: { description: string; value: number }[]
+  createdAt: string
+}>({
   date: '',
   warehouse: {
     name: ''
@@ -29,7 +34,7 @@ onMounted(async () => {
       form.value.items = result.data.items
       form.value.createdAt = format(new Date(result.data.createdAt), 'dd MMM yyyy HH:mm')
 
-      form.value.items.forEach((element) => {
+      form.value.items.forEach((element: any) => {
         total.value += element.value
       })
     } else {
@@ -83,7 +88,7 @@ onMounted(async () => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in form.items" :key="form.items._id + item._id" class="basic-table-row">
+              <tr v-for="item in form.items" :key="item.description" class="basic-table-row">
                 <td class="basic-table-body w-full">
                   {{ item.description }}
                 </td>

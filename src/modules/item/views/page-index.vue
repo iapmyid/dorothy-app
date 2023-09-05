@@ -22,6 +22,7 @@ export interface ItemInterface {
   name: string
   size: string
   color: string
+  barcode: string
   itemCategory: {
     name: string
   }

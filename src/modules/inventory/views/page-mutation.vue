@@ -51,6 +51,7 @@ export interface InventoryInterface {
     color: string
     size: string
   }
+  color: string
   size: string
   quantity: number
   reference: string

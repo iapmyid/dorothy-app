@@ -45,6 +45,7 @@ const totalIncome = ref(0)
 const totalExpense = ref(0)
 const finances = ref<PosInterface[]>([])
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getFinances = async (page = 1, search = '') => {
   const result = await axios.get('/v1/finances', {
     params: {
