@@ -39,6 +39,7 @@ interface FormInterface {
   price: number
   cargoPrice: number
   totalPrice: number
+  totalPricePerItem: number
   profitMargin: number
   totalProfit: number
   totalSelling: number
@@ -80,6 +81,7 @@ const form = ref<FormInterface>({
   price: 0,
   cargoPrice: 0,
   totalPrice: 0,
+  totalPricePerItem: 0,
   profitMargin: 0,
   totalProfit: 0,
   totalSelling: 0,
@@ -101,6 +103,7 @@ const calculateQuantity = () => {
 
 const calculatePrice = () => {
   form.value.totalPrice = Number(form.value.totalQuantity) * (Number(form.value.price) + Number(form.value.cargoPrice))
+  form.value.totalPricePerItem = Number(form.value.price) + Number(form.value.cargoPrice)
 }
 
 const calculateProfit = () => {
@@ -307,7 +310,14 @@ const onSubmit = async () => {
                 :is="BaseNumeric"
                 layout="horizontal"
                 v-model="form.cargoPrice"
-                label="Cargo Price"
+                label="Cargo Price per Item"
+                @keyup="calculateForm"
+              ></component>
+              <component
+                :is="BaseNumeric"
+                layout="horizontal"
+                v-model="form.totalPricePerItem"
+                label="Total Price per Item"
                 @keyup="calculateForm"
               ></component>
               <component
