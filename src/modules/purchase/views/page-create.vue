@@ -100,7 +100,7 @@ const calculateQuantity = () => {
 }
 
 const calculatePrice = () => {
-  form.value.totalPrice = Number(form.value.totalQuantity) * Number(form.value.price) + Number(form.value.cargoPrice)
+  form.value.totalPrice = Number(form.value.totalQuantity) * (Number(form.value.price) + Number(form.value.cargoPrice))
 }
 
 const calculateProfit = () => {
@@ -191,7 +191,7 @@ const onSubmit = async () => {
     </div>
     <div class="main-content-body">
       <div class="card card-template">
-        <div class="card-header bg-slate-200 p-4 -mx-4 -my-2 font-extrabold">
+        <div class="card-header bg-slate-200 dark:bg-slate-700 p-4 -mx-4 -my-2 font-extrabold">
           <h2>New Purchase</h2>
         </div>
         <div class="flex flex-col gap-4">
