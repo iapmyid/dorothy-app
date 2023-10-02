@@ -2,13 +2,14 @@
 import { onMounted, ref } from 'vue'
 import { BaseBreadcrumb } from '@/components/index'
 import { BaseDivider } from '@/components/index'
-import { BaseInput } from '@/components/index'
 import { watchDebounced } from '@vueuse/core'
 import { useNumeric } from '@/composable/numeric'
 import { usePagination } from '@/composable/pagination'
 import { useRoute, useRouter } from 'vue-router'
 import { format } from 'date-fns'
 import axios from '@/axios'
+import Excel from 'exceljs'
+import { saveAs } from 'file-saver'
 
 const pagination = usePagination()
 const numeric = useNumeric()
@@ -87,6 +88,48 @@ onMounted(async () => {
   searchAll.value = route.query.search?.toString() ?? ''
   await getPurchases(page, searchAll.value)
 })
+
+const exportBarcode = async () => {
+  const workbook = new Excel.Workbook()
+  const worksheet = workbook.addWorksheet('Sheet 1')
+
+  const sheetColumns = [
+    { key: 'name', header: 'name' },
+    { key: 'barcode', header: 'barcode' },
+    { key: 'price', header: 'price' },
+    { key: 'description', header: 'description' }
+  ]
+
+  worksheet.columns = sheetColumns
+
+  worksheet.addRow({
+    name: 'EXAMPLE ITEM',
+    barcode: 20230101,
+    price: 'Rp. 250.000',
+    description: '20230101    XL - MAGENTA'
+  })
+
+  worksheet.addRow({
+    name: 'EXAMPLE ITEM 2',
+    barcode: 20230102,
+    price: 'Rp. 250.000',
+    description: '20230102    L - MAGENTA'
+  })
+
+  worksheet.addRow({
+    name: 'EXAMPLE ITEM 3',
+    barcode: 20230103,
+    price: 'Rp. 250.000',
+    description: '20230103    YELLOW'
+  })
+
+  workbook.xlsx.writeBuffer().then(function (buffer) {
+    saveAs(
+      new Blob([buffer], { type: 'application/octet-stream' }),
+      `${format(new Date(), 'yyyy-MM-dd-HH-mm-ss')}-dorothy-barcode.xlsx`
+    )
+  })
+}
 
 const paginatePrev = async () => {
   router.replace({
@@ -200,9 +243,9 @@ const paginate = async (page: number) => {
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.price) }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.sellingPrice) }}</td>
                     <td class="basic-table-body text-center justify-center flex">
-                      <a :href="`/purchase/${purchase._id}/barcode?count=${purchase.totalQuantity}`" target="_blank">
+                      <button @click="exportBarcode()" class="btn" type="button">
                         <i class="i-far-barcode-read block"></i>
-                      </a>
+                      </button>
                     </td>
                   </tr>
                 </template>
