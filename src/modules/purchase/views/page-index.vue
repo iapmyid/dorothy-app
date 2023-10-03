@@ -23,7 +23,11 @@ export interface PurchaseInterface {
   _id: string
   code: string
   name: string
-  size: []
+  size: {
+    label: string
+    quantity: number
+    barcode: string
+  }[]
   color: string
   totalQuantity: number
   price: number
@@ -88,6 +92,42 @@ onMounted(async () => {
   searchAll.value = route.query.search?.toString() ?? ''
   await getPurchases(page, searchAll.value)
 })
+
+const exportBarcodeThisPage = async () => {
+  const workbook = new Excel.Workbook()
+  const worksheet = workbook.addWorksheet('Sheet 1')
+
+  const sheetColumns = [
+    { key: 'name', header: 'name' },
+    { key: 'barcode', header: 'barcode' },
+    { key: 'price', header: 'price' },
+    { key: 'description', header: 'description' }
+  ]
+
+  worksheet.columns = sheetColumns
+
+  purchases.value.forEach((element) => {
+    element.size.forEach((size) => {
+      if (size.barcode) {
+        for (let i = 0; i < size.quantity; i++) {
+          worksheet.addRow({
+            name: element.name.toUpperCase(),
+            barcode: size.barcode,
+            price: `Rp ${element.sellingPrice}`,
+            description: `${size.barcode}    ${size.label.toUpperCase()} - ${element.color.toUpperCase()}`
+          })
+        }
+      }
+    })
+  })
+
+  workbook.xlsx.writeBuffer().then(function (buffer) {
+    saveAs(
+      new Blob([buffer], { type: 'application/octet-stream' }),
+      `${format(new Date(), 'yyyy-MM-dd-HH-mm-ss')}-dorothy-barcode.xlsx`
+    )
+  })
+}
 
 const exportBarcode = async () => {
   const workbook = new Excel.Workbook()
@@ -179,10 +219,10 @@ const paginate = async (page: number) => {
                 <i class="i-far-pen-to-square block"></i>
                 <p>Add New</p>
               </router-link>
-              <!-- <router-link to="/purchase/create" class="btn btn-secondary rounded-none space-x-1">
+              <button @click="exportBarcodeThisPage()" class="btn btn-secondary rounded-none space-x-1">
                 <i class="i-far-print block"></i>
-                <p>Print Barcode</p>
-              </router-link> -->
+                <p>Export Barcode on This Page</p>
+              </button>
               <!-- <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
@@ -190,6 +230,7 @@ const paginate = async (page: number) => {
               </component> -->
             </div>
           </div>
+
           <div class="table-container">
             <table class="table text-sm">
               <thead>
@@ -221,9 +262,6 @@ const paginate = async (page: number) => {
                   <th class="basic-table-head text-right">
                     <p>Selling Price</p>
                   </th>
-                  <th class="basic-table-head text-center">
-                    <p>Barcode</p>
-                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -242,11 +280,6 @@ const paginate = async (page: number) => {
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.totalQuantity) }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.price) }}</td>
                     <td class="basic-table-body text-right">{{ numeric.format(purchase.sellingPrice) }}</td>
-                    <td class="basic-table-body text-center justify-center flex">
-                      <button @click="exportBarcode()" class="btn" type="button">
-                        <i class="i-far-barcode-read block"></i>
-                      </button>
-                    </td>
                   </tr>
                 </template>
               </tbody>
