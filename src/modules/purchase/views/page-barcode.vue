@@ -34,15 +34,22 @@ onMounted(async () => {
   }
 })
 
-const width = ref(320)
+const width = ref(420)
 const gapX = ref(4)
-const gapY = ref(4)
+const gapY = ref(32)
 const height = ref(15)
 const showName = ref(true)
 const showCode = ref(true)
 
 const onPrint = () => {
-  window.print()
+  const params = new URLSearchParams({
+    gap_x: gapX.value.toString(),
+    gap_y: gapY.value.toString(),
+    height: height.value.toString(),
+    show_name: (showName.value ? 1 : 0).toString(),
+    show_code: (showCode.value ? 1 : 0).toString()
+  })
+  window.open('barcode/print?' + params.toString(), '_blank', 'width=1280,height=720')
 }
 </script>
 
@@ -53,10 +60,7 @@ const onPrint = () => {
     </div>
     <div class="flex gap-4">
       <div class="flex-1">
-        <div
-          :style="{ width: width + 'px' }"
-          class="main-content-body print:m-0! print:p-0 print:fixed! print:top-0! print:left-0! bg-white"
-        >
+        <div :style="{ width: width + 'px' }" class="main-content-body bg-white py-4">
           <div
             v-if="items"
             class="grid grid-cols-3 text-sm!"
@@ -112,7 +116,7 @@ const onPrint = () => {
           v-model="gapY"
           label="Gap Y"
           :max="100"
-          description="default 4"
+          description="default 32"
         />
         <component :is="BaseCheckbox" v-model="showName" label="Show Name" />
         <component :is="BaseCheckbox" v-model="showCode" label="Show Code" />

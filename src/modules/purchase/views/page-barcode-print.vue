@@ -1,0 +1,65 @@
+<script setup lang="ts">
+import { BaseBarcode } from '@/components/index'
+import { onMounted, ref } from 'vue'
+import axios from '@/axios'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+const items =
+  ref<
+    { barcode: string; name: string; size: [{ label: string; quantity: number; barcode: string }]; color: string }[]
+  >()
+
+onMounted(async () => {
+  try {
+    const result = await axios.get(`/v1/purchases/${route.params.id}`)
+
+    const purchases = await axios.get(`/v1/purchases`, {
+      params: {
+        filter: {
+          date: result.data.date
+        }
+      }
+    })
+
+    if (result.status === 200) {
+      items.value = purchases.data.data
+      setTimeout(() => {
+        window.print()
+      }, 1000)
+    } else {
+      router.push('/404')
+    }
+  } catch (error) {
+    router.push('/404')
+  }
+})
+const gapX = ref<number>(Number(route.query.gap_x) ?? 4)
+const gapY = ref<number>(Number(route.query.gap_y) ?? 32)
+const height = ref<number>(Number(route.query.height) ?? 15)
+const showName = ref<boolean>(!!Number(route.query.show_name ?? 1))
+const showCode = ref<boolean>(!!Number(route.query.show_code ?? 1))
+</script>
+
+<template>
+  <div class="grid grid-cols-3 px-20px py-16px" :style="{ 'column-gap': gapX + 'px', 'row-gap': gapY + 'px' }">
+    <template v-for="item in items" :key="item">
+      <template v-for="size in item.size" :key="item + size">
+        <template v-for="i in size.quantity" :key="item + size + i">
+          <component
+            :is="BaseBarcode"
+            :showCode="showCode"
+            :showName="showName"
+            :height="height"
+            :size="size.label"
+            :color="item.color"
+            :label="item.name"
+            :value="size.barcode"
+          />
+        </template>
+      </template>
+    </template>
+  </div>
+</template>
