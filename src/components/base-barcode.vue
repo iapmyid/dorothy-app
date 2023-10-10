@@ -47,12 +47,14 @@ watch(
 </script>
 
 <template>
-  <div class="flex flex-col text-center justify-center items-center relative text-black uppercase font-bold">
-    <span class="text-9px z-1 leading-none -mb-2" v-if="props.showName">
+  <div
+    class="flex flex-col text-center justify-center items-center relative text-black uppercase font-bold bg-white w-40 h-81px"
+  >
+    <span class="text-9px z-1 leading-none" v-if="props.showName">
       <span>{{ props.label }}</span>
     </span>
-    <svg ref="barcodeRef" id="barcode" class="z-0"></svg>
-    <div class="flex flex-col text-center -mt-2">
+    <svg ref="barcodeRef" id="barcode" class="z-0 -my-2"></svg>
+    <div class="flex flex-col text-center">
       <div class="text-8px w-full flex justify-between space-x-3 z-1 leading-none" v-if="props.showCode">
         <span>{{ props.value }}</span>
         <span>{{ props.size }} - {{ props.color }}</span>

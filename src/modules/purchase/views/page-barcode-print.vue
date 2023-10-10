@@ -41,15 +41,15 @@ onMounted(async () => {
     router.push('/404')
   }
 })
-const gapX = ref<number>(Number(route.query.gap_x) ?? 4)
-const gapY = ref<number>(Number(route.query.gap_y) ?? 32)
+const gapX = ref<number>(Number(route.query.gap_x) ?? 0)
+const gapY = ref<number>(Number(route.query.gap_y) ?? 2)
 const height = ref<number>(Number(route.query.height) ?? 15)
 const showName = ref<boolean>(!!Number(route.query.show_name ?? 1))
 const showCode = ref<boolean>(!!Number(route.query.show_code ?? 1))
 </script>
 
 <template>
-  <div class="grid grid-cols-3 px-20px py-16px" :style="{ 'column-gap': gapX + 'px', 'row-gap': gapY + 'px' }">
+  <div class="grid grid-cols-3 w-120 pr-6" :style="{ 'column-gap': gapX + 'px', 'row-gap': gapY + 'px' }">
     <template v-for="item in items" :key="item">
       <template v-for="size in item.size" :key="item + size">
         <template v-for="i in size.quantity" :key="item + size + i">
