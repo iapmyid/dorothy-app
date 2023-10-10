@@ -7,10 +7,15 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const items =
-  ref<
-    { barcode: string; name: string; size: [{ label: string; quantity: number; barcode: string }]; color: string }[]
-  >()
+const items = ref<
+  {
+    barcode: string
+    name: string
+    size: [{ label: string; quantity: number; barcode: string }]
+    color: string
+    sellingPrice: number
+  }[]
+>()
 
 onMounted(async () => {
   try {
@@ -53,6 +58,7 @@ const showCode = ref<boolean>(!!Number(route.query.show_code ?? 1))
             :showCode="showCode"
             :showName="showName"
             :height="height"
+            :selling-price="item.sellingPrice"
             :size="size.label"
             :color="item.color"
             :label="item.name"

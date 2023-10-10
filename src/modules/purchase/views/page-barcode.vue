@@ -7,10 +7,15 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const items =
-  ref<
-    { barcode: string; name: string; size: [{ label: string; quantity: number; barcode: string }]; color: string }[]
-  >()
+const items = ref<
+  {
+    barcode: string
+    name: string
+    size: [{ label: string; quantity: number; barcode: string }]
+    color: string
+    sellingPrice: number
+  }[]
+>()
 
 onMounted(async () => {
   try {
@@ -59,7 +64,10 @@ const onPrint = () => {
       <h1>Barcode</h1>
     </div>
     <div class="flex gap-4">
-      <div class="flex-1">
+      <div class="flex-1 space-y-4">
+        <div class="print:hidden! flex flex-col gap-4">
+          <button type="button" @click="onPrint" class="btn btn-primary btn-sm btn-block">Print</button>
+        </div>
         <div :style="{ width: width + 'px' }" class="main-content-body bg-white py-4">
           <div
             v-if="items"
@@ -74,6 +82,7 @@ const onPrint = () => {
                     :showCode="showCode"
                     :showName="showName"
                     :height="height"
+                    :selling-price="item.sellingPrice"
                     :size="size.label"
                     :color="item.color"
                     :label="item.name"
@@ -84,43 +93,6 @@ const onPrint = () => {
             </template>
           </div>
         </div>
-      </div>
-      <div class="print:hidden! flex flex-col gap-4">
-        <component
-          :is="BaseNumeric"
-          layout="horizontal"
-          v-model="height"
-          label="Height"
-          :max="25"
-          description="max 25"
-        />
-        <component
-          :is="BaseNumeric"
-          layout="horizontal"
-          v-model="width"
-          label="Width"
-          :max="640"
-          description="min 320"
-        />
-        <component
-          :is="BaseNumeric"
-          layout="horizontal"
-          v-model="gapX"
-          label="Gap X"
-          :max="100"
-          description="default 4"
-        />
-        <component
-          :is="BaseNumeric"
-          layout="horizontal"
-          v-model="gapY"
-          label="Gap Y"
-          :max="100"
-          description="default 32"
-        />
-        <component :is="BaseCheckbox" v-model="showName" label="Show Name" />
-        <component :is="BaseCheckbox" v-model="showCode" label="Show Code" />
-        <button type="button" @click="onPrint" class="btn btn-primary btn-sm btn-block">Print</button>
       </div>
     </div>
   </div>
