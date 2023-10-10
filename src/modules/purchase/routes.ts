@@ -4,23 +4,32 @@ import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
 export const routes = {
   path: '/purchase',
-  component: () => import('@/layouts/app/app-index.vue'),
   children: [
     {
       path: '',
-      component: () => import('./views/page-index.vue')
+      component: () => import('@/layouts/app/app-index.vue'),
+      children: [
+        {
+          path: '',
+          component: () => import('./views/page-index.vue')
+        },
+        {
+          path: 'create',
+          component: () => import('./views/page-create.vue')
+        },
+        {
+          path: ':id',
+          component: () => import('./views/page-detail.vue')
+        },
+        {
+          path: ':id/barcode',
+          component: () => import('./views/page-barcode.vue')
+        }
+      ]
     },
     {
-      path: 'create',
-      component: () => import('./views/page-create.vue')
-    },
-    {
-      path: ':id',
-      component: () => import('./views/page-detail.vue')
-    },
-    {
-      path: ':id/barcode',
-      component: () => import('./views/page-barcode.vue')
+      path: ':id/barcode/print',
+      component: () => import('./views/page-barcode-print.vue')
     }
   ],
   beforeEnter: async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {

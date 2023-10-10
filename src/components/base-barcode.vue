@@ -43,7 +43,7 @@ watch(
 </script>
 
 <template>
-  <div class="flex flex-col text-center justify-center items-center relative">
+  <div class="flex flex-col text-center justify-center items-center relative text-black">
     <span class="text-9px z-1 leading-none -mb-2" v-if="props.showName">
       <span>{{ props.label.substring(0, 20) }}</span>
     </span>
