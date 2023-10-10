@@ -39,9 +39,9 @@ onMounted(async () => {
   }
 })
 
-const width = ref(420)
-const gapX = ref(4)
-const gapY = ref(32)
+const width = ref(480)
+const gapX = ref(0)
+const gapY = ref(2)
 const height = ref(15)
 const showName = ref(true)
 const showCode = ref(true)
@@ -68,7 +68,7 @@ const onPrint = () => {
         <div class="print:hidden! flex flex-col gap-4">
           <button type="button" @click="onPrint" class="btn btn-primary btn-sm btn-block">Print</button>
         </div>
-        <div :style="{ width: width + 'px' }" class="main-content-body bg-white py-4">
+        <div :style="{ width: width + 'px' }" class="main-content-body py-4">
           <div
             v-if="items"
             class="grid grid-cols-3 text-sm!"
