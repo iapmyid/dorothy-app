@@ -168,19 +168,20 @@ const paginate = async (page: number) => {
               <button @click="paginatePrev()" type="button" class="btn btn-light-dark rounded-r-none">
                 <i class="i-fas-angle-left block"></i>
               </button>
-              <button
-                v-for="page in pagination.pageCount.value"
-                :key="page"
-                type="button"
-                class="btn rounded border-r-none"
-                :class="{
-                  'btn-secondary': page === pagination.page.value,
-                  'btn-light-dark': page !== pagination.page.value
-                }"
-                @click="paginate(page)"
-              >
-                {{ page }}
-              </button>
+              <template v-for="page in pagination.pageCount.value" :key="page">
+                <button
+                  v-if="page + 5 > pagination.page.value && page - 5 < pagination.page.value"
+                  type="button"
+                  class="btn rounded border-r-none"
+                  :class="{
+                    'btn-secondary': page === pagination.page.value,
+                    'btn-light-dark': page !== pagination.page.value
+                  }"
+                  @click="paginate(page)"
+                >
+                  {{ page }}
+                </button>
+              </template>
               <button @click="paginateNext()" type="button" class="btn btn-light-dark rounded-l-none">
                 <i class="i-fas-angle-right block"></i>
               </button>
