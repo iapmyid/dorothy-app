@@ -42,7 +42,7 @@ onMounted(async () => {
 const width = ref(480)
 const gapX = ref(0)
 const gapY = ref(2)
-const height = ref(20)
+const height = ref(18)
 const showName = ref(true)
 const showCode = ref(true)
 

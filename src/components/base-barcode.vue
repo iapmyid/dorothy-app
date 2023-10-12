@@ -65,7 +65,7 @@ const fontSize = computed(() => {
   >
     <span :style="{ fontSize }" class="z-1 leading-tight line-clamp-2" v-if="props.showName">{{ props.label }}</span>
     <svg ref="barcodeRef" id="barcode" class="-my-2"></svg>
-    <div class="text-8px leading-none flex justify-between space-x-3 z-1 max-w-full" v-if="props.showCode">
+    <div class="text-9px leading-none flex justify-between space-x-3 z-1 max-w-full" v-if="props.showCode">
       <div>{{ props.value }}</div>
       <div class="flex-1 whitespace-nowrap overflow-hidden">{{ props.size }} - {{ props.color }}</div>
     </div>
