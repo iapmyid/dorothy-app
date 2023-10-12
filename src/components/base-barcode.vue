@@ -46,13 +46,13 @@ watch(
 )
 
 const fontSize = computed(() => {
-  if (props.label.length < 19) {
-    return '12px'
+  if (props.label.length < 18) {
+    return '13px'
   }
-  if (props.label.length < 21) {
+  if (props.label.length < 20) {
     return '11px'
   }
-  if (props.label.length < 23) {
+  if (props.label.length < 22) {
     return '10px'
   }
   return '9px'
@@ -61,7 +61,7 @@ const fontSize = computed(() => {
 
 <template>
   <div
-    class="flex flex-col text-center justify-center items-center relative text-black uppercase bg-white w-40 h-81px px-2 overflow-hidden"
+    class="flex flex-col text-center justify-center items-center relative font-medium text-black uppercase bg-white w-40 h-81px pt-1 px-2 overflow-hidden"
   >
     <span :style="{ fontSize }" class="z-1 leading-tight line-clamp-2" v-if="props.showName">{{ props.label }}</span>
     <svg ref="barcodeRef" id="barcode" class="-my-2"></svg>
