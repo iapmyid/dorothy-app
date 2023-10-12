@@ -137,6 +137,7 @@ onMounted(async () => {
               readonly
               layout="horizontal"
               v-model="form.size[0].quantity"
+              :helper="form.size[0].barcode"
               label="All Size"
             ></component>
             <component
@@ -145,6 +146,7 @@ onMounted(async () => {
               layout="horizontal"
               v-model="form.size[1].quantity"
               label="Size S"
+              :helper="form.size[1].barcode"
             ></component>
             <component
               :is="BaseNumeric"
@@ -152,6 +154,7 @@ onMounted(async () => {
               layout="horizontal"
               v-model="form.size[2].quantity"
               label="Size M"
+              :helper="form.size[2].barcode"
             ></component>
             <component
               :is="BaseNumeric"
@@ -159,6 +162,7 @@ onMounted(async () => {
               layout="horizontal"
               v-model="form.size[3].quantity"
               label="Size L"
+              :helper="form.size[3].barcode"
             ></component>
             <component
               :is="BaseNumeric"
@@ -166,6 +170,7 @@ onMounted(async () => {
               layout="horizontal"
               v-model="form.size[4].quantity"
               label="Size XL"
+              :helper="form.size[4].barcode"
             ></component>
             <component
               :is="BaseNumeric"

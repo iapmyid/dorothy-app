@@ -156,7 +156,7 @@ const menuMain = {
     {
       name: 'Transfer Item',
       path: '/transfer-item',
-      allowed: ['administrator', 'admin purchasing', 'admin stock']
+      allowed: ['administrator', 'admin purchasing', 'admin stock', 'cashier']
     },
     {
       name: 'Purchase',
