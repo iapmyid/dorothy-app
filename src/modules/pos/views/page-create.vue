@@ -84,7 +84,7 @@ const getItemCategories = async (page = 1, search = '') => {
 const selectedCustomer = ref<{ id: string; label: string }>()
 watch(selectedCustomer, () => {
   form.value.customer_id = selectedCustomer.value?.id ?? ''
-  form.value.discount = (form.value.totalPrice * 5) / 100
+  form.value.discount = (form.value.totalPrice * 10) / 100
   form.value.subtotal = form.value.totalPrice - form.value.discount
   calculatePrice()
 })
@@ -321,7 +321,7 @@ const onSubmit = async () => {
 <template>
   <div class="main-content-container print:text-black!">
     <div class="main-content-body">
-      <div class="grid grid-cols-4 gap-4">
+      <div class="grid grid-cols-5 gap-4">
         <div class="col-span-3 overflow-hidden print:hidden!">
           <div class="flex flex-col gap-2">
             <h4>Categories</h4>
@@ -361,7 +361,7 @@ const onSubmit = async () => {
             </template>
           </div>
         </div>
-        <div class="flex flex-col gap-4 overflow-hidden print:col-span-4">
+        <div class="col-span-2 flex flex-col gap-4 overflow-hidden print:col-span-4">
           <div class="flex flex-col items-start gap-1 print:hidden!">
             <component
               :is="BaseAutocomplete"

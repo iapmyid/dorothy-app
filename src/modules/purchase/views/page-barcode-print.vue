@@ -42,8 +42,8 @@ onMounted(async () => {
   }
 })
 const gapX = ref<number>(Number(route.query.gap_x) ?? 0)
-const gapY = ref<number>(Number(route.query.gap_y) ?? 2)
-const height = ref<number>(Number(route.query.height) ?? 15)
+const gapY = ref<number>(Number(route.query.gap_y) ?? 3)
+const height = ref<number>(Number(route.query.height) ?? 18)
 const showName = ref<boolean>(!!Number(route.query.show_name ?? 1))
 const showCode = ref<boolean>(!!Number(route.query.show_code ?? 1))
 </script>
