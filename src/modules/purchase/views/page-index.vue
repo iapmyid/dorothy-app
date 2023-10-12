@@ -236,10 +236,16 @@ const paginate = async (page: number) => {
               <thead>
                 <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
                   <th class="basic-table-head">
+                    <p>Barcode</p>
+                  </th>
+                  <th class="basic-table-head">
                     <p>Date</p>
                   </th>
                   <th class="basic-table-head">
                     <p>Name</p>
+                  </th>
+                  <th class="basic-table-head">
+                    <p>Barcode</p>
                   </th>
                   <th class="basic-table-head">
                     <p>Warehouse</p>
@@ -267,11 +273,26 @@ const paginate = async (page: number) => {
               <tbody>
                 <template v-if="purchases.length > 0">
                   <tr v-for="purchase in purchases" :key="purchase._id" class="basic-table-row">
+                    <td class="basic-table-body flex space-x-3 text-center justify-center">
+                      <router-link to="/">
+                        <i class="block h-5 w-5 i-far-file-excel"></i>
+                      </router-link>
+                      <button>
+                        <i class="block h-5 w-5 i-far-barcode-read"></i>
+                      </button>
+                    </td>
                     <td class="basic-table-body">
                       {{ format(new Date(purchase.createdAt), 'dd MMM yyyy HH:mm') }}
                     </td>
                     <td class="basic-table-body">
                       <router-link :to="`/purchase/${purchase._id}`" class="text-info">{{ purchase.name }}</router-link>
+                    </td>
+                    <td class="basic-table-body">
+                      <template v-for="size in purchase.size" :key="size.barcode">
+                        <p class="whitespace-nowrap" v-if="size.quantity">
+                          <span class="font-bold">{{ size.label }}</span> {{ size.barcode }}
+                        </p>
+                      </template>
                     </td>
                     <td class="basic-table-body">{{ purchase.warehouse?.name }}</td>
                     <td class="basic-table-body">{{ purchase.supplier?.name }}</td>
