@@ -56,7 +56,8 @@ const getPurchases = async (page = 1, search = '') => {
       page: page,
       sort: '-date',
       filter: {
-        name: search
+        name: search,
+        barcode: search
       }
     }
   })
