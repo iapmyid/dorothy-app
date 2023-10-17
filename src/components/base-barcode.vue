@@ -28,7 +28,7 @@ const barcodeRef = ref()
 onMounted(() => {
   JsBarcode(barcodeRef.value, props.value, {
     height: props.height,
-    width: 1,
+    width: 1.3,
     fontSize: 12,
     displayValue: false
   })

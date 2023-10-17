@@ -15,14 +15,23 @@ const items = ref<
     color: string
     sellingPrice: number
   }[]
->([])
+>()
 
 onMounted(async () => {
   try {
-    const result = await axios.get(`/v1/purchases/${route.params.id}`)
+    const purchases = await axios.get(`/v1/purchases`, {
+      params: {
+        pageSize: 10,
+        page: route.query.page,
+        sort: '-date',
+        filter: {
+          name: route.query.search
+        }
+      }
+    })
 
-    if (result.status === 200) {
-      items.value.push(result.data)
+    if (purchases.status === 200) {
+      items.value = purchases.data.data
       setTimeout(() => {
         window.print()
       }, 1000)

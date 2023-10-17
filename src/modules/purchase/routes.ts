@@ -24,12 +24,20 @@ export const routes = {
         {
           path: ':id/barcode',
           component: () => import('./views/page-barcode.vue')
+        },
+        {
+          path: 'all-barcode',
+          component: () => import('./views/page-all-barcode.vue')
         }
       ]
     },
     {
       path: ':id/barcode/print',
       component: () => import('./views/page-barcode-print.vue')
+    },
+    {
+      path: 'all-barcode/print',
+      component: () => import('./views/page-all-barcode-print.vue')
     }
   ],
   beforeEnter: async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {

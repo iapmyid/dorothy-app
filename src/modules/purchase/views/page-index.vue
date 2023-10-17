@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { BaseBreadcrumb } from '@/components/index'
+import { BaseBreadcrumb, BaseInput } from '@/components/index'
 import { BaseDivider } from '@/components/index'
 import { watchDebounced } from '@vueuse/core'
 import { useNumeric } from '@/composable/numeric'
@@ -54,7 +54,7 @@ const getPurchases = async (page = 1, search = '') => {
     params: {
       pageSize: 10,
       page: page,
-      sort: 'name',
+      sort: '-date',
       filter: {
         name: search
       }
@@ -129,7 +129,7 @@ const exportBarcodeThisPage = async () => {
   })
 }
 
-const exportBarcode = async () => {
+const exportBarcode = async (_id: string) => {
   const workbook = new Excel.Workbook()
   const worksheet = workbook.addWorksheet('Sheet 1')
 
@@ -142,25 +142,21 @@ const exportBarcode = async () => {
 
   worksheet.columns = sheetColumns
 
-  worksheet.addRow({
-    name: 'EXAMPLE ITEM',
-    barcode: 20230101,
-    price: 'Rp. 250.000',
-    description: '20230101    XL - MAGENTA'
-  })
-
-  worksheet.addRow({
-    name: 'EXAMPLE ITEM 2',
-    barcode: 20230102,
-    price: 'Rp. 250.000',
-    description: '20230102    L - MAGENTA'
-  })
-
-  worksheet.addRow({
-    name: 'EXAMPLE ITEM 3',
-    barcode: 20230103,
-    price: 'Rp. 250.000',
-    description: '20230103    YELLOW'
+  purchases.value.forEach((element) => {
+    if (element._id === _id) {
+      element.size.forEach((size) => {
+        if (size.barcode) {
+          for (let i = 0; i < size.quantity; i++) {
+            worksheet.addRow({
+              name: element.name.toUpperCase(),
+              barcode: size.barcode,
+              price: `Rp ${element.sellingPrice}`,
+              description: `${size.barcode}    ${size.label.toUpperCase()} - ${element.color.toUpperCase()}`
+            })
+          }
+        }
+      })
+    }
   })
 
   workbook.xlsx.writeBuffer().then(function (buffer) {
@@ -220,14 +216,21 @@ const paginate = async (page: number) => {
                 <p>Add New</p>
               </router-link>
               <button @click="exportBarcodeThisPage()" class="btn btn-secondary rounded-none space-x-1">
-                <i class="i-far-print block"></i>
-                <p>Export Barcode on This Page</p>
+                <i class="i-far-file-excel block"></i>
+                <p>Export Barcode</p>
               </button>
-              <!-- <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
+              <router-link
+                :to="`/purchase/all-barcode?page=${pagination.page.value}&search=${searchAll}`"
+                class="btn btn-secondary rounded-none space-x-1"
+              >
+                <i class="i-far-barcode-read block"></i>
+                <p>Print Barcode</p>
+              </router-link>
+              <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
                 </template>
-              </component> -->
+              </component>
             </div>
           </div>
 
@@ -274,10 +277,10 @@ const paginate = async (page: number) => {
                 <template v-if="purchases.length > 0">
                   <tr v-for="purchase in purchases" :key="purchase._id" class="basic-table-row">
                     <td class="basic-table-body flex space-x-3 text-center justify-center">
-                      <router-link to="/">
+                      <router-link :to="`/purchase/${purchase._id}/barcode`">
                         <i class="block h-5 w-5 i-far-file-excel"></i>
                       </router-link>
-                      <button>
+                      <button @click="exportBarcode(purchase._id)">
                         <i class="block h-5 w-5 i-far-barcode-read"></i>
                       </button>
                     </td>

@@ -19,10 +19,19 @@ const items = ref<
 
 onMounted(async () => {
   try {
-    const result = await axios.get(`/v1/purchases/${route.params.id}`)
+    const purchases = await axios.get(`/v1/purchases`, {
+      params: {
+        pageSize: 10,
+        page: route.query.page,
+        sort: '-date',
+        filter: {
+          name: route.query.search
+        }
+      }
+    })
 
-    if (result.status === 200) {
-      items.value.push(result.data)
+    if (purchases.status === 200) {
+      items.value = purchases.data.data
     } else {
       router.push('/404')
     }
@@ -44,9 +53,11 @@ const onPrint = () => {
     gap_y: gapY.value.toString(),
     height: height.value.toString(),
     show_name: (showName.value ? 1 : 0).toString(),
-    show_code: (showCode.value ? 1 : 0).toString()
+    show_code: (showCode.value ? 1 : 0).toString(),
+    page: (route.query.page ?? 1).toString(),
+    search: (route.query.search ?? '').toString()
   })
-  window.open('barcode/print?' + params.toString(), '_blank', 'width=1280,height=720')
+  window.open('all-barcode/print?' + params.toString(), '_blank', 'width=1280,height=720')
 }
 </script>
 
