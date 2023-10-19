@@ -32,7 +32,7 @@ export interface TransferItemInterface {
   }
   createdAt: Date
 }
-const transferItems = ref<TransferItemInterface[]>([])
+const stockCorrections = ref<TransferItemInterface[]>([])
 
 const getTransferItems = async (page = 1, search = '') => {
   const result = await axios.get('/v1/stock-corrections', {
@@ -46,7 +46,7 @@ const getTransferItems = async (page = 1, search = '') => {
     }
   })
 
-  transferItems.value = result.data.data
+  stockCorrections.value = result.data.data
 
   pagination.page.value = result.data.pagination.page
   pagination.pageCount.value = result.data.pagination.pageCount
@@ -120,17 +120,17 @@ const paginate = async (page: number) => {
     <div class="main-content-body">
       <div class="card card-template">
         <div class="flex flex-col gap-4">
-          <div class="w-full flex transferItems-center gap-4">
+          <div class="w-full flex stockCorrections-center gap-4">
             <div class="w-full flex space-x-2">
               <router-link to="/stock-correction/create" class="btn btn-secondary rounded-none space-x-1">
                 <i class="i-far-pen-to-square block"></i>
                 <p>Add New</p>
               </router-link>
-              <!-- <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
+              <component :is="BaseInput" v-model="searchAll" placeholder="Search" border="full" class="flex-1">
                 <template #prefix>
                   <i class="i-far-magnifying-glass mx-3 block"></i>
                 </template>
-              </component> -->
+              </component>
             </div>
           </div>
           <div class="table-container">
@@ -158,14 +158,18 @@ const paginate = async (page: number) => {
                 </tr>
               </thead>
               <tbody>
-                <template v-if="transferItems.length > 0">
-                  <template v-for="transferItem in transferItems" :key="transferItem._id">
-                    <tr v-for="item in transferItem.items" :key="transferItem._id + item._id" class="basic-table-row">
+                <template v-if="stockCorrections.length > 0">
+                  <template v-for="stockCorrection in stockCorrections" :key="stockCorrection._id">
+                    <tr
+                      v-for="item in stockCorrection.items"
+                      :key="stockCorrection._id + item._id"
+                      class="basic-table-row"
+                    >
                       <td class="basic-table-body">
-                        {{ format(new Date(transferItem.createdAt), 'dd MMM yyyy HH:mm') }}
+                        {{ format(new Date(stockCorrection.createdAt), 'dd MMM yyyy HH:mm') }}
                       </td>
                       <td class="basic-table-body">
-                        <router-link :to="`/stock-correction/${transferItem._id}`" class="text-info">
+                        <router-link :to="`/stock-correction/${stockCorrection._id}`" class="text-info">
                           {{ item.name }}
                         </router-link>
                       </td>
@@ -175,7 +179,7 @@ const paginate = async (page: number) => {
                       <td class="basic-table-body">
                         {{ item.size }}
                       </td>
-                      <td class="basic-table-body">{{ transferItem.warehouse.name }}</td>
+                      <td class="basic-table-body">{{ stockCorrection.warehouse.name }}</td>
                       <td class="basic-table-body text-right">{{ numeric.format(item.quantity) }}</td>
                     </tr>
                   </template>
@@ -183,7 +187,7 @@ const paginate = async (page: number) => {
               </tbody>
             </table>
           </div>
-          <div class="w-full flex transferItems-center justify-between">
+          <div class="w-full flex stockCorrections-center justify-between">
             <div>
               <p class="text-sm text-slate-600 dark:text-slate-400">
                 Showing {{ pagination.dataFrom() }} to {{ pagination.dataTo() }} of
@@ -194,19 +198,21 @@ const paginate = async (page: number) => {
               <button @click="paginatePrev()" type="button" class="btn btn-light-dark rounded-r-none">
                 <i class="i-fas-angle-left block"></i>
               </button>
-              <button
-                v-for="page in pagination.pageCount.value"
-                :key="page"
-                type="button"
-                class="btn rounded border-r-none"
-                :class="{
-                  'btn-secondary': page === pagination.page.value,
-                  'btn-light-dark': page !== pagination.page.value
-                }"
-                @click="paginate(page)"
-              >
-                {{ page }}
-              </button>
+              <template v-for="page in pagination.pageCount.value" :key="page">
+                <button
+                  v-if="page + 5 > pagination.page.value && page - 5 < pagination.page.value"
+                  type="button"
+                  class="btn rounded border-r-none"
+                  :class="{
+                    'btn-secondary': page === pagination.page.value,
+                    'btn-light-dark': page !== pagination.page.value
+                  }"
+                  @click="paginate(page)"
+                >
+                  {{ page }}
+                </button>
+              </template>
+
               <button @click="paginateNext()" type="button" class="btn btn-light-dark rounded-l-none">
                 <i class="i-fas-angle-right block"></i>
               </button>

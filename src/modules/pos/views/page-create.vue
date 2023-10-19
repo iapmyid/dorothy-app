@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { AxiosError } from 'axios'
-import { BaseInput, BaseAutocomplete } from '@/components/index'
+import { BaseInput, BaseAutocomplete, BaseNumeric } from '@/components/index'
 import { useBaseNotification, TypesEnum } from '@/composable/notification'
 import { format } from 'date-fns'
 import { useItemCategoryApi } from '../api/item-category'
@@ -36,6 +36,8 @@ const form = ref<{
   discount: number
   totalPrice: number
   paymentType: string
+  cashReceived: number
+  cashChange: number
 }>({
   date: format(new Date(), 'yyyy-MM-dd'),
   warehouse_id: '',
@@ -44,6 +46,8 @@ const form = ref<{
   subtotal: 0,
   discount: 0,
   totalPrice: 0,
+  cashReceived: 0,
+  cashChange: 0,
   paymentType: ''
 })
 
@@ -87,6 +91,10 @@ watch(selectedCustomer, () => {
   form.value.discount = (form.value.totalPrice * 10) / 100
   form.value.subtotal = form.value.totalPrice - form.value.discount
   calculatePrice()
+})
+
+watch(form.value, () => {
+  form.value.cashChange = form.value.cashReceived - form.value.totalPrice
 })
 
 export interface ItemInterface {
@@ -200,8 +208,8 @@ const calculatePrice = () => {
   }
   if (form.value.customer_id) {
     form.value.subtotal = totalPrice
-    form.value.discount = (totalPrice * 5) / 100
-    form.value.totalPrice = totalPrice - (totalPrice * 5) / 100
+    form.value.discount = (totalPrice * 10) / 100
+    form.value.totalPrice = totalPrice - (totalPrice * 10) / 100
     form.value.subtotal = totalPrice
   } else {
     form.value.totalPrice = totalPrice
@@ -285,6 +293,8 @@ const resetForm = async () => {
   form.value.items = []
   form.value.customer_id = ''
   form.value.paymentType = ''
+  form.value.cashReceived = 0
+  form.value.cashChange = 0
   if (selectedCustomer.value) {
     selectedCustomer.value.id = ''
     selectedCustomer.value.label = ''
@@ -296,6 +306,11 @@ const resetForm = async () => {
 const onSubmit = async () => {
   try {
     isSubmitted.value = true
+
+    if (form.value.paymentType === 'cash' && form.value.cashChange < 0) {
+      notification('Cash Error', 'Jumlah cash diterima kurang', { type: TypesEnum.Warning })
+      return
+    }
 
     const response = await axios.post('/v1/pos', form.value)
 
@@ -432,6 +447,44 @@ const onSubmit = async () => {
                       <span class="text-right">{{ numeric.format(form.totalPrice) }}</span>
                     </div>
                   </div>
+
+                  <div class="hidden font-normal print:flex w-full text-14px" v-if="form.paymentType === 'cash'">
+                    <div class="flex-1">
+                      <span class="m-0 p-0">Cash</span>
+                    </div>
+                    <div class="flex-0">
+                      <span class="text-right">{{ numeric.format(form.cashReceived) }}</span>
+                    </div>
+                  </div>
+                  <div class="hidden font-normal print:flex w-full text-14px" v-if="form.paymentType === 'cash'">
+                    <div class="flex-1">
+                      <span class="m-0 p-0">Change</span>
+                    </div>
+                    <div class="flex-0">
+                      <span class="text-right">{{ numeric.format(form.cashChange) }}</span>
+                    </div>
+                  </div>
+
+                  <div v-if="form.paymentType === 'cash'" class="text-12px mt-2 print:hidden!">
+                    <component
+                      :is="BaseNumeric"
+                      layout="horizontal"
+                      v-model="form.cashReceived"
+                      label="Cash"
+                      description="Uang Diterima"
+                      class="print:hidden!"
+                    ></component>
+                  </div>
+                  <div v-if="form.paymentType === 'cash'" class="text-12px print:hidden!">
+                    <component
+                      :is="BaseNumeric"
+                      layout="horizontal"
+                      v-model="form.cashChange"
+                      label="Change"
+                      description="Kembalian"
+                      class="print:hidden!"
+                    ></component>
+                  </div>
                 </div>
 
                 <p class="hidden print:block text-center print:my-6!">- Thankyou -</p>
@@ -450,6 +503,16 @@ const onSubmit = async () => {
                   </button>
                   <button
                     type="button"
+                    @click="choosePaymentMethod('debit')"
+                    class="btn btn-secondary"
+                    :class="{
+                      'btn-success': form.paymentType === 'debit'
+                    }"
+                  >
+                    Debit
+                  </button>
+                  <button
+                    type="button"
                     @click="choosePaymentMethod('credit')"
                     class="btn btn-secondary"
                     :class="{
@@ -457,6 +520,16 @@ const onSubmit = async () => {
                     }"
                   >
                     Credit
+                  </button>
+                  <button
+                    type="button"
+                    @click="choosePaymentMethod('qris')"
+                    class="btn btn-secondary"
+                    :class="{
+                      'btn-success': form.paymentType === 'qris'
+                    }"
+                  >
+                    QRIS
                   </button>
                 </div>
                 <button type="button" @click="onSubmit()" class="btn btn-primary">Submit</button>

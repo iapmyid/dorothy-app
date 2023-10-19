@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { BaseAutocomplete, BaseBreadcrumb, BaseDivider } from '@/components/index'
+import { BaseAutocomplete, BaseBreadcrumb, BaseDivider, BaseInput } from '@/components/index'
 import { useNumeric } from '@/composable/numeric'
 import { usePagination } from '@/composable/pagination'
 import { useRoute, useRouter } from 'vue-router'
 import { useWarehouseApi } from '../api/warehouse'
 import { useItemApi } from '../api/item'
 import axios from '@/axios'
+import { watchDebounced } from '@vueuse/core'
 
 const pagination = usePagination()
 const numeric = useNumeric()
@@ -18,6 +19,7 @@ const itemApi = useItemApi()
 const warehouse_id = ref('')
 const item_id = ref('')
 const size = ref('')
+const searchAll = ref('')
 
 const selectedWarehouse = ref<{ id: string; label: string }>()
 watch(selectedWarehouse, async () => {
@@ -60,7 +62,8 @@ const getInventories = async (page = 1) => {
       filter: {
         item_id: item_id.value,
         warehouse_id: warehouse_id.value,
-        size: size.value
+        'size.label': searchAll.value,
+        search: searchAll.value
       }
     }
   })
@@ -72,6 +75,22 @@ const getInventories = async (page = 1) => {
   pagination.pageSize.value = result.data.pagination.pageSize
   pagination.totalDocument.value = result.data.pagination.totalDocument
 }
+
+watchDebounced(
+  searchAll,
+  async () => {
+    router.replace({
+      path: route.path,
+      query: {
+        ...route.query,
+        page: pagination.previousPage(),
+        search: searchAll.value
+      }
+    })
+    await getInventories()
+  },
+  { debounce: 500, maxWait: 1000 }
+)
 
 onMounted(async () => {
   await warehouseApi.fetchListWarehouse()
@@ -145,6 +164,20 @@ const paginate = async (page: number) => {
                   :list="warehouseApi.listWarehouse.value"
                 ></component>
               </div>
+              <div class="flex flex-col items-start gap-1">
+                <label class="text-sm font-bold">Search</label>
+                <component
+                  :is="BaseInput"
+                  v-model="searchAll"
+                  placeholder="Search"
+                  border="simple"
+                  class="flex-1 w-full mt-1"
+                >
+                  <template #prefix>
+                    <i class="i-far-magnifying-glass mx-3 block"></i>
+                  </template>
+                </component>
+              </div>
             </div>
           </div>
           <div class="table-container">
@@ -196,19 +229,21 @@ const paginate = async (page: number) => {
               <button @click="paginatePrev()" type="button" class="btn btn-light-dark rounded-r-none">
                 <i class="i-fas-angle-left block"></i>
               </button>
-              <button
-                v-for="page in pagination.pageCount.value"
-                :key="page"
-                type="button"
-                class="btn rounded border-r-none"
-                :class="{
-                  'btn-secondary': page === pagination.page.value,
-                  'btn-light-dark': page !== pagination.page.value
-                }"
-                @click="paginate(page)"
-              >
-                {{ page }}
-              </button>
+              <template v-for="page in pagination.pageCount.value" :key="page">
+                <button
+                  v-if="page + 5 > pagination.page.value && page - 5 < pagination.page.value"
+                  type="button"
+                  class="btn rounded border-r-none"
+                  :class="{
+                    'btn-secondary': page === pagination.page.value,
+                    'btn-light-dark': page !== pagination.page.value
+                  }"
+                  @click="paginate(page)"
+                >
+                  {{ page }}
+                </button>
+              </template>
+
               <button @click="paginateNext()" type="button" class="btn btn-light-dark rounded-l-none">
                 <i class="i-fas-angle-right block"></i>
               </button>
