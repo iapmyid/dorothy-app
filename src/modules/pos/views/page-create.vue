@@ -112,7 +112,7 @@ const items = ref<ItemInterface[]>([])
 const getItems = async (page = 1, search = '') => {
   const result = await axios.get('/v1/items', {
     params: {
-      pageSize: 100,
+      pageSize: 12,
       page: page,
       sort: 'name',
       filter: {
@@ -368,7 +368,6 @@ const onSubmit = async () => {
           <div class="py-4 grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
             <template v-for="item in items" :key="item._id">
               <div class="btn py-4 btn-light-dark flex flex-col shadow" @click="onChooseItem(item)">
-                <div><img :src="item.photoUrl" alt="" /></div>
                 <p class="text-14px font-bold">{{ item.name }}</p>
                 <p class="text-xs uppercase">{{ item.size }} - {{ item.color }}</p>
                 <p class="text-16px">Rp {{ numeric.format(item.sellingPrice) }}</p>

@@ -192,7 +192,6 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  {{ form.items }}
   <div class="main-content-container">
     <div class="main-content-header">
       <h1>Transfer Item</h1>
