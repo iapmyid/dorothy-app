@@ -391,7 +391,7 @@ const onSubmit = async () => {
           </div>
 
           <div
-            class="card card-template flex flex-col gap-4 print:fixed print:top-0 print:w-80mm print:shadow-none print:border-none! print:text-black! print:bg-white!"
+            class="card card-template flex flex-col gap-4 print:fixed print:top-0 print:w-76mm print:shadow-none print:border-none! print:text-black! print:bg-white!"
           >
             <form @submit.prevent="onSubmit()" method="post" class="space-y-5">
               <div class="flex flex-col gap-6px text-11px font-bold">

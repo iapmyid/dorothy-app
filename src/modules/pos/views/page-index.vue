@@ -46,7 +46,8 @@ const getListPos = async (page = 1, search = '') => {
   const result = await axios.get('/v1/pos', {
     params: {
       pageSize: 10,
-      page: page
+      page: page,
+      sort: '-_id'
     }
   })
 
@@ -141,6 +142,7 @@ const paginate = async (page: number) => {
             <table class="table text-sm">
               <thead>
                 <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
+                  <th class="basic-table-head"></th>
                   <th class="basic-table-head">
                     <p>Date</p>
                   </th>
@@ -174,6 +176,11 @@ const paginate = async (page: number) => {
                 <template v-if="listPos.length > 0">
                   <template v-for="pos in listPos" :key="pos._id">
                     <tr v-for="posItem in pos.items" :key="posItem._id" class="basic-table-row">
+                      <td class="pl-4">
+                        <router-link :to="`/pos/${pos._id}/print`">
+                          <i class="block h-5 w-5 i-far-print"></i>
+                        </router-link>
+                      </td>
                       <td class="basic-table-body">
                         <router-link :to="`/pos/${pos._id}`" class="text-info">
                           {{ format(new Date(pos.createdAt), 'dd MMM yyyy HH:mm') }}
