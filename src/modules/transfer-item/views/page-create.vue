@@ -32,6 +32,7 @@ export interface ItemInterface {
 }
 
 const items = ref<ItemInterface[]>([])
+const totalQuantity = ref(0)
 
 const findBarcode = async () => {
   if (!searchAll.value) {
@@ -68,7 +69,14 @@ const findBarcode = async () => {
       return
     }
 
+    // stock unavailable
+    if (form.value.items[index] && form.value.items[index].quantity >= inventories.value[0].quantity) {
+      notification('Stock Unavailable', '', { type: TypesEnum.Warning })
+      return
+    }
+
     if (index >= 0) {
+      form.value.items[index].available = inventories.value[0].quantity
       form.value.items[index].quantity += 1
       form.value.items[index].total += items.value[0].sellingPrice
     } else {
@@ -78,11 +86,14 @@ const findBarcode = async () => {
         size: items.value[0].size,
         color: items.value[0].color,
         barcode: items.value[0].barcode,
+        available: inventories.value[0].quantity,
         quantity: 1,
         price: items.value[0].sellingPrice,
         total: items.value[0].sellingPrice
       })
     }
+
+    totalQuantity.value += 1
   } catch (error) {
     notification('Item not found', '', { type: TypesEnum.Warning })
   } finally {
@@ -101,6 +112,7 @@ const form = ref<{
     name: string
     size: string
     color: string
+    available: number
     quantity: number
     price: number
     total: number
@@ -150,6 +162,11 @@ const getInventories = async (item_id: string, warehouse_id: string, color: stri
 const errors = ref()
 const isSubmitted = ref(false)
 
+const removeRow = (index: number) => {
+  totalQuantity.value -= form.value.items[index].quantity
+  form.value.items.splice(index, 1)
+}
+
 const onSubmit = async () => {
   try {
     isSubmitted.value = true
@@ -175,6 +192,7 @@ const onSubmit = async () => {
 </script>
 
 <template>
+  {{ form.items }}
   <div class="main-content-container">
     <div class="main-content-header">
       <h1>Transfer Item</h1>
@@ -246,6 +264,7 @@ const onSubmit = async () => {
                 <table class="table text-sm">
                   <thead>
                     <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
+                      <th class="basic-table-head"></th>
                       <th class="basic-table-head">
                         <p>Barcode</p>
                       </th>
@@ -259,20 +278,33 @@ const onSubmit = async () => {
                         <p>Color</p>
                       </th>
                       <th class="basic-table-head text-right">
+                        <p>Stock</p>
+                      </th>
+                      <th class="basic-table-head text-right">
                         <p>Quantity</p>
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <template v-if="form.items.length > 0">
-                      <tr v-for="item in form.items" :key="item._id">
+                      <tr v-for="(item, index) in form.items" :key="item._id">
+                        <td class="basic-table-body w-0">
+                          <button type="button" @click="removeRow(index)" class="btn btn-xs btn-outline-danger">
+                            X
+                          </button>
+                        </td>
                         <td class="basic-table-body">{{ item.barcode }}</td>
                         <td class="basic-table-body">{{ item.name }}</td>
                         <td class="basic-table-body">{{ item.size }}</td>
                         <td class="basic-table-body">{{ item.color }}</td>
+                        <td class="basic-table-body text-right">{{ numeric.format(item.available) }}</td>
                         <td class="basic-table-body text-right">{{ numeric.format(item.quantity) }}</td>
                       </tr>
                     </template>
+                    <tr>
+                      <td class="basic-table-body text-right font-bold w-0" colspan="6">Total Quantity</td>
+                      <td class="basic-table-body text-right">{{ numeric.format(totalQuantity) }}</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>

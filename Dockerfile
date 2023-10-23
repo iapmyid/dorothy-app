@@ -16,7 +16,7 @@ ENV VITE_API_TIMEOUT $VITE_API_TIMEOUT
 COPY --chown=node:node package.json ./
 RUN npm install
 COPY --chown=node:node . .
-RUN npm run build
+RUN npm run build-only
 
 # Runner
 FROM node:18 as runner

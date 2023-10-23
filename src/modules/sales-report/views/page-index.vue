@@ -52,6 +52,10 @@ const dateFrom = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTo = ref(format(new Date(), 'yyyy-MM-dd'))
 const warehouse_id = ref('')
 const total = ref(0)
+const totalCash = ref(0)
+const totalDebit = ref(0)
+const totalCredit = ref(0)
+const totalQris = ref(0)
 const listPos = ref<PosInterface[]>([])
 const selectedWarehouse = ref<{ id: string; label: string }>()
 watch(selectedWarehouse, () => {
@@ -76,6 +80,16 @@ const getListPos = async (page = 1, search = '') => {
 
   listPos.value.forEach((el) => {
     total.value += el.totalPrice
+
+    if (el.paymentType === 'cash') {
+      totalCash.value += el.totalPrice
+    } else if (el.paymentType === 'credit') {
+      totalCredit.value += el.totalPrice
+    } else if (el.paymentType === 'debit') {
+      totalDebit.value += el.totalPrice
+    } else if (el.paymentType === 'qris') {
+      totalQris.value += el.totalPrice
+    }
   })
 
   pagination.page.value = result.data.pagination.page
@@ -223,11 +237,23 @@ const paginate = async (page: number) => {
                     </tr>
                   </template>
                   <tr class="basic-table-row">
-                    <td class="basic-table-body"></td>
-                    <td class="basic-table-body"></td>
-                    <td class="basic-table-body"></td>
-                    <td class="basic-table-body text-right"></td>
-                    <td class="basic-table-body font-bold text-right">Total</td>
+                    <td colspan="5" class="basic-table-body font-bold text-right">Total Cash</td>
+                    <td class="basic-table-body font-bold text-right">{{ numeric.format(totalCash) }}</td>
+                  </tr>
+                  <tr class="basic-table-row">
+                    <td colspan="5" class="basic-table-body font-bold text-right">Total Debit</td>
+                    <td class="basic-table-body font-bold text-right">{{ numeric.format(totalDebit) }}</td>
+                  </tr>
+                  <tr class="basic-table-row">
+                    <td colspan="5" class="basic-table-body font-bold text-right">Total Credit</td>
+                    <td class="basic-table-body font-bold text-right">{{ numeric.format(totalCredit) }}</td>
+                  </tr>
+                  <tr class="basic-table-row">
+                    <td colspan="5" class="basic-table-body font-bold text-right">Total Qris</td>
+                    <td class="basic-table-body font-bold text-right">{{ numeric.format(totalQris) }}</td>
+                  </tr>
+                  <tr class="basic-table-row">
+                    <td colspan="5" class="basic-table-body font-bold text-right">Total</td>
                     <td class="basic-table-body font-bold text-right">{{ numeric.format(total) }}</td>
                   </tr>
                 </template>

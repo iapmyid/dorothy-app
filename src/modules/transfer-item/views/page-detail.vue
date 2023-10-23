@@ -23,6 +23,9 @@ const form = ref({
   receivedAt: ''
 })
 
+const totalSent = ref(0)
+const totalReceived = ref(0)
+
 onMounted(async () => {
   try {
     const result = await axios.get(`/v1/transfer-items/${route.params.id}`)
@@ -34,6 +37,11 @@ onMounted(async () => {
       form.value.items = result.data.items
       form.value.receivedAt = result.data.receivedAt
       form.value.createdAt = format(new Date(result.data.createdAt), 'dd MMM yyyy HH:mm')
+
+      for (const iterator of form.value.items) {
+        totalSent.value += iterator.quantity
+        totalReceived.value += iterator.quantityReceived
+      }
     } else {
       router.push('/404')
     }
@@ -99,6 +107,9 @@ onMounted(async () => {
                   <p>Item</p>
                 </th>
                 <th class="basic-table-head">
+                  <p>Barcode</p>
+                </th>
+                <th class="basic-table-head">
                   <p>Color</p>
                 </th>
                 <th class="basic-table-head">
@@ -118,6 +129,9 @@ onMounted(async () => {
                   {{ item.name }}
                 </td>
                 <td class="basic-table-body">
+                  {{ item.barcode }}
+                </td>
+                <td class="basic-table-body">
                   {{ item.color }}
                 </td>
                 <td class="basic-table-body">
@@ -127,6 +141,11 @@ onMounted(async () => {
                 <td class="basic-table-body text-right">
                   {{ item.quantityReceived !== undefined ? numeric.format(item.quantityReceived) : '-' }}
                 </td>
+              </tr>
+              <tr class="basic-table-row">
+                <td class="basic-table-body" colspan="4">Total Quantity</td>
+                <td class="basic-table-body text-right">{{ numeric.format(totalSent) }}</td>
+                <td class="basic-table-body text-right">{{ numeric.format(totalReceived) }}</td>
               </tr>
             </tbody>
           </table>
