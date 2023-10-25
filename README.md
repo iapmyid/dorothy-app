@@ -51,3 +51,9 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+
+## Production
+
+```sh
+docker buildx build --platform linux/amd64 -t iapmyid/dorothy-app $(cat Docker.env | sed 's@^@--build-arg @g' | paste -s -d " " /dev/stdin) . && docker push iapmyid/dorothy-app && k rollout restart deployment/dorothy-app-depl
+```
