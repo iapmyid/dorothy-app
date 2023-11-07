@@ -9,8 +9,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { format } from 'date-fns'
 import axios from '@/axios'
 import { useWarehouseApi } from '../api/warehouse'
+import { useUserApi } from '../api/user'
 
 const warehouseApi = useWarehouseApi()
+const userApi = useUserApi()
 const pagination = usePagination()
 const numeric = useNumeric()
 const route = useRoute()
@@ -51,6 +53,7 @@ const formDateTo = ref(format(new Date(), 'dd/MM/yyyy'))
 const dateFrom = ref(format(new Date(), 'yyyy-MM-dd'))
 const dateTo = ref(format(new Date(), 'yyyy-MM-dd'))
 const warehouse_id = ref('')
+const user_id = ref('')
 const total = ref(0)
 const totalCash = ref(0)
 const totalDebit = ref(0)
@@ -62,6 +65,11 @@ watch(selectedWarehouse, () => {
   warehouse_id.value = selectedWarehouse.value?.id ?? ''
 })
 
+const selectedUser = ref<{ id: string; label: string }>()
+watch(selectedUser, () => {
+  user_id.value = selectedUser.value?.id ?? ''
+})
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getListPos = async (page = 1, search = '') => {
   const result = await axios.get('/v1/pos', {
@@ -71,7 +79,8 @@ const getListPos = async (page = 1, search = '') => {
       filter: {
         dateFrom: dateFrom.value,
         dateTo: dateTo.value,
-        warehouse_id: warehouse_id.value
+        warehouse_id: warehouse_id.value,
+        createdBy_id: user_id.value
       }
     }
   })
@@ -104,6 +113,7 @@ onMounted(async () => {
   await warehouseApi.fetchListWarehouse()
   selectedWarehouse.value = warehouseApi.listWarehouse.value[0]
   warehouse_id.value = selectedWarehouse.value.id
+  await userApi.fetchListUser()
   await getListPos(page, searchAll.value)
 })
 
@@ -175,6 +185,18 @@ const paginate = async (page: number) => {
                   required
                   v-model="selectedWarehouse"
                   :list="warehouseApi.listWarehouse.value"
+                ></component>
+              </div>
+              <div class="flex flex-col items-start">
+                <label class="text-sm font-bold">
+                  Cashier
+                  <span class="text-xs text-slate-400"></span>
+                </label>
+                <component
+                  :is="BaseAutocomplete"
+                  required
+                  v-model="selectedUser"
+                  :list="userApi.listUser.value"
                 ></component>
               </div>
               <div class="flex flex-col justify-end items-end">

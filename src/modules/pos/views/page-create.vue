@@ -397,8 +397,11 @@ const onSubmit = async () => {
               <div class="flex flex-col gap-6px text-11px font-bold">
                 <!-- Header -->
                 <div class="flex flex-col">
+                  <div class="hidden print:block">
+                    <img src="/logo.png" alt="" />
+                  </div>
                   <p class="font-extrabold text-center mb-3 text-18px">Dorothy Boutique</p>
-                  <p class="text-center text-12px -mt-10px">PTC UG F5 NO 11-12 <br />031-7392043</p>
+                  <p class="text-center text-12px -mt-10px">PTC UG F5 NO 11-12 <br />0821-4157-8602</p>
                   <hr class="my-5px" />
                   <p class="flex flex-col">
                     <span>Date: {{ format(new Date(), 'dd MMM yyyy HH:mm') }}</span>
