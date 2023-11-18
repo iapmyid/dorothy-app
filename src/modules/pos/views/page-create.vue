@@ -397,10 +397,9 @@ const onSubmit = async () => {
               <div class="flex flex-col gap-6px text-11px font-bold">
                 <!-- Header -->
                 <div class="flex flex-col">
-                  <div class="hidden print:block">
-                    <img src="/logo.png" alt="" />
+                  <div class="hidden justify-center print:flex print:mb-4">
+                    <img src="/logo.png" class="h-16" alt="" />
                   </div>
-                  <p class="font-extrabold text-center mb-3 text-18px">Dorothy Boutique</p>
                   <p class="text-center text-12px -mt-10px">PTC UG F5 NO 11-12 <br />0821-4157-8602</p>
                   <hr class="my-5px" />
                   <p class="flex flex-col">
@@ -415,7 +414,7 @@ const onSubmit = async () => {
                   <div class="flex flex-row w-full" v-for="item in form.items" :key="item._id">
                     <div class="flex flex-col flex-1">
                       <span class="m-0 p-0">x{{ item.quantity }} {{ item.name }}</span>
-                      <span class="text-8px uppercase font-light">{{ item.size }} - {{ item.color }}</span>
+                      <span class="text-8px uppercase">{{ item.size }} - {{ item.color }}</span>
                     </div>
                     <div class="flex-0">
                       <span class="text-right">{{ numeric.format(item.total) }}</span>
