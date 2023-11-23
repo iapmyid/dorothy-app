@@ -109,7 +109,7 @@ const onPrint = async () => {
                   <div class="hidden justify-center print:flex print:mb-4">
                     <img src="/logo.png" class="h-16" alt="" />
                   </div>
-                  <p class="text-center text-12px -mt-10px">PTC UG F5 NO 11-12 <br />031-7392043</p>
+                  <p class="text-center text-12px -mt-10px">PTC UG F5 NO 11-12 <br />0821-4157-8602</p>
                   <hr class="my-5px" />
                   <p class="flex flex-col">
                     <span>Date: {{ format(new Date(), 'dd MMM yyyy HH:mm') }}</span>
