@@ -28,7 +28,7 @@ export const routes = {
     const authorization = useAuthorization()
     if (
       !(await authStore.isAuthenticated()) ||
-      !authorization.isAuthorize(['administrator', 'admin purchasing', 'admin stock'])
+      !authorization.isAuthorize(['administrator', 'admin purchasing', 'admin stock', 'cashier'])
     ) {
       next('/signin')
     } else {
