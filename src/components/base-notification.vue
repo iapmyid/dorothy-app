@@ -4,7 +4,7 @@
   <notifications position="bottom right" :duration="3000">
     <template #body="props">
       <div
-        class="card-header mx-4 my-1 items-start rounded-xl bg-white text-slate-600 shadow space-x-2"
+        class="card-header mx-4 my-1 items-start rounded-xl bg-white text-slate-600 shadow space-x-2 print:hidden"
         :class="{
           'bg-blue-50 text-blue-600': props.item.type === 'info',
           'bg-green-50 text-green-600': props.item.type === 'success',

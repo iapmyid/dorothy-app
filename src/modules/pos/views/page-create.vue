@@ -15,6 +15,16 @@ const numeric = useNumeric()
 
 const authStore = useAuthStore()
 
+interface FormItemInterface {
+  _id: string
+  name: string
+  size: string
+  color: string
+  quantity: number
+  price: number
+  total: number
+}
+
 const { notification } = useBaseNotification()
 const itemCategoryApi = useItemCategoryApi()
 const customerApi = useCustomerApi()
@@ -22,15 +32,7 @@ const form = ref<{
   date: string
   customer_id?: string
   warehouse_id: string
-  items: {
-    _id: string
-    name: string
-    size: string
-    color: string
-    quantity: number
-    price: number
-    total: number
-  }[]
+  items: FormItemInterface[]
   totalQuantity: number
   subtotal: number
   discount: number
@@ -331,6 +333,12 @@ const onSubmit = async () => {
     isSubmitted.value = false
   }
 }
+
+const removeItem = (item: FormItemInterface) => {
+  const index = form.value.items.indexOf(item)
+
+  form.value.items.splice(index, 1)
+}
 </script>
 
 <template>
@@ -419,6 +427,9 @@ const onSubmit = async () => {
                     <div class="flex-0">
                       <span class="text-right">{{ numeric.format(item.total) }}</span>
                     </div>
+                    <div class="flex-0 ml-2">
+                      <button type="button" @click="removeItem(item)">X</button>
+                    </div>
                   </div>
                 </div>
 
@@ -491,7 +502,7 @@ const onSubmit = async () => {
                 <p class="hidden print:block text-center print:my-6!">- Thankyou -</p>
               </div>
               <div class="flex flex-col gap-2 print:hidden!">
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-3 gap-2">
                   <button
                     type="button"
                     @click="choosePaymentMethod('cash')"
@@ -531,6 +542,16 @@ const onSubmit = async () => {
                     }"
                   >
                     QRIS
+                  </button>
+                  <button
+                    type="button"
+                    @click="choosePaymentMethod('transfer')"
+                    class="btn btn-secondary"
+                    :class="{
+                      'btn-success': form.paymentType === 'transfer'
+                    }"
+                  >
+                    Transfer
                   </button>
                 </div>
                 <button type="button" @click="onSubmit()" class="btn btn-primary">Submit</button>

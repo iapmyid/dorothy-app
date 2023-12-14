@@ -44,7 +44,7 @@ export interface PosInterface {
   totalQuantity: number
   discount: number
   totalPrice: number
-  paymentType: number
+  paymentType: string
   createdAt: Date
 }
 
@@ -59,6 +59,7 @@ const totalCash = ref(0)
 const totalDebit = ref(0)
 const totalCredit = ref(0)
 const totalQris = ref(0)
+const totalTransfer = ref(0)
 const listPos = ref<PosInterface[]>([])
 const selectedWarehouse = ref<{ id: string; label: string }>()
 watch(selectedWarehouse, () => {
@@ -98,6 +99,8 @@ const getListPos = async (page = 1, search = '') => {
       totalDebit.value += el.totalPrice
     } else if (el.paymentType === 'qris') {
       totalQris.value += el.totalPrice
+    } else if (el.paymentType === 'transfer') {
+      totalTransfer.value += el.totalPrice
     }
   })
 
@@ -273,6 +276,10 @@ const paginate = async (page: number) => {
                   <tr class="basic-table-row">
                     <td colspan="5" class="basic-table-body font-bold text-right">Total Qris</td>
                     <td class="basic-table-body font-bold text-right">{{ numeric.format(totalQris) }}</td>
+                  </tr>
+                  <tr class="basic-table-row">
+                    <td colspan="5" class="basic-table-body font-bold text-right">Total Transfer</td>
+                    <td class="basic-table-body font-bold text-right">{{ numeric.format(totalTransfer) }}</td>
                   </tr>
                   <tr class="basic-table-row">
                     <td colspan="5" class="basic-table-body font-bold text-right">Total</td>
