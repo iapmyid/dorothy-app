@@ -5,10 +5,13 @@ import { useRoute, useRouter } from 'vue-router'
 import { format } from 'date-fns'
 import axios from '@/axios'
 import { useNumeric } from '@/composable/numeric'
+import { useBaseNotification, TypesEnum } from '@/composable/notification'
+import { AxiosError } from 'axios'
 
 const route = useRoute()
 const router = useRouter()
 const numeric = useNumeric()
+const { notification } = useBaseNotification()
 
 export interface PosInterface {
   _id: string
@@ -59,11 +62,15 @@ const form = ref<PosInterface>({
   }
 })
 
+const isVoided = ref(true)
 onMounted(async () => {
   try {
     const result = await axios.get(`/v1/pos/${route.params.id}`)
 
     if (result.status === 200) {
+      if (!result.data.void) {
+        isVoided.value = false
+      }
       form.value._id = result.data._id
       form.value.date = format(new Date(result.data.createdAt), 'dd MMM yyyy HH:mm')
       form.value.warehouse.name = result.data.warehouse?.name
@@ -83,6 +90,32 @@ onMounted(async () => {
     router.push('/404')
   }
 })
+
+const isVoid = ref(false)
+const onVoid = async () => {
+  if (isVoid.value == true) {
+    return
+  }
+  try {
+    isVoid.value = true
+    const response = await axios.delete('/v1/pos/' + route.params.id)
+
+    if (response.status === 204) {
+      notification('Void Success', '', { type: TypesEnum.Success })
+      router.push('/pos')
+    }
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      notification(error.response?.statusText, error.response?.data.message, { type: TypesEnum.Warning })
+    } else if (error instanceof AxiosError) {
+      notification(error.code as string, error.message, { type: TypesEnum.Warning })
+    } else {
+      notification('Unknown Error', '', { type: TypesEnum.Warning })
+    }
+  } finally {
+    isVoid.value = false
+  }
+}
 </script>
 
 <template>
@@ -105,10 +138,16 @@ onMounted(async () => {
                 <i class="i-far-circle-plus block"></i>
                 <span>Add</span>
               </router-link>
-              <!-- <button type="button" class="btn btn-danger btn-sm rounded-none space-x-1">
+              <button
+                type="button"
+                :disabled="isVoid"
+                v-if="!isVoided"
+                class="btn btn-danger btn-sm rounded-none space-x-1"
+                @click="onVoid"
+              >
                 <i class="i-far-trash block"></i>
-                <span>Delete</span>
-              </button> -->
+                <span>Void</span>
+              </button>
             </div>
           </div>
         </div>

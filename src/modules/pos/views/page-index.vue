@@ -175,7 +175,12 @@ const paginate = async (page: number) => {
               <tbody>
                 <template v-if="listPos.length > 0">
                   <template v-for="pos in listPos" :key="pos._id">
-                    <tr v-for="posItem in pos.items" :key="posItem._id" class="basic-table-row">
+                    <tr
+                      v-for="posItem in pos.items"
+                      :key="posItem._id"
+                      class="basic-table-row"
+                      :class="{ 'bg-red-100': pos.void }"
+                    >
                       <td class="pl-4">
                         <router-link :to="`/pos/${pos._id}/print`">
                           <i class="block h-5 w-5 i-far-print"></i>
