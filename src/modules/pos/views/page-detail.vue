@@ -71,6 +71,7 @@ onMounted(async () => {
       if (!result.data.void) {
         isVoided.value = false
       }
+      console.log(result.data)
       form.value._id = result.data._id
       form.value.date = format(new Date(result.data.createdAt), 'dd MMM yyyy HH:mm')
       form.value.warehouse.name = result.data.warehouse?.name

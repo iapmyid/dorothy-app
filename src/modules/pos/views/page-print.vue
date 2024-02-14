@@ -133,7 +133,7 @@ const onPrint = async () => {
 
                 <!-- Summary -->
                 <div class="flex flex-col">
-                  <div class="flex w-full text-14px font-normal" v-if="form.customer_id">
+                  <div class="flex w-full text-14px font-normal" v-if="form.discount != 0">
                     <div class="flex-1">
                       <span class="m-0 p-0">Sub Total</span>
                     </div>
@@ -141,7 +141,7 @@ const onPrint = async () => {
                       <span class="text-right">{{ numeric.format(form.subtotal) }}</span>
                     </div>
                   </div>
-                  <div class="flex w-full text-14px font-normal" v-if="form.customer_id">
+                  <div class="flex w-full text-14px font-normal" v-if="form.discount != 0">
                     <div class="flex-1">
                       <span class="m-0 p-0">Discount</span>
                     </div>
