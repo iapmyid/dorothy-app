@@ -59,7 +59,8 @@ const getFinances = async (page = 1, search = '') => {
   })
 
   finances.value = result.data.data
-
+  totalExpense.value = 0
+  totalIncome.value = 0
   finances.value.forEach((el) => {
     if (el.value < 0) {
       totalExpense.value += el.value
