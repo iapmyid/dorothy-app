@@ -73,13 +73,17 @@ watch(selectedUser, () => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getListPos = async (page = 1, search = '') => {
+  const dateFromTz = new Date(dateFrom.value)
+  dateFromTz.setHours(0, 0, 0)
+  const dateToTz = new Date(dateTo.value)
+  dateToTz.setHours(23, 59, 59)
   const result = await axios.get('/v1/pos', {
     params: {
       pageSize: 9999999,
       page: 1,
       filter: {
-        dateFrom: dateFrom.value,
-        dateTo: dateTo.value,
+        dateFrom: dateFromTz,
+        dateTo: dateToTz,
         warehouse_id: warehouse_id.value,
         createdBy_id: user_id.value
       }
