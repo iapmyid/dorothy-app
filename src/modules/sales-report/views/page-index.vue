@@ -87,7 +87,7 @@ const getListPos = async (page = 1, search = '') => {
   })
 
   listPos.value = result.data.data
-
+  total.value = 0
   listPos.value.forEach((el) => {
     total.value += el.totalPrice
 
