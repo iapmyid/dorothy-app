@@ -128,7 +128,7 @@ const paginate = async (page: number) => {
       <div class="card card-template">
         <div class="flex flex-col gap-4">
           <div class="w-full flex item-center gap-4">
-            <div class="w-full flex space-x-2">
+            <div class="w-full flex flex-col lg:flex-row gap-2">
               <component
                 :is="BaseDatepicker"
                 required
