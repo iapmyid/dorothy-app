@@ -88,6 +88,11 @@ const getListPos = async (page = 1, search = '') => {
 
   listPos.value = result.data.data
   total.value = 0
+  totalCash.value = 0
+  totalCredit.value = 0
+  totalQris.value = 0
+  totalDebit.value = 0
+  totalTransfer.value = 0
   listPos.value.forEach((el) => {
     total.value += el.totalPrice
 
