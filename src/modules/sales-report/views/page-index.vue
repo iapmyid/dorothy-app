@@ -72,7 +72,9 @@ watch(selectedUser, () => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const totalQty = ref(0)
 const getListPos = async (page = 1, search = '') => {
+  totalQty.value = 0
   const dateFromTz = new Date(dateFrom.value)
   dateFromTz.setHours(0, 0, 0)
   const dateToTz = new Date(dateTo.value)
@@ -98,6 +100,9 @@ const getListPos = async (page = 1, search = '') => {
   totalDebit.value = 0
   totalTransfer.value = 0
   listPos.value.forEach((el) => {
+    el.items.forEach((el2) => {
+      totalQty.value += el2.quantity
+    })
     total.value += el.totalPrice
 
     if (el.paymentType === 'cash') {
@@ -270,8 +275,11 @@ const paginate = async (page: number) => {
                       <td class="basic-table-body text-right">-{{ numeric.format(pos.discount) }}</td>
                     </tr>
                   </template>
+
                   <tr class="basic-table-row">
-                    <td colspan="5" class="basic-table-body font-bold text-right">Total Cash</td>
+                    <td colspan="3" class="basic-table-body font-bold text-right">Total Qty</td>
+                    <td class="basic-table-body font-bold text-right">{{ numeric.format(totalQty) }}</td>
+                    <td class="basic-table-body font-bold text-right">Total Cash</td>
                     <td class="basic-table-body font-bold text-right">{{ numeric.format(totalCash) }}</td>
                   </tr>
                   <tr class="basic-table-row">
