@@ -62,16 +62,15 @@ const form = ref<PosInterface>({
   }
 })
 
-const isVoided = ref(true)
+const isVoided = ref(false)
 onMounted(async () => {
   try {
     const result = await axios.get(`/v1/pos/${route.params.id}`)
 
     if (result.status === 200) {
-      if (!result.data.void) {
-        isVoided.value = false
+      if (result.data.void) {
+        isVoided.value = true
       }
-      console.log(result.data)
       form.value._id = result.data._id
       form.value.date = format(new Date(result.data.createdAt), 'dd MMM yyyy HH:mm')
       form.value.warehouse.name = result.data.warehouse?.name
