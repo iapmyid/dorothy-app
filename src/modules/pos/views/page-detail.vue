@@ -130,10 +130,13 @@ const onVoid = async () => {
       />
     </div>
     <div class="main-content-body">
-      <div class="card card-template">
+      <div class="card card-template" :class="{ 'bg-red-100': isVoided }">
         <div class="card-header">
           <h2>Show Sales</h2>
           <div class="flex gap-2 overflow-x-hidden">
+            <label v-if="isVoided" class="btn btn-danger btn-sm btn-block rounded-none space-x-1">
+              <span>Transaction Void</span>
+            </label>
             <div class="space-x-3">
               <router-link to="/pos/create" class="btn btn-secondary btn-sm rounded-none space-x-1">
                 <i class="i-far-circle-plus block"></i>
@@ -215,7 +218,7 @@ const onVoid = async () => {
             <h3>Items</h3>
             <table class="table text-sm">
               <thead>
-                <tr class="basic-table-row bg-slate-100 dark:bg-slate-700">
+                <tr class="basic-table-row bg-slate-100 dark:bg-slate-700" :class="{ 'bg-red-400!': isVoided }">
                   <th class="basic-table-head">
                     <p>Item</p>
                   </th>
