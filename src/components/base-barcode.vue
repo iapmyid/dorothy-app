@@ -69,6 +69,7 @@ const fontSize = computed(() => {
       <div>{{ props.value }}</div>
       <div class="flex-1 whitespace-nowrap overflow-hidden">{{ props.size }} - {{ props.color }}</div>
     </div>
-    <div class="text-14px leading-tight w-full text-center">Rp. {{ numeric.format(props.sellingPrice) }}</div>
+    <div class="text-14px leading-tight w-full text-center">&nbsp;</div>
+    <!-- <div class="text-14px leading-tight w-full text-center">Rp. {{ numeric.format(props.sellingPrice) }}</div> -->
   </div>
 </template>
